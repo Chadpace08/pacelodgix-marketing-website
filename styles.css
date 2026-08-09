@@ -1,0 +1,3915 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Pace Lodgix — marketing site
+
+   Standalone by design: it does NOT import the app's global.css. That
+   stylesheet carries a component library and two themes this page doesn't
+   need, and the marketing page is light-only. What it DOES share is the
+   palette and the type ramp — copied below from src/styles/global.css so the
+   two properties read as one brand. If the brand hues change there, change
+   them here too.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ══════════════════════════════════════════════════════════════════════
+     LUXURY REDESIGN 2026 — neutral canvas · brand as accent
+
+     The site was a warm-cream + forest-green brand where GREEN WAS THE CANVAS.
+     It now reads like a premium software company (Stripe / Linear / Vercel /
+     Apple): a NEUTRAL dual canvas — porcelain light sections alternating with
+     near-black graphite — where green and gold appear only as small, deliberate
+     accents (links, active states, icons, ticks, one solid CTA, a rare badge).
+
+     Architecture: the palette is defined once as raw neutrals + accents below,
+     then the whole existing stylesheet is remapped onto it by pointing its old
+     token NAMES at these. Change a value here, the site follows.
+     ════════════════════════════════════════════════════════════════════════ */
+
+  /* ── Neutrals — the canvas (the 95%) ──────────────────────────────────── */
+  --ink:        #101512;   /* near-black text on light — a hair of green in it */
+  --ink-2:      #3B423D;   /* secondary text */
+  --ink-3:      #6C736D;   /* muted text / captions */
+  --porcelain:  #FBFBF9;   /* light section background — never pure white */
+  --surface:    #FFFFFF;   /* cards / raised panels on light */
+  --surface-2:  #F3F3F0;   /* subtle inset panel */
+  --hairline:   #E9E9E4;   /* 1px borders on light */
+  --hairline-2: #DBDBD4;   /* stronger divider */
+
+  --graphite:      #0C0F0E;   /* dark section floor — near-black, faint green */
+  --graphite-elev: #15191700; /* (kept as var below) */
+  --on-dark:    #ECEDEA;   /* primary text on graphite */
+  --on-dark-2:  #9AA19B;   /* secondary text on graphite */
+
+  /* ── Brand accents — used sparingly (the 5%) ──────────────────────────── */
+  --green:        #1E7A50;   /* emerald — solid fills, icons, the primary CTA */
+  --green-ink:    #15613E;   /* emerald that clears AA as text/links on light */
+  --green-bright: #46C98A;   /* emerald that reads on graphite (links/active/dark)*/
+  --gold:         #C79A3B;   /* rare — a badge, a single highlight */
+  --gold-ink:     #8C6C1A;   /* rare readable gold on light */
+
+  /* ══ Compatibility remap ═══════════════════════════════════════════════
+     The old token names the rest of the file uses, re-pointed at the system
+     above. This is what converts every component at once. */
+  --primary:       var(--green);       /* now an ACCENT, no longer the canvas */
+  --primary-light: #2A9163;            /* lighter emerald accent */
+  --primary-dark:  var(--graphite);    /* dark SURFACES are graphite, not green */
+  --accent:        var(--gold);
+  --accent-light:  #D8BE79;
+  --accent-dark:   var(--gold-ink);
+  --accent-ink:    var(--gold-ink);
+  --graphite-2:    #14181500;
+
+  --bg:         var(--porcelain);
+  --bg-card:    var(--surface);
+  --bg-tint:    var(--surface-2);
+  --bg-subtle:  #F6F6F3;
+
+  --text:         var(--ink);
+  --text-light:   var(--ink-2);
+  --text-muted:   var(--ink-3);
+  --text-inverse: var(--on-dark);
+  /* Text sitting on a solid green button/badge — white reads cleanest on the
+     emerald and clears AA. */
+  --on-accent:    #FFFFFF;
+
+  /* Ink roles on the graphite slabs (measured against --graphite). */
+  --ink-dark-1: rgba(236, 237, 234, 0.92);
+  --ink-dark-2: rgba(236, 237, 234, 0.60);
+
+  --border:        var(--hairline);
+  --border-strong: var(--hairline-2);
+
+  /* Type — two families, strictly split by size.
+     DISPLAY (Fraunces): h1, h2, pull-quotes, big figures. A variable serif with
+     an optical-size axis, so it earns its keep at scale — high contrast and
+     flared terminals that read premium and editorial. Kept display-only (nothing
+     under ~1.4rem); at small sizes the same detail turns fussy.
+     UI (Inter): body, buttons, nav, eyebrows, labels, every small piece of chrome.
+     The app uses Manrope for headings; the marketing site deliberately doesn't. */
+  --font: 'Inter', system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-brand: 'Inter', system-ui, sans-serif;
+
+  /* ── Type ramp ───────────────────────────────────────────────────────────
+     The UI layer of this page was set in seventeen distinct font sizes
+     between 0.62rem and 1.15rem — 0.92 next to 0.93 next to 0.94 next to
+     0.95. At those deltas nothing reads as hierarchy; it reads as drift,
+     because you see three of them inside one card. Six steps, with a
+     ~1.09 ratio, is enough to say everything this page needs to say.
+
+     DISPLAY sizes (h1, h2, .counter strong, .pc-amt) are NOT in here — they
+     are per-component clamps, because a display face has to be tuned against
+     its own measure. This ramp governs the UI/chrome layer only.
+
+     The two --fs-label steps are the tracked-uppercase family. They are
+     separate from the body ramp on purpose: uppercase runs optically larger
+     and letter-spacing adds width, so a label at the same px as body text
+     reads bigger than it is. */
+  --fs-label: 0.76rem;    /* 12.9px  section eyebrows, step numbers */
+  --fs-label-sm: 0.7rem;  /* 11.9px  column headings, hints, meta labels */
+  --fs-xs: 0.82rem;       /* 13.9px  legal lines, footer bottom, captions */
+  --fs-sm: 0.88rem;       /* 15.0px  secondary body, chips, tick lists */
+  --fs-base: 0.95rem;     /* 16.2px  buttons, nav, dense body copy */
+  --fs-md: 1.02rem;       /* 17.3px  card body, FAQ questions, leads */
+  --fs-lg: 1.15rem;       /* 19.6px  section ledes, h3 */
+
+  /* ── Spacing ramp ────────────────────────────────────────────────────────
+     Same problem as the type ramp, in the other axis: padding and margin
+     were set in free-hand rem across the file (1.35, 1.4, 1.5, 1.6, 1.7,
+     1.75, 1.8, 1.9, 2, 2.1, 2.2 …). These are the steps everything new
+     should snap to. Existing values are migrated where the difference was
+     drift; where a number is doing real optical work (a card's asymmetric
+     padding, a fold budget) it is left alone and says so. */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 2.5rem;
+  --s-8: 3.5rem;
+  --s-9: 4.5rem;
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-full: 999px;
+  /* Icon tiles sat at a hand-picked 17px — between --r-md and --r-lg, so the
+     one shape that repeats five times down the feature stack belonged to no
+     step of the scale. Its own token, because a filled 58px tile wants a
+     tighter corner than the 22px card it sits inside: matching --r-lg makes
+     the tile read as a small card rather than as a glyph holder. */
+  --r-tile: 16px;
+
+  /* Multi-layer shadows: three stacked layers with negative spreads so the
+     penumbra falls off smoothly instead of as one hard ring — most of what
+     reads as "expensive". Neutral graphite tint (10,13,11), soft on porcelain.
+     Kept restrained: luxury light UIs cast light shadows, not heavy ones. */
+  --shadow-sm: 0 1px 2px rgba(10, 13, 11, 0.05), 0 2px 6px rgba(10, 13, 11, 0.04);
+  --shadow-md:
+    0 1px 2px rgba(10, 13, 11, 0.05),
+    0 5px 14px -4px rgba(10, 13, 11, 0.08),
+    0 12px 30px -12px rgba(10, 13, 11, 0.07);
+  --shadow-lg:
+    0 2px 4px rgba(10, 13, 11, 0.05),
+    0 12px 26px -10px rgba(10, 13, 11, 0.10),
+    0 28px 56px -20px rgba(10, 13, 11, 0.14);
+  --shadow-xl:
+    0 4px 8px rgba(10, 13, 11, 0.06),
+    0 22px 44px -14px rgba(10, 13, 11, 0.16),
+    0 46px 90px -28px rgba(10, 13, 11, 0.24);
+  /* The primary CTA is emerald now, so its cast is a soft green lift rather
+     than a gold one. Used by .btn-accent and .play-icon. */
+  --shadow-accent: 0 6px 18px -4px rgba(30, 122, 80, 0.35);
+  --shadow-accent-hi: 0 12px 28px -6px rgba(30, 122, 80, 0.45);
+
+  /* ── Content measures ────────────────────────────────────────────────────
+     There were six near-identical column caps on the page (760, 820, 860,
+     920, 960, 1200). Anything within ~10% of a neighbour is not a different
+     measure, it is an unaligned one — and two of them are visible at the
+     same time at a section boundary. Three steps: prose, panel, page. */
+  --wrap: 1200px;         /* page */
+  --wrap-panel: 940px;    /* stage-width blocks: showcase mockup, video duo */
+  --wrap-prose: 820px;    /* reading measure: FAQ, flow, legal */
+
+  /* expo.out — the signature "premium software" curve (Stripe/Linear/Vercel):
+     a fast, confident start that glides to a near-imperceptible stop. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* A slight overshoot, for the few things that should feel sprung rather
+     than eased — icon tiles landing, badges popping in. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Hairlines on the graphite slabs — cool white at low alpha. */
+  --edge-dark: rgba(255, 255, 255, 0.09);
+  --edge-dark-strong: rgba(255, 255, 255, 0.16);
+
+  /* ── Section rhythm ──────────────────────────────────────────────────────
+     The gap between a section's heading block and the content under it was
+     set independently per section and had drifted to four different values:
+     3.5rem (.cards, .counter-grid, .stack, .price-grid, .video-grid), 3rem
+     (.faq-list), 4rem (.flow) and 2.5rem (.chip-cloud). At those sizes the
+     differences are not read as hierarchy — they are read as misalignment,
+     because you see two of them at once when a section boundary is on screen.
+     One token, so the whole page breathes on the same beat. */
+  --lead: 3.5rem;
+
+  /* ── Focus ring ──────────────────────────────────────────────────────────
+     See the :focus-visible block below for why this exists at all. */
+  --focus-ring: 3px;
+  --focus-offset: 3px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-light);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+img { max-width: 100%; display: block; }
+
+/* Selection was the browser default — a flat blue that belongs to no brand and
+   looks especially wrong dragged across cream and gold. --on-accent (not
+   white) because the gold is light enough that white text on it fails to read;
+   it is the same pairing the CTA button already uses. */
+::selection { background: var(--green-bright); color: var(--on-accent); }
+
+/* The scrollbar is a full-height element on every desktop view of this page,
+   so leaving it at the OS default put a grey channel down the side of a warm
+   cream layout. Firefox gets the standard properties, Chromium/WebKit the
+   -webkit- ones; neither is load-bearing, and touch devices see no scrollbar
+   at all. Kept slim and low-contrast — this should be felt, not noticed. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--r-full);
+  /* Transparent border + background-clip is the standard trick for insetting a
+     webkit thumb — it leaves breathing room without a second element. */
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); background-clip: content-box; }
+
+/* ── Display figures ─────────────────────────────────────────────────────
+   The display face can render OLDSTYLE (text) figures, where 3/4/5/7/9 descend
+   below the baseline and 0 sits at x-height. That is lovely inside running
+   prose, and wrong for every place this page uses the display face for numbers
+   that must line up and be compared. `lnum` + lining-nums pins the flat,
+   cap-height set at exactly these three spots:
+
+     • .stack-num — "01" through "05" rendered as something very close to
+       "OI"…"OS". This is the feature stack's chapter marker and it was not
+       reading as a number at all.
+     • .pc-amt    — "399" and "999" with three glyphs hanging under the
+       baseline, in a table whose entire job is being compared across.
+     • .counter strong — same, on the KPI figures.
+
+   `lining-nums` asks for the flat, cap-height set. `font-feature-settings`
+   is the fallback for engines that don't implement the high-level property;
+   both are needed, and the high-level one must come after so it wins where
+   it is supported. Declared on the .num-lining utility rather than on the
+   display face wholesale, because a date or a figure inside legal prose
+   still wants the oldstyle default.
+
+   If you prefer the editorial look on the PRICES specifically, remove
+   .pc-amt and .counter strong from the selector list below — but leave
+   .stack-num in it, because that one is a legibility fault, not a taste. */
+.stack-num,
+.pc-amt,
+.counter strong {
+  font-feature-settings: "lnum" 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Display — Fraunces. `font-optical-sizing: auto` lets the browser drive the
+   opsz axis from the rendered px, so a 5rem H1 gets the high-contrast display
+   cut while a 1.5rem heading stays sturdier — one family, tuned to its own
+   size. Fraunces carries more weight and a taller x-height than Cormorant did,
+   so headings sit a step lighter (500, not 600) and a hair tighter to keep the
+   refined, editorial feel rather than reading bold. Letter-spacing stays near
+   zero: a serif this expressive does not want to be tracked in. */
+h1, h2 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  color: var(--text);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.9rem, 6.6vw, 5.1rem); font-weight: 500; }
+h2 { font-size: clamp(2.2rem, 4.5vw, 3.5rem); font-weight: 500; }
+
+/* h3/h4 are UI-scale — Inter, not Cormorant. */
+h3, h4 {
+  font-family: var(--font);
+  color: var(--text);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+  font-weight: 700;
+}
+h3 { font-size: var(--fs-lg); }
+
+/* The italic is where Fraunces earns its keep — expressive, calligraphic
+   terminals carry the emphasis on their own. Kept MONOCHROME on purpose: gold
+   text on the green read brassy rather than premium, so the emphasis is the
+   same ink as the rest of the heading and the italic does all the work. This is
+   the Apple/Stripe/Linear move — colour is spent on one thing (the CTA), not
+   sprinkled through the type. Inherits: cream on the dark hero/sections, deep
+   ink on the light ones. */
+h1 em, h2 em { font-style: italic; color: inherit; font-weight: 500; }
+
+/* `pretty` is the paragraph-level counterpart to the `balance` already set on
+   the headings: it asks the browser to avoid leaving a single word alone on a
+   paragraph's last line. The ledes here are centred and 58ch wide, which is
+   exactly the shape where an orphan is most visible. Progressive enhancement —
+   engines that don't support it simply wrap as before. */
+p { margin: 0 0 1em; text-wrap: pretty; }
+
+.eyebrow {
+  font-family: var(--font-brand);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+  margin-bottom: var(--s-3);
+}
+.eyebrow.center { text-align: center; }
+
+.lede { font-size: var(--fs-lg); color: var(--text-muted); max-width: 58ch; }
+.lede.center { margin-inline: auto; text-align: center; }
+
+/* ── The section header triad ────────────────────────────────────────────
+   eyebrow → h2 → lede is the page's most-repeated composition (it opens
+   eight sections), and its spacing was inverted: the eyebrow sat 1rem above
+   the heading while the lede sat 0.5em of a 3.6rem h2 — 1.8rem — below it.
+   So the label the heading OWNS was nearer to it than the sentence that
+   completes it, and the three lines read as three unrelated blocks instead
+   of one masthead.
+
+   Tightened to a real triad: 0.75rem above, 1rem below, and the whole group
+   then separated from the content by --lead (3.5rem). Proximity now matches
+   the hierarchy.
+
+   Only applies when a lede actually follows. Sections that go straight from
+   h2 to a grid keep the old value, and it is invisible there anyway —
+   adjacent siblings collapse margins, and the grid's own --lead margin-top
+   is the larger of the two.
+
+   Deliberately NOT scoped to `.section >`: the same triad appears one level
+   down inside .dim-copy and .split-copy, and scoping it would have tightened
+   six of the eight section headers while leaving those two visibly looser
+   than their neighbours — which is worse than leaving all eight alone. */
+h2:has(+ .lede) { margin-bottom: var(--s-4); }
+.hero-copy h1:has(+ .lede) { margin-bottom: var(--s-4); }
+
+/* ── Scroll progress indicator ───────────────────────────────────────── */
+.progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 60;
+  background: transparent;
+  pointer-events: none;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  width: var(--p, 0%);
+  /* Three stops, not two. A two-stop forest→gold ramp spends most of its
+     length in the muddy olive between them; landing on --accent-light at the
+     head gives the bar a lit tip that reads as progress rather than as a
+     coloured rule. */
+  background: linear-gradient(90deg,
+    var(--green-ink), var(--green) 70%, var(--primary-light));
+  /* Rounds only the leading edge — a pill would float the tail off the left
+     corner of the viewport. */
+  border-radius: 0 var(--r-full) var(--r-full) 0;
+  box-shadow: 0 0 12px rgba(30, 122, 80, 0.5);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  padding: 0.72em 1.5em;
+  border: 0;
+  border-radius: var(--r-full);
+  font-family: var(--font-brand);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  /* The label is the smallest type on a large filled shape, so it takes a
+     touch of positive tracking — set solid, a bold pill label closes up and
+     reads muddier than the same word in running copy. */
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  /* Buttons are the one control that must never be a moving target: without
+     this, "Book a demo" and "Start free" sit at different heights whenever
+     one of them carries an icon and the other doesn't. */
+  line-height: 1.2;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+              background-color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.btn-lg { padding: 0.95em 1.9em; font-size: var(--fs-md); }
+.btn-block { width: 100%; }
+
+/* The primary action — a solid EMERALD pill, the one place brand colour is
+   spent on a filled surface. A faint top-lit gradient + inset highlight keep it
+   from reading as flat paint; white label clears AA on the emerald. It works on
+   both canvases (pops on porcelain, glows on graphite), so the whole site has
+   exactly one primary-button treatment. */
+.btn-accent {
+  background: linear-gradient(180deg, var(--primary-light), var(--green) 68%);
+  color: var(--on-accent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    var(--shadow-accent);
+}
+.btn-accent:hover {
+  background: linear-gradient(180deg, #34A972, var(--primary-light) 68%);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    var(--shadow-accent-hi);
+}
+
+/* The secondary action. On LIGHT it is a clean outline button (ink label,
+   hairline edge, white surface); on graphite it becomes a frosted translucent
+   pane. One class, two skins, chosen by the section it sits in. */
+.btn-glass {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--hairline-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 3px rgba(10, 13, 11, 0.04),
+    0 8px 20px -6px rgba(10, 13, 11, 0.06);
+}
+.btn-glass:hover {
+  border-color: var(--ink-3);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 2px 6px rgba(10, 13, 11, 0.05),
+    0 14px 28px -8px rgba(10, 13, 11, 0.09);
+}
+.section.dark .btn-glass,
+.cta .btn-glass {
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--on-dark);
+  border: 1px solid var(--edge-dark-strong);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+.section.dark .btn-glass:hover,
+.cta .btn-glass:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.30);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+/* Was a transparent-to-tint swap, which on a white pricing card meant the
+   button got DARKER on hover while the accent button next to it got
+   lighter — two secondary CTAs moving in opposite directions. Now it firms
+   up its edge and lifts, the same gesture as the others. */
+.btn-ghost:hover {
+  background: var(--bg-card);
+  border-color: var(--green);
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Press feedback. Every interactive thing on this page had a hover lift and
+   nothing for the pressed state, so on touch — where hover never fires — a tap
+   produced no acknowledgement at all until the page navigated. The button
+   settles back through its own hover lift rather than dipping below the
+   baseline, so the motion reads as "pushed" instead of "dropped".
+   Transform only; nothing here can shift a neighbour. */
+.btn:active { transform: translateY(0) scale(0.985); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   FOCUS
+
+   This stylesheet previously contained exactly one :focus rule, and what it
+   did was `outline: none` on the demo-request inputs — the site's only
+   conversion form. So a keyboard user tabbing to the CTA had no visible
+   position indicator anywhere on the page (WCAG 2.4.7 Focus Visible, Level
+   AA), and on the one control where the browser default would have saved it,
+   it was explicitly removed.
+
+   :focus-visible, not :focus — the browser then shows the ring for keyboard
+   and programmatic focus but not for a mouse click, which is what makes it
+   safe to put a bold ring on a button without it flashing on every press.
+
+   Two rings, because the page runs on two grounds: gold on the cream
+   sections, cream on the dark slabs. Both are drawn with box-shadow rather
+   than `outline` so they follow border-radius on every engine, and both use a
+   contrasting inner hairline so the ring survives landing on a surface close
+   to its own colour.
+
+   `outline: 2px solid transparent` is deliberate and must stay: in Windows
+   High Contrast Mode box-shadows are dropped entirely, and the transparent
+   outline is what gets forced to a system colour so the ring still exists. */
+:where(a, button, summary, input, [tabindex]):focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: var(--focus-offset);
+  box-shadow:
+    0 0 0 var(--focus-offset) var(--bg),
+    0 0 0 calc(var(--focus-offset) + var(--focus-ring)) var(--green-ink);
+  border-radius: var(--r-sm);
+}
+
+/* On the dark slabs the gold ring loses its contrast against the deep green,
+   and the cream "gap" ring above would draw a bright halo. Invert both. */
+.section.dark :where(a, button, summary, input, [tabindex]):focus-visible,
+.footer :where(a, button, summary, input, [tabindex]):focus-visible,
+.lightbox :where(a, button, summary, input, [tabindex]):focus-visible,
+.hero :where(a, button, summary, input, [tabindex]):focus-visible {
+  box-shadow:
+    0 0 0 var(--focus-offset) var(--primary-dark),
+    0 0 0 calc(var(--focus-offset) + var(--focus-ring)) var(--green-bright);
+}
+
+/* Pill controls keep their own radius so the ring hugs the shape. */
+.btn:focus-visible,
+.nav-cta:focus-visible,
+.request-form input:focus-visible { border-radius: var(--r-full); }
+
+/* ── Skip link ───────────────────────────────────────────────────────────
+   The nav is five links, a sign-in and a CTA, and it is the first thing in
+   the tab order on every page — so a keyboard or switch user paid seven tab
+   stops before reaching the headline, on every navigation, including the two
+   legal pages where the content is a 20-section document.
+
+   Hidden by clip rather than by `display: none` or a negative text-indent:
+   the element has to stay focusable, and it has to still be announced when
+   it takes focus. It comes back as a real, styled control on focus rather
+   than as the browser's default blue rectangle — it is the first thing some
+   people see of this site. */
+.skip-link {
+  position: absolute;
+  top: var(--s-2);
+  left: var(--s-2);
+  z-index: 200;
+  padding: 0.7em 1.2em;
+  border-radius: var(--r-full);
+  background: var(--green);
+  color: var(--on-accent);
+  font-family: var(--font-brand);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-accent), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  /* Off-screen but focusable. */
+  transform: translateY(-160%);
+  transition: transform 0.2s var(--ease);
+}
+.skip-link:focus-visible { transform: none; }
+
+/* <main tabindex="-1"> is the skip link's target, and it matches the
+   [tabindex] arm of the focus rule above — which would draw a gold ring
+   around the entire page. A container that fills the viewport cannot
+   usefully indicate focus by outlining itself; the jump to the top of the
+   content is the indication, and the next Tab lands on a control that rings
+   properly. Suppressed only for this one programmatic target. */
+main:focus,
+main:focus-visible { outline: 0; box-shadow: none; }
+
+/* ── Forced colours / high contrast ──────────────────────────────────────
+   Windows High Contrast Mode and `forced-colors` drop background-image,
+   box-shadow and most colour declarations. That is fine for the type — the
+   focus system above already keeps its transparent outline for exactly this
+   reason — but this page carries meaning in a few places that are drawn ONLY
+   as decoration, and those go blank:
+
+     • .ticks li::before  — the "included" checkmark on every pricing row,
+       built from two CSS borders
+     • .step.is-active    — the showcase's active step, signalled by opacity
+     • .flow-node.is-lit  — same, in the automation chain
+
+   Each is restored to something forced-colors will actually paint. */
+@media (forced-colors: active) {
+  .ticks li::before {
+    border-left-color: CanvasText;
+    border-bottom-color: CanvasText;
+  }
+  .step,
+  .flow-node { opacity: 1; filter: none; transform: none; }
+  .step.is-active::before,
+  .flow-node.is-lit .fn-dot { forced-color-adjust: none; background: Highlight; }
+  .btn { border: 1px solid ButtonText; }
+}
+
+/* `prefers-contrast: more` is the standard-track opt-in and, unlike
+   forced-colors, it leaves the design intact — so the response is to firm up
+   the two things this palette deliberately runs soft: hairline borders and
+   the muted ink. Both are AA-compliant today; this takes them past AAA for
+   people who have asked for it. */
+@media (prefers-contrast: more) {
+  :root {
+    --text-muted: #3F4C44;          /* 5.2:1 → 8.0:1 on cream */
+    --border: #C9BC9E;
+    --border-strong: #B3A47F;
+    --ink-dark-2: rgba(250, 245, 234, 0.82);
+    --edge-dark: rgba(250, 245, 234, 0.24);
+    --edge-dark-strong: rgba(250, 245, 234, 0.38);
+  }
+  .step { opacity: 1; filter: none; }
+  .flow-node { opacity: 1; transform: none; }
+  .glass { background: rgba(255, 255, 255, 0.94); }
+}
+
+/* The nav underline is a hover affordance; without this a keyboard user gets
+   the ring but not the state change the mouse user sees. */
+.nav-links a:focus-visible::after { width: 100%; }
+
+/* ── Glassmorphism ───────────────────────────────────────────────────────
+   A flat 62% white panel with a uniform white border is "frosted" in the
+   sense that it is translucent, but it is not glass: real glass catches more
+   light along its top edge than its bottom, and the page's texture layers
+   (dot grid, grain, drifting orbs) all sit BEHIND these cards, so a card
+   that doesn't refract them just looks like a piece of paper laid over the
+   texture.
+
+   Three changes, all on the same element, no extra markup:
+     • a top-to-bottom fill gradient — brighter where the light is
+     • an inset hairline highlight on the top edge only
+     • the border graded from bright to near-nothing, so the card's own
+       silhouette fades into the page at its base instead of ringing it */
+/* Cards on LIGHT are now crisp white with a hairline edge and a soft layered
+   shadow — the Stripe/Notion/Linear surface, not frosted glass. (The old
+   translucent treatment was built to refract the dark hero's texture; on a
+   clean porcelain page it just looked hazy.) */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-md);
+}
+/* On graphite: a barely-lifted translucent panel with a cool hairline and a
+   top-edge highlight, so cards read as raised glass on the near-black. */
+.dark .glass,
+.section.dark .glass {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--edge-dark);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 20px 44px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Animated gradient blobs ─────────────────────────────────────────── */
+.blobs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+/* These drift behind the final CTA's dark-green ground. blob-1 and blob-3 used
+   to be gold, which read as brassy blobs smeared across the green; all three
+   are now emerald/moss so the CTA field stays a clean, deep green with only
+   motion for interest — the section's one warm element is the solid gold
+   button, same discipline as the hero. */
+.blob-1 {
+  width: 480px; height: 480px;
+  top: -140px; left: -100px;
+  background: radial-gradient(circle, rgba(40, 88, 64, 0.52), transparent 70%);
+  animation: drift-1 22s ease-in-out infinite;
+}
+.blob-2 {
+  width: 380px; height: 380px;
+  top: 30%; right: -120px;
+  background: radial-gradient(circle, rgba(30, 72, 53, 0.55), transparent 70%);
+  animation: drift-2 27s ease-in-out infinite;
+}
+.blob-3 {
+  width: 420px; height: 420px;
+  bottom: -160px; left: 40%;
+  background: radial-gradient(circle, rgba(22, 60, 44, 0.45), transparent 70%);
+  animation: drift-3 31s ease-in-out infinite;
+}
+@keyframes drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(70px, 50px) scale(1.15); }
+}
+@keyframes drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1.1); }
+  50%      { transform: translate(-60px, -70px) scale(1); }
+}
+@keyframes drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-80px, -40px) scale(1.2); }
+}
+
+/* ── Floating elements ───────────────────────────────────────────────── */
+.float-a { animation: bob 7s ease-in-out infinite; }
+.float-b { animation: bob 9s ease-in-out infinite 0.8s; }
+.float-c { animation: bob 8s ease-in-out infinite 1.6s; }
+.float-slow { animation: bob 11s ease-in-out infinite; }
+@keyframes bob {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -14px; }
+}
+
+/* ── Nav ─────────────────────────────────────────────────────────────── */
+/* `inset: 3px` used to hold the bar clear of the 3px scroll-progress
+   indicator. That left a 3px transparent letterbox above the frosted panel
+   once the nav went solid — and page content scrolled through it, so the
+   site's most permanent piece of chrome had a hairline of moving cream
+   showing above it on every scroll. The progress bar is already z-index 60
+   against the nav's 50, so it can simply ride ON the bar: nav goes to the
+   top edge, the indicator draws over its first 3px, and the seam is gone.
+   The extra 3px of top padding keeps the lockup optically centred under it. */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: calc(var(--s-4) + 3px) clamp(1.2rem, 4vw, 3rem) var(--s-4);
+  transition: background-color 0.35s var(--ease), box-shadow 0.35s var(--ease),
+              padding 0.35s var(--ease), backdrop-filter 0.35s var(--ease);
+}
+/* Stuck state. The old treatment was a 1px --border line plus a 24px cast at
+   5% — the line was the only thing separating bar from page, and --border
+   (#EAE1CE) on cream is under 1.4:1, so at a glance the bar had no edge at
+   all and the content appeared to slide under a slightly milky rectangle.
+   Replaced with a graded ink hairline and a shorter, tighter cast: the bar
+   now reads as a plane above the page rather than a wash across it. */
+.nav.is-stuck {
+  background: rgba(251, 251, 249, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+          backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow:
+    inset 0 -1px 0 rgba(16, 21, 18, 0.07),
+    0 8px 28px -14px rgba(10, 13, 11, 0.16);
+  padding-block: calc(0.6rem + 3px) 0.6rem;
+}
+/* An open mobile menu fills the bar in too, even at the very top of the page
+   where it is otherwise transparent over the dark hero — the panel below is
+   an opaque cream sheet, and hanging it off an invisible bar left the brand
+   and the burger floating on the hero above a rectangle that appeared from
+   nowhere. Deliberately NOT the padding change: the bar must not shrink at
+   the moment the menu opens.
+
+   FLAT --bg, not the frosted rgba+blur of .is-stuck, and this is load-bearing
+   rather than a taste call. Bar and panel are one surface while the menu is
+   open, so they have to resolve to the same colour — and they can't, frosted:
+   the panel sits OUTSIDE the bar's bounds, and a backdrop-filter makes its
+   element a backdrop root, so a nested one samples nothing and the two
+   translucent sheets composite differently over the same hero. Opaque also
+   means the section headings behind can't read through the menu, which they
+   did. Listed after .is-stuck so it wins at equal specificity.
+
+   box-shadow: none because the panel carries the drop shadow for the pair;
+   the bar's own bottom hairline would otherwise draw a second line across
+   the middle of the sheet. */
+.nav.is-menu-open {
+  background: var(--bg);
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+}
+
+/* ── Brand lockup ────────────────────────────────────────────────────────
+   The mark and the wordmark are both artwork now, not an icon beside styled
+   text. The old font-family/size/weight on .nav-brand and the .mark-primary
+   / .mark-accent colour pair went with the text — there is nothing left to
+   set in Inter or to recolour.
+
+   Sized by HEIGHT with width:auto. The mark is 1.46:1 and the wordmark is
+   5.09:1, so the square `width:36px; height:36px` this replaced would have
+   squashed both. The width/height attributes in the markup are the true
+   pixel ratios at these heights, so the bar holds its layout before the
+   images decode.
+
+   TWO COPIES OF EACH, and the reason matters: the supplied artwork is white
+   only. This bar is transparent over the dark hero, but turns cream
+   (rgba(250,245,234,.82)) once stuck — and is cream for the entire length of
+   privacy.html and terms.html via .nav-solid. White on cream is invisible.
+   So each asset ships as the original white render for dark surfaces and as
+   a flat --primary silhouette for light ones (~3-6KB each).
+
+   Swapped by opacity, not display, and stacked in the same grid cell: the
+   bar's own background transition is 0.35s, and a hard display swap popped
+   against it. This inherits the timing the .mark-primary colour transition
+   used to have, so the lockup fades exactly as the bar fills in. */
+.brand-mark,
+.brand-word { display: block; width: auto; }
+.brand-mark { height: 34px; }
+.brand-word { height: 20px; }
+
+.brand-swap { display: grid; }
+.brand-swap > img {
+  grid-area: 1 / 1;
+  transition: opacity 0.35s var(--ease);
+}
+
+/* The hero is a LIGHT canvas now, so the bar reads dark-on-light from the very
+   top — the forest lockup is the default, and the white (on-dark) artwork is
+   retired along with the dark hero it was for. The is-stuck / solid states no
+   longer swap the mark; they only frost the bar. */
+.brand-on-dark  { opacity: 0; }
+.brand-on-light { opacity: 1; }
+
+.nav-links { display: flex; gap: 1.75rem; margin-left: auto; }
+.nav-links a {
+  position: relative;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  /* A bare inline link in a 56px bar is a ~19px tap/click target sitting in a
+     lot of dead space. Padding (not a larger face) takes it to ~34px without
+     changing the bar's height or the type's optical weight. */
+  padding-block: 0.45rem;
+  transition: color 0.2s var(--ease);
+}
+.nav-links a:hover { color: var(--ink); }
+/* Micro-interaction: a hairline emerald underline grows from the left — the
+   accent doing exactly one small job. */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--green);
+  transition: width 0.3s var(--ease);
+}
+.nav-links a:hover::after { width: 100%; }
+
+.nav-signin {
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  padding-block: 0.45rem;
+  transition: color 0.2s var(--ease);
+}
+.nav-signin:hover { color: var(--green-ink); }
+
+.nav-cta { padding: 0.6em 1.25em; font-size: var(--fs-sm); }
+
+/* ── Mobile menu ─────────────────────────────────────────────────────────
+   Below 900px .nav-links goes display:none and, until this existed, took the
+   site's whole navigation with it: on a phone the only route from the FAQ
+   back to Pricing was to scroll ~12,000px to the top and start again. The
+   burger and the panel below are that route.
+
+   Both are display:none above the breakpoint rather than merely hidden — the
+   panel is a second copy of the nav, and leaving it in the layout (even
+   invisible) puts a duplicate set of links in the a11y tree on desktop.
+
+   Everything here is defined at phone scale and switched off at the bottom
+   of the block, which is the opposite of the rest of this file. It reads
+   better that way: this component only exists on small screens, so its real
+   styles belong together rather than scattered through the breakpoints. */
+.nav-toggle {
+  display: none;                  /* → grid in the ≤900px block */
+  place-items: center;
+  /* 44px is the floor for a primary tap target and this is now the most
+     tapped control on the bar. It sits on the padding, not on a font-size —
+     the burger inside is drawn, not typeset. */
+  width: 44px;
+  height: 44px;
+  margin-right: -0.35rem;         /* optical: pull the glyph to the bar's edge */
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgba(250, 245, 234, 0.92);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Same two cream-bar states the brand lockup answers to. */
+.nav.is-stuck .nav-toggle,
+.nav.is-menu-open .nav-toggle,
+.nav-solid .nav-toggle { color: var(--primary); }
+
+/* The burger itself: one element, three lines. The span is the middle bar;
+   ::before and ::after are the outer two, positioned off it. Drawing it in
+   CSS rather than shipping two SVGs is what lets the open state be a
+   transition (bars rotating into an X) instead of an icon swap. */
+.nav-burger,
+.nav-burger::before,
+.nav-burger::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.28s var(--ease), background-color 0.16s var(--ease);
+}
+.nav-burger { position: relative; }
+.nav-burger::before,
+.nav-burger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.nav-burger::before { top: -6px; }
+.nav-burger::after  { top: 6px; }
+
+/* Open: the outer bars slide to the centre and cross, the middle one drops
+   out. The translate and the rotate are on the same transition, so they
+   happen together rather than as two steps.
+
+   The middle bar goes transparent rather than opacity: 0 — the other two ARE
+   its pseudo-elements, so fading the span fades the entire X with it and the
+   button renders empty. Only its own painted background may be touched. */
+.nav.is-menu-open .nav-burger { background: transparent; }
+.nav.is-menu-open .nav-burger::before { transform: translateY(6px) rotate(45deg); }
+.nav.is-menu-open .nav-burger::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* ── The panel ───────────────────────────────────────────────────────────
+   Absolutely positioned against .nav (which is fixed), so it hangs from the
+   bar's bottom edge and follows it — including through the bar's own padding
+   transition when it becomes stuck. Full-bleed rather than a floating card:
+   a card would need a shadow and a radius on all four corners to read as
+   deliberate, and at 320px that costs horizontal room the links want. */
+.nav-panel {
+  display: none;                  /* → block in the ≤900px block */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding: var(--s-2) clamp(1.2rem, 4vw, 3rem) var(--s-4);
+  /* Opaque, and the same flat --bg the bar switches to while it is open —
+     see the note on .nav.is-menu-open for why neither may be frosted. */
+  background: var(--bg);
+  box-shadow:
+    inset 0 -1px 0 rgba(31, 58, 42, 0.09),
+    0 18px 40px -20px rgba(13, 31, 22, 0.35);
+
+  /* Closed state. visibility (not display) so the transition runs, and it is
+     listed last in the transition with a delay on the way out so the panel
+     is still visible while it slides away. `inert` in the markup is what
+     actually takes it out of the tab order — see nav.js. */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-0.6rem);
+  transition:
+    opacity 0.22s var(--ease),
+    transform 0.28s var(--ease),
+    visibility 0s linear 0.28s;
+}
+.nav.is-menu-open .nav-panel {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.22s var(--ease),
+    transform 0.28s var(--ease),
+    visibility 0s;
+}
+
+.nav-panel-links { display: flex; flex-direction: column; }
+.nav-panel-links a {
+  padding: 0.85rem 0.15rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  /* A hairline between rows, and none under the last one — the panel's own
+     bottom padding closes the list. Cheaper and more reliable than a
+     :not(:last-child) border on a flex column that may be 3 or 5 items long
+     depending on the page. */
+  box-shadow: inset 0 -1px 0 rgba(31, 58, 42, 0.08);
+  transition: color 0.2s var(--ease), padding-left 0.2s var(--ease);
+}
+.nav-panel-links a:last-child { box-shadow: none; }
+.nav-panel-links a:hover,
+.nav-panel-links a:active { color: var(--green-ink); padding-left: 0.5rem; }
+
+/* Sign in reads as a different KIND of destination from the five section
+   links — it leaves the marketing site for the app — so it gets the gold ink
+   and a gap rather than another row in the list. */
+.nav-panel-signin {
+  display: block;
+  margin-top: var(--s-3);
+  padding: 0.65rem 0.15rem;
+  color: var(--green-ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.nav-panel-signin:hover { color: var(--primary); }
+
+/* ── Hero ────────────────────────────────────────────────────────────── */
+/* The top padding is a fold budget, not a taste call. Everything above the
+   dashboard (nav + eyebrow + h1 + lede + buttons + note) has to fit, AND leave
+   enough viewport for the mockup to read as a screenshot rather than a sliver.
+   At the old 7-10rem the frame started ~620px down a 940px viewport and got
+   cut through the KPI row — the one part of the shot that proves the product
+   does anything. */
+.hero {
+  position: relative;
+  padding: clamp(5.5rem, 11vh, 7.5rem) clamp(1.2rem, 4vw, 3rem) 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  isolation: isolate;
+}
+
+/* ── Hero field ───────────────────────────────────────────────────────────
+   The dark green wash the headline sits on. Three jobs, inherited from the
+   scrim this replaced: carry the top dark enough that the fixed nav and the
+   H1 read in white, hold a lit centre so the hero isn't a flat slab, and
+   dissolve into --bg at the bottom so the dashboard emerges from the page
+   instead of being pasted onto a seam.
+
+   Keep the last stop as var(--bg). If it ever stops matching the page
+   background you get a visible horizontal band across the hero. */
+.hero-field {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 90%;
+  z-index: -2;
+  overflow: hidden;
+  isolation: isolate;
+  /* PURE LUXURY WHITE CANVAS — Vibrant Emerald & Gold Accents with Luminous Depth
+     No cream/yellow off-white paper tones; pure #FFFFFF base with rich atmospheric light pools.
+     1. Luminous white spotlight directly behind headline.
+     2. Rich emerald ambient bloom washing down from top nav.
+     3. Warm champagne gold catch-light on the upper right.
+     4. Fresh mint accent light on the upper left for asymmetric 3D depth.
+     5. Ambient emerald bottom pool rising behind the floating dashboard.
+     6. Crisp pure white base gradient (#FFFFFF). */
+  background:
+    radial-gradient(45% 28% at 50% 22%, rgba(255, 255, 255, 1) 0%, transparent 75%),
+    radial-gradient(70% 55% at 50% -8%, rgba(30, 122, 80, 0.16) 0%, rgba(30, 122, 80, 0.04) 55%, transparent 80%),
+    radial-gradient(65% 50% at 88% 12%, rgba(199, 154, 59, 0.14) 0%, transparent 65%),
+    radial-gradient(60% 48% at 12% 18%, rgba(52, 169, 114, 0.12) 0%, transparent 65%),
+    radial-gradient(85% 65% at 50% 100%, rgba(30, 122, 80, 0.09) 0%, transparent 70%),
+    linear-gradient(180deg,
+      #FFFFFF 0%,
+      #FFFFFF 60%,
+      var(--porcelain) 100%);
+}
+
+/* Texture, layer 1 — Modern micro-dot matrix & fine architectural grid (Vercel/Linear tech aesthetic). */
+.hero-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    radial-gradient(rgba(30, 122, 80, 0.12) 1.2px, transparent 1.2px),
+    linear-gradient(rgba(30, 122, 80, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px, 112px 112px;
+  -webkit-mask-image: radial-gradient(68% 52% at 50% 20%, #000 12%, transparent 82%);
+          mask-image: radial-gradient(68% 52% at 50% 20%, #000 12%, transparent 82%);
+  pointer-events: none;
+}
+
+/* Texture, layer 2 — Glassmorphic radiant light sweep (replaces paper noise overlay). */
+.hero-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(80% 50% at 50% 35%, rgba(255, 255, 255, 0.6) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 40%, rgba(30, 122, 80, 0.03) 100%);
+  pointer-events: none;
+}
+
+/* Oversized soft-mesh shapes — Vibrant ambient lighting pools drifting behind headline and stage. */
+.hero-field .blobs { z-index: 0; }
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  will-change: transform;
+}
+.hero-glow-green {
+  width: 880px; height: 880px;
+  top: -180px; left: -120px;
+  background: radial-gradient(circle, rgba(30, 122, 80, 0.20), rgba(30, 122, 80, 0.04) 50%, transparent 75%);
+  animation: hero-glow-drift-a 35s ease-in-out infinite;
+}
+.hero-glow-gold {
+  width: 780px; height: 780px;
+  top: 18%; right: -150px;
+  background: radial-gradient(circle, rgba(199, 154, 59, 0.16), rgba(199, 154, 59, 0.03) 55%, transparent 75%);
+  animation: hero-glow-drift-b 42s ease-in-out infinite;
+}
+@keyframes hero-glow-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(60px, 40px, 0) scale(1.12); }
+}
+@keyframes hero-glow-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.08); }
+  50%      { transform: translate3d(-50px, -35px, 0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow { animation: none; }
+}
+
+/* Wider than the 900px it used to be, and a step down in size: the same
+   sentence now sets in two balanced lines instead of three. Pure fold budget —
+   the headline reads no smaller, it just stops pushing the product shot off
+   the bottom of the screen. Narrow it again and the third line comes back. */
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 1120px;
+  width: 100%;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.hero-copy h1 {
+  color: var(--ink);
+  /* Stepped down from clamp(2.75rem, 5.6vw, 4.6rem). The SEO headline is ~104
+     characters against the old one's 55, so at the previous ramp it set in five
+     lines (~380px) and pushed the dashboard shot clean off the fold. This holds
+     it to three lines at desktop and four on a phone. Tied to the copy — if the
+     h1 in index.html is ever shortened, put the old clamp back. */
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  /* The global h1 sets 1.05, which is right for the one- or two-line display
+     headline this used to be. At three lines on desktop and five on a phone
+     that tracks as a solid block — the descenders of one line almost touch the
+     caps of the next. 1.12 opens it just enough to read as separate lines
+     without breaking the display feel. */
+  line-height: 1.12;
+  text-align: center;
+}
+
+/* Green theme text contrast for hero headline phrases */
+.hero-copy h1 .hero-green,
+.hero-copy h1 .text-green,
+.text-green {
+  color: var(--green-ink);
+}
+
+.hero-copy .lede {
+  color: var(--ink-2);
+  margin-inline: auto;
+  margin-top: var(--s-5);
+  font-size: 1.22rem;
+  /* Keeps the lede inside the 60-75 char comfortable measure and, just as
+     importantly, narrower than the h1 above it so the block tapers. */
+  max-width: 58ch;
+  width: 100%;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Snapped to the --s-* scale (was 2.1rem / 1.1rem — free-hand values that sat
+   between steps). The two gaps are deliberately unequal and that is the whole
+   point: 1rem below the buttons keeps the trust line attached to them, 2rem
+   above the proof strip (set on .hero-proof) separates it as its own group.
+   Equal gaps would flatten five elements into one undifferentiated column. */
+.hero-actions {
+  display: flex;
+  gap: var(--s-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: var(--s-7) 0 var(--s-4);
+}
+/* This line lands on the brightest part of the photo (the sun). At 0.62 alpha
+   with no shadow it was effectively invisible — cream on cream. */
+.hero-note {
+  font-size: 0.88rem;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ── Hero credibility strip ──────────────────────────────────────────────
+   Sits on the photo, so it needs the same shadow treatment as .hero-note —
+   at plain 0.9 cream it disappeared into the sunlit cloud behind it. Ticks are
+   gold rather than green: green on this scrim is nearly invisible, and the
+   gold is already the CTA colour so the eye reads the two as one group. */
+/* GRID, not a centred flex-wrap row. The old rule was
+     `flex-wrap: wrap; justify-content: center` with short chip-length items,
+   and it broke the moment the copy got long: item 1 ("Automatic two-way
+   calendar sync with Airbnb, Agoda, Booking.com and other platforms") is now
+   ~72 characters, so it claims a whole row on its own and items 2-3 share the
+   next one — a ragged 1-then-2 arrangement that reads as an accident. Three
+   equal columns give the strip a fixed shape that does not depend on how long
+   any one line happens to be.
+
+   Each item is itself a 2-column grid (tick | text) rather than a flex row.
+   That is what produces the hanging indent: a wrapped second line starts under
+   the FIRST line of text, not back under the tick. With flex + align-items:
+   center the tick also floated to the vertical middle of a 2-line block, which
+   is the misalignment visible on mobile. */
+.hero-proof {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-4) var(--s-6);
+  width: min(100%, 960px);
+  list-style: none;
+  margin: var(--s-6) auto 0;
+  padding: 0;
+  text-align: left;
+}
+.hero-proof li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 0.55rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  /* 1.45 because these are now multi-line. At the inherited heading-ish
+     line-height the wrapped lines sat on top of each other. */
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+/* Stroke-weight discipline. The page draws icons at four scales — 15px here,
+   21-27px in the card and stack tiles, up to 56px for the stack check — and
+   every one of them was set at a different stroke width picked by eye (3,
+   1.8, 2.6). Optical weight is stroke ÷ size, so a fixed number cannot be
+   right at every scale, but 3 on a 15px glyph is 0.20 against 0.067 for the
+   card icons: the hero ticks were three times heavier than the icon language
+   they were meant to belong to, which is why they read as clipart. 2.2 here
+   holds the same apparent weight at a third of the size. */
+.hero-proof svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Optical, not geometric. `align-items: start` puts the 16px box flush with
+     the top of a 1.45 line box, which leaves the tick sitting visibly high
+     against the cap-height of the first line. ~0.2em drops it onto the text's
+     optical centre. Tie any change here to the line-height above. */
+  margin-top: 0.2em;
+}
+
+.hero-stage {
+  position: relative;
+  z-index: 2;
+  width: min(1020px, 100%);
+  margin-top: clamp(2.5rem, 5.5vh, 4rem);
+  perspective: 1800px;
+}
+/* Starting pose — scroll.js (or the GSAP layer) interpolates it flat as it
+   enters view. */
+#heroFrame {
+  transform: perspective(1800px) rotateX(17deg) scale(0.94);
+  transform-origin: 50% 0%;
+  will-change: transform;
+  box-shadow:
+    0 4px 12px rgba(10, 13, 11, 0.035),
+    0 16px 32px -8px rgba(10, 13, 11, 0.075),
+    0 36px 72px -16px rgba(10, 13, 11, 0.11),
+    0 70px 130px -28px rgba(10, 13, 11, 0.09);
+}
+
+/* Ambient light & soft shadow pool under the mockup for physical hover elevation. */
+.hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: -10% -8% -22%;
+  z-index: -1;
+  background:
+    radial-gradient(65% 52% at 50% 46%, rgba(30, 122, 80, 0.095) 0%, transparent 68%),
+    radial-gradient(85% 70% at 50% 64%, rgba(10, 13, 11, 0.07) 0%, transparent 75%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+/* ── Floating hero cards ─────────────────────────────────────────────── */
+.float-card {
+  position: absolute;
+  z-index: 3;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--r-lg);
+  --tint: 30, 122, 80; /* --green, as channels for rgba() */
+  background:
+    linear-gradient(155deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(var(--tint), 0.04) 55%,
+      rgba(255, 255, 255, 0.92) 100%);
+  border: 1px solid rgba(var(--tint), 0.22);
+  -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(16px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 4px 14px rgba(10, 13, 11, 0.04),
+    0 20px 48px -12px rgba(10, 13, 11, 0.09),
+    0 12px 32px -10px rgba(var(--tint), 0.26);
+  text-align: left;
+  font-size: 0.84rem;
+}
+/* The calendar card leans on the rare gold instead of emerald, so the three
+   panels aren't one flat colour. Kept a whisper — gold is a highlight here, not
+   a fill (see the --gold note in the palette). */
+.float-cal { --tint: 199, 154, 59; } /* --gold, as channels */
+/* Card outset. Two values, not one, because the two edges of the mockup are
+   not worth the same: the LEFT edge is the app's sidebar (nav labels — losing
+   40px of it costs nothing) while the RIGHT edge is the 4th KPI column, i.e.
+   the actual Outstanding and Net Profit figures. At a symmetric -6% the stat
+   card sat directly on top of the Outstanding value, so the hero's proof card
+   was covering the hero's proof. The right side gets pushed further out. */
+.hero-stage {
+  /* The outset is derived, not guessed. A fixed percentage cannot work here:
+     it is a share of the STAGE, but what actually constrains a card is the
+     room between the stage edge and the VIEWPORT edge — and that gutter
+     collapses to zero once the stage hits its 1020px cap, while a percentage
+     of 1020px does not. Below ~1200px the two diverge and body's
+     overflow-x: clip amputates the card instead of scrolling it.
+
+     So: measure the room, then take whichever is smaller. --room is the
+     distance from viewport edge to stage edge, less a 12px breathing margin
+     that also absorbs the desktop scrollbar (100vw includes it, the content
+     box does not). 204px is the old -20% of 1020px — still the cap, so wide
+     screens look exactly as they did, and everything narrower tapers
+     continuously instead of jumping at a breakpoint. */
+  --stage-w: min(1020px, 100vw - 2 * clamp(1.2rem, 4vw, 3rem));
+  --room: max(0px, (100vw - var(--stage-w)) / 2 - 12px);
+  --card-out-l: calc(-1 * min(204px, var(--room)));
+  --card-out-r: calc(-1 * min(204px, var(--room)));
+}
+.float-booking { top: 9%;     left: var(--card-out-l);  width: 230px; }
+.float-cal     { bottom: 12%; left: var(--card-out-l);  width: 176px; }
+/* Sits BETWEEN the two KPI rows rather than on either of them. */
+.float-stat    { top: 40%;    right: var(--card-out-r); width: 190px; }
+
+/* No breakpoint override here any more. The old `@media (max-width: 1440px)`
+   fallback dropped the outset to -7%/-8%, which is still 71px of a 1020px
+   stage — fine at 1300px wide, but at ~1100px the gutter is gone entirely and
+   only the hero's own ~44px of padding remains, so the card was clipped by
+   ~27px. --room above handles the whole range continuously. */
+
+.fc-row { display: flex; align-items: center; gap: 0.65rem; }
+.fc-avatar {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text-inverse);
+  font-family: var(--font-brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.fc-row strong { display: block; color: var(--text); font-size: 0.88rem; }
+.fc-sub { color: var(--text-muted); font-size: 0.76rem; }
+.fc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+}
+/* Peso figures in the floating cards. Tabular so the amount does not visibly
+   reflow while the card bobs. */
+.fc-amt { color: var(--text); font-family: var(--font-brand); font-variant-numeric: tabular-nums; }
+.pill {
+  padding: 0.2em 0.6em;
+  border-radius: var(--r-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.pill-confirmed { background: #D7E4DA; color: #173626; }
+
+.fc-cal-head {
+  font-family: var(--font-brand);
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.fc-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.fc-cal-grid i {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: var(--bg-tint);
+}
+.fc-cal-grid i.on { background: var(--primary-light); }
+.fc-cal-grid i.dot { background: var(--green); }
+.fc-cal-foot {
+  margin-top: 0.6rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.fc-label { font-size: 0.72rem; color: var(--text-muted); }
+.fc-big {
+  display: block;
+  font-family: var(--font-brand);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.fc-delta { font-size: 0.72rem; font-weight: 600; color: #2C5340; }
+
+/* ── Hero audience row ───────────────────────────────────────────────── */
+.hero-audience {
+  position: relative;
+  z-index: 2;
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-audience > span {
+  font-size: var(--fs-label-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.hero-audience ul {
+  display: flex;
+  /* --s-2 here, in .stack-tags and in .chip-cloud. These are the same
+     component — a wrapping row of pills — rendered in three places, and they
+     carried three gaps (0.5, 0.55, 0.6rem). Nobody perceives a 1px difference
+     as intent; they perceive the set as slightly unaligned. */
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hero-audience li {
+  padding: 0.4em 1em;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), var(--shadow-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-light);
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease),
+              background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.hero-audience li:hover {
+  transform: translateY(-3px);
+  border-color: var(--green);
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+/* ── Sections ────────────────────────────────────────────────────────── */
+.section {
+  position: relative;
+  padding: clamp(5rem, 11vh, 8.5rem) clamp(1.2rem, 4vw, 3rem);
+  max-width: var(--wrap);
+  margin-inline: auto;
+}
+.section > h2 { text-align: center; }
+.section.dark {
+  max-width: none;
+  /* Was a flat --primary-dark fill. A 900px-tall slab of one hex has no light
+     in it, so the type sits on it rather than in it — and next to the hero,
+     which IS graded, the dark sections read as the cheaper surface. Same two
+     ingredients the hero field uses, at a fraction of the strength: a lit
+     centre-top and a fractionally deeper floor. The end stops are within 4%
+     lightness of --primary-dark, so nothing about the contrast maths in the
+     --ink-dark-* tokens changes. */
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(40, 120, 82, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #121613 0%, var(--graphite) 55%, #080A09 100%);
+  color: var(--ink-dark-1);
+  overflow: hidden;
+  isolation: isolate;
+}
+.section.dark h2, .section.dark h3, .section.dark h4 { color: var(--text-inverse); }
+.section.dark .lede { color: var(--ink-dark-2); }
+.section.dark .eyebrow { color: var(--green-bright); }
+.section.dark > * { position: relative; z-index: 1; }
+
+/* ── Section transitions ─────────────────────────────────────────────────
+   The page alternates cream and dark slabs five times, and every one of
+   those boundaries was a hard horizontal cut. On a long scrolling page a cut
+   like that reads as two documents stacked, not as one — which is exactly
+   the problem the hero already solved for itself with .hero-field's dissolve
+   into --bg. This is the same idea, generalised, and it is the single
+   biggest thing standing between this page and "one continuous surface".
+
+   Two layers per dark section:
+     ::before  a light spill along the top edge, so the cream above appears
+               to fall INTO the slab rather than stop at it
+     ::after   a hairline of the page cream at the very top, at low alpha —
+               the specular edge you get where two planes meet
+
+   Both are drawn INSIDE the section (it is overflow: hidden), both are
+   pointer-events: none, and both sit under the content via z-index, which
+   .section.dark > * already elevates above. Nothing here can be selected,
+   clicked or read by a screen reader. */
+.section.dark::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: clamp(90px, 14vh, 170px);
+  z-index: 0;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.028) 38%,
+    transparent 100%);
+  pointer-events: none;
+}
+.section.dark::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  z-index: 0;
+  /* Brightest in the middle, gone at the gutters — a hairline that runs edge
+     to edge at a constant alpha reads as a border, which is the opposite of
+     what a dissolve is for. */
+  background: linear-gradient(90deg,
+    transparent, rgba(255, 255, 255, 0.16) 22%,
+    rgba(255, 255, 255, 0.16) 78%, transparent);
+  pointer-events: none;
+}
+/* The final CTA and the footer are a single dark block that runs to the
+   bottom of the document, so the CTA's own bottom edge is not a transition
+   and the footer's top edge must not draw a second hairline through it. */
+.footer { position: relative; }
+
+/* ── Containing the decorative bleed ─────────────────────────────────────
+   The page's only real source of horizontal overhang, and it is not an
+   element you can see: .problem::before, .counters::before and
+   .scrolly-stage::before are decorative blooms inset by -10%, and a negative
+   PERCENTAGE inset scales with the viewport instead of staying a fixed bleed.
+   Unlike the blobs, orbs and ambient clouds — which all live inside
+   overflow:hidden wrappers — these sit directly on sections that never clip.
+
+   This rule used to live inside the ≤600px block, which fixed phones and left
+   the whole tablet/small-laptop band overhanging by exactly 10% of the
+   viewport: measured 77px at 768px wide and 103px at 1024px. It is invisible
+   today only because body's `overflow-x: clip` swallows it, i.e. the layout is
+   relying on a backstop rather than being correct. Above ~1400px the sections
+   hit their 1200px cap and the gutters absorb the bleed, so there was nothing
+   to see at desktop width and the gap went unnoticed.
+
+   Hoisted out of the media query so it holds at every width. Nothing visible
+   is lost: the bloom is a radial gradient that has already reached `transparent`
+   well before the 10% mark, so the clipped strip is fully transparent.
+
+   `overflow-x: clip`, NOT `overflow: hidden`: .scrolly contains the sticky
+   showcase stage, and hidden would make the section a scroll container, which
+   silently kills position: sticky. clip has no such side effect and leaves the
+   y axis visible. */
+.problem,
+.counters,
+.pricing,
+.scrolly { overflow-x: clip; }
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+/* Card grids share one collapse point. .cards, .price-grid, .video-grid and
+   .counter-grid each carried their own auto-fit minimum (260, 270, 250,
+   180px), so the page reflowed from 3-up to 2-up at four different widths as
+   you dragged a window — four separate "the layout just jumped" moments where
+   there should be one. --card-min is the shared beat; .counter-grid keeps its
+   own smaller value because four figures are meant to hold a single row far
+   longer than three prose cards. */
+.cards {
+  --card-min: 264px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--card-min), 1fr));
+  gap: var(--s-5);
+  margin-top: var(--lead);
+}
+.card {
+  /* Was --r-md (14px) while .price-card, .stack-inner and .counter-grid — all
+     panels of the same order of size — sat at --r-lg (22px). Radius is read
+     as a family resemblance, so one card type at half the others' corner
+     radius reads as belonging to a different set. 14px stays the tier for
+     media tiles and accordion rows, which are genuinely smaller. */
+  border-radius: var(--r-lg);
+  padding: var(--s-6) 1.7rem;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.card p { margin: 0; color: var(--text-muted); font-size: var(--fs-base); }
+/* Themed line icons (deep-forest stroke), matching the feature-stack set —
+   no emoji, so the page reads as one icon language. */
+.card-icon { margin-bottom: 0.8rem; color: var(--primary); line-height: 0; }
+.card-icon svg {
+  width: 30px; height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── "The problem" — texture + accent ────────────────────────────────────
+   This slab was three near-white cards on flat cream with nothing else in it.
+   Everything below is decoration only: two pseudo-element layers on the
+   section, an icon tile, and a gilded top edge on each card that draws itself
+   in when the card reveals. No markup, no JS — the edge rides the .reveal
+   observer's existing .is-in class, so there is nothing new to compute on
+   scroll and nothing to keep in sync with scroll.js. */
+/* ── Shared section texture ───────────────────────────────────────────────
+   Used by .problem and .counters, the two light sections between the hero and
+   the features grid. Both already spend ::before on a bloom and ::after on the
+   dot grid, so this is the third layer: grain for tooth, plus a couple of very
+   slow drifting orbs that give the sections a light source that moves.
+
+   The whole layer is decorative and inert — z-index -1 puts it under the
+   content (each section sets isolation:isolate so that stays local), and
+   nothing here reacts to the pointer.
+
+   Motion budget: transform/opacity only, on 30s+ periods with prime-ish
+   offsets so the two orbs never visibly resync. Nothing animates a property
+   that triggers layout. */
+.tex {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Grain. Same inline SVG turbulence as .hero-field, but `multiply` instead of
+   `overlay` — on a pale cream ground overlay barely registers, multiply gives
+   the paper tooth this section was missing. Kept low: it should read as the
+   cream having a surface, not as visible static. */
+.tex-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.055;
+  mix-blend-mode: multiply;
+}
+
+/* Drifting orbs. These are the same device as the hero blobs, dialled right
+   down for a light ground: no blend mode (screen would blow out to white on
+   cream), heavy blur, low alpha. They mostly exist to put something in the
+   dead space under the cards so the section doesn't end in a flat void. */
+.tex-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+/* Atmosphere on the light sections — now the faintest emerald/neutral clouds
+   (were warm gold), so the porcelain reads as softly lit rather than tinted. */
+.tex-orb-1 {
+  width: 460px; height: 460px;
+  top: -6%; left: -8%;
+  background: radial-gradient(circle, rgba(30, 122, 80, 0.055), transparent 70%);
+  animation: tex-drift-a 34s ease-in-out infinite;
+}
+.tex-orb-2 {
+  width: 520px; height: 520px;
+  bottom: -14%; right: -10%;
+  background: radial-gradient(circle, rgba(16, 21, 18, 0.035), transparent 70%);
+  animation: tex-drift-b 41s ease-in-out infinite;
+}
+.tex-orb-3 {
+  width: 560px; height: 560px;
+  bottom: -18%; left: 24%;
+  background: radial-gradient(circle, rgba(30, 122, 80, 0.045), transparent 70%);
+  animation: tex-drift-a 37s ease-in-out infinite 4s;
+}
+@keyframes tex-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(60px, 40px, 0) scale(1.14); }
+}
+@keyframes tex-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.12); }
+  50%      { transform: translate3d(-70px, -50px, 0) scale(1); }
+}
+
+.problem { position: relative; isolation: isolate; }
+/* A warm bloom behind the heading, so the section has a light source. */
+.problem::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -6% -10% auto;
+  height: 440px;
+  background: radial-gradient(58% 100% at 50% 0%, rgba(30, 122, 80, 0.07), transparent 70%);
+  pointer-events: none;
+  /* Slow breathe, so the "light source" isn't a static wash. Long period on
+     purpose — at anything under ~20s it reads as a pulsing effect rather than
+     as light. */
+  animation: bloom-breathe 24s ease-in-out infinite;
+}
+@keyframes bloom-breathe {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+/* A faint dot grid for tooth, masked to a soft oval so it never reaches the
+   section edges as a visible seam. */
+.problem::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  /* Was --border-strong at 0.45, which measured fine and disappeared on screen:
+     a 1px dot of #DDD2B9 on #FAF5EA is under 2% contrast. Stepped to a real
+     ink at low alpha so the grid actually reads as tooth. */
+  background-image: radial-gradient(circle, rgba(31, 58, 42, 0.16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.85;
+  -webkit-mask-image: radial-gradient(72% 62% at 50% 48%, #000 35%, transparent 78%);
+          mask-image: radial-gradient(72% 62% at 50% 48%, #000 35%, transparent 78%);
+  pointer-events: none;
+}
+
+.problem .card { position: relative; overflow: hidden; }
+.problem .card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--primary-light) 60%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.75s var(--ease) 0.15s;
+}
+.problem .card.is-in::before { transform: scaleX(1); }
+
+/* The bare 30px icon was floating in whitespace; a tinted tile gives it a seat
+   and carries the gold through to the card body. */
+/* Icon tile geometry is shared with .stack-ico: both are square, filled or
+   tinted, and hold a line glyph at ~46% of the tile. What was NOT shared was
+   the corner — 8px here against 17px there, on tiles of 46px and 58px. A
+   squircle's character comes from radius ÷ size, so those two read as
+   different shapes rather than two sizes of one shape. Both now run off
+   --r-tile scaled to their own box (0.28), which is the ratio the larger tile
+   was already using. */
+.problem .card-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  margin-bottom: var(--s-4);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(30, 122, 80, 0.12), rgba(30, 122, 80, 0.04));
+  box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.20);
+  color: var(--green-ink);
+  transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease),
+              transform 0.4s var(--ease);
+}
+.problem .card-icon svg { width: 24px; height: 24px; }
+
+/* The cards only moved on hover, which is invisible on touch and on a first
+   read-through. A very shallow, staggered bob gives the row a pulse without
+   turning into a carousel — 1.5rem of travel over 9s. The three offsets are
+   uneven so they drift apart instead of marching in step. */
+.problem .cards > .card:nth-child(1) { animation: card-bob 9s ease-in-out infinite; }
+.problem .cards > .card:nth-child(2) { animation: card-bob 11s ease-in-out infinite 1.1s; }
+.problem .cards > .card:nth-child(3) { animation: card-bob 10s ease-in-out infinite 2.3s; }
+@keyframes card-bob {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -7px, 0); }
+}
+/* Hover must beat the bob, and both write `transform`. A running animation
+   outranks a normal declaration no matter what, and PAUSING it does not hand
+   the property back — a paused animation still applies its computed value. The
+   only way to return transform to the cascade is to remove the animation
+   outright, which is why this is `animation: none` and not play-state. */
+.problem .card:hover {
+  animation: none;
+  transform: translateY(-10px);
+}
+.problem .card:hover .card-icon {
+  transform: translateY(-2px) scale(1.06);
+  background: linear-gradient(145deg, rgba(30, 122, 80, 0.22), rgba(30, 122, 80, 0.07));
+  box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.38),
+              0 6px 18px -6px rgba(30, 122, 80, 0.28);
+}
+
+/* ── Animated counters ───────────────────────────────────────────────── */
+/* Third and last beat of the textured run that starts at the hero. Same two
+   ingredients as .problem — a warm bloom for a light source and a dot grid for
+   tooth — so the eye reads hero → problem → counters as one continuous
+   surface. The dot grid is deliberately the SAME 26px cell as .problem; change
+   one and change both, or the seam between the sections becomes visible. */
+.counters { text-align: center; position: relative; isolation: isolate; }
+.counters::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: auto -10% -4%;
+  height: 420px;
+  background: radial-gradient(58% 100% at 50% 100%, rgba(30, 122, 80, 0.06), transparent 70%);
+  pointer-events: none;
+  /* Offset from .problem's breathe so the two sections never swell together. */
+  animation: bloom-breathe 29s ease-in-out infinite 6s;
+}
+.counters::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  /* Matches .problem::after — same cell, same ink, same alpha. Keep them in
+     step or the boundary between the two sections becomes visible. */
+  background-image: radial-gradient(circle, rgba(31, 58, 42, 0.16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.85;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 52%, #000 32%, transparent 78%);
+          mask-image: radial-gradient(70% 60% at 50% 52%, #000 32%, transparent 78%);
+  pointer-events: none;
+}
+
+/* The four figures were floating directly on the page, which is what made this
+   section read as unfinished next to the carded sections either side. Seating
+   them on a panel gives the numbers an edge to sit against and lets the dot
+   grid show around them instead of behind them. */
+.counter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: var(--lead);
+  padding: 2.8rem 1.6rem 2.4rem;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-md);
+}
+.counter strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 4.6vw, 3.8rem);
+  font-weight: 600;
+  /* Ink, not green — big editorial numerals in the display face, with the
+     emerald spent only on the little rule beneath. Restraint reads richer than
+     four green figures. */
+  color: var(--ink);
+  line-height: 1.05;
+  /* Figure style AND advance width are both set by the .num-lining rule near
+     the top of this file — re-declaring `font-variant-numeric` here would win
+     on source order and silently drop `lining-nums` from it, leaving the
+     lining figures propped up by the font-feature-settings fallback alone. */
+}
+.counter span { font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* Four big numerals in a row read as a spreadsheet without something to
+   separate and seat them. A hairline between columns plus a short gold rule
+   under each figure — the rule grows on reveal off the shared .is-in class. */
+.counter { position: relative; padding-inline: 0.6rem; }
+.counter + .counter::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 12%; bottom: 12%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--border-strong), transparent);
+}
+.counter strong::after {
+  content: "";
+  display: block;
+  width: 34px; height: 2px;
+  margin: 0.85rem auto 0.7rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--green), var(--primary-light));
+  transform: scaleX(0);
+  transition: transform 0.6s var(--ease) 0.25s;
+}
+.counter.is-in strong::after { transform: scaleX(1); }
+
+/* The separators assume a single row. auto-fit reflows to 2 columns well
+   before that is true, and a hairline on the left of every second item then
+   floats mid-grid. */
+@media (max-width: 760px) {
+  .counter + .counter::after { display: none; }
+}
+
+/* ── Feature stack — pinned cards that pile up on scroll ─────────────────
+   The sixteen features, grouped into five themed cards. Each card is
+   position:sticky at an incrementally lower offset, so as you scroll a new
+   card slides up and pins just below the previous one — the earlier cards
+   stay peeking above, and the whole set reads as a growing pile. Pure CSS:
+   there is nothing here for scroll.js to compute (same "no scroll maths"
+   discipline as the rest of the page). The fade-in and the check-draw ride
+   the shared .reveal IntersectionObserver.
+
+   Each card carries its own jewel pair (--c1 deep / --c2 light) inline in the
+   markup, so the pile reads as five distinct chapters instead of five white
+   boxes: forest, gold, ocean, copper, plum. Every coloured part of a card —
+   the gilded top edge, the numeral, the icon tile, the tag dots, the check,
+   the hover glow — derives from those two vars and nothing else. To retheme a
+   card, change the two hex values in index.html; touch nothing here. */
+.features { text-align: center; }
+
+.stack {
+  --stack-top: 96px;    /* where the first card pins (clears the sticky nav) */
+  --stack-step: 26px;   /* how far each card peeks out below the previous one */
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 9vh, 7rem);   /* the scroll travel between one pin and the next */
+  max-width: 860px;
+  margin: var(--lead) auto 0;
+  padding-bottom: 12vh;
+  text-align: left;
+}
+
+/* Each card pins a little lower than the one before it, so the stack fans
+   out at the top rather than sitting in a single spot. */
+.stack-card {
+  position: sticky;
+  top: calc(var(--stack-top) + var(--i) * var(--stack-step));
+  /* Fallbacks, so a card without an inline pair still looks brand-correct. */
+  --c1: var(--primary);
+  --c2: var(--green);
+}
+
+.stack-inner {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.7rem, 3.5vw, 2.8rem);
+  border-radius: var(--r-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  /* Two shadows: the neutral depth that holds the pile apart, plus a faint
+     wash of the card's own hue so the colour bleeds onto the page. */
+  box-shadow: var(--shadow-lg), 0 18px 50px -30px color-mix(in srgb, var(--c1) 65%, transparent);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease),
+              border-color 0.5s var(--ease);
+}
+/* A wash in the card's own hue so a stacked card never reads as a plain white
+   box — two offset radials (light from the top-right, deep from the
+   bottom-left) give it the graded look of a lit surface rather than a tint. */
+.stack-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 140% at 100% 0%,
+      color-mix(in srgb, var(--c2) 22%, transparent), transparent 58%),
+    radial-gradient(90% 120% at 0% 100%,
+      color-mix(in srgb, var(--c1) 9%, transparent), transparent 60%);
+  pointer-events: none;
+}
+
+/* Gilded top edge — a hairline of the card's gradient that wipes across as
+   the card reveals. It is the first thing that moves, so the eye lands on the
+   card's colour before its words. */
+.stack-inner::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    var(--c1), var(--c2), color-mix(in srgb, var(--c2) 45%, #FFFFFF), var(--c1));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.1s var(--ease) 0.1s;
+  pointer-events: none;
+}
+.stack-inner:has(.reveal.is-in)::after { transform: scaleX(1); }
+
+.stack-card:hover .stack-inner {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--c2) 45%, var(--border));
+  box-shadow: var(--shadow-xl), 0 34px 70px -34px color-mix(in srgb, var(--c1) 80%, transparent);
+}
+/* Only the contents (.stack-body) fade/rise in — the card surface stays
+   opaque, so a pinned card fully covers the ones stacked behind it (no text
+   bleed-through during the entrance). The checkmark sits on the opaque
+   surface, not inside the animated body, so it never shifts. */
+
+/* A single slow sheen that travels across the card once, on reveal. Runs on
+   transform only (no filter, no repaint of the card behind it) and does not
+   loop — a permanent shimmer reads as a loading skeleton, not as silk. */
+.stack-body::after {
+  content: "";
+  position: absolute;
+  z-index: 2;          /* ::after so it rides OVER the text, not under it */
+  top: 0; bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent,
+              rgba(255, 255, 255, 0.55) 45%, transparent);
+  transform: skewX(-16deg) translateX(-40%);
+  opacity: 0;
+  pointer-events: none;
+}
+.stack-body.is-in::after { animation: stackSheen 1.5s var(--ease) 0.25s 1; }
+@keyframes stackSheen {
+  0%   { opacity: 0;   transform: skewX(-16deg) translateX(-40%); }
+  25%  { opacity: 1; }
+  100% { opacity: 0;   transform: skewX(-16deg) translateX(340%); }
+}
+/* The sheen is absolutely positioned against the body, and the body is what
+   the observer animates — so it needs to be a containing block. */
+.stack-body { position: relative; }
+
+.stack-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  /* The numeral is the card's colour chip: the gradient itself, clipped to the
+     glyph. Falls back to a flat --c1 anywhere background-clip:text is missing. */
+  color: var(--c1);
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stack-ico {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 58px; height: 58px;
+  margin: 0.9rem 0 1.15rem;
+  border-radius: var(--r-tile);
+  /* Filled tile in the card's gradient, with a light inner bevel and a glow
+     cast in the same hue — the one genuinely "jewelled" element per card. */
+  background: linear-gradient(150deg, var(--c2), var(--c1));
+  color: #FFFFFF;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 22px -10px color-mix(in srgb, var(--c1) 85%, transparent);
+  transform: scale(0.6) rotate(-12deg);
+  opacity: 0;
+  transition: transform 0.7s var(--ease-spring) 0.15s,
+              opacity 0.5s var(--ease) 0.15s;
+}
+.stack-body.is-in .stack-ico { transform: none; opacity: 1; }
+/* A soft halo that breathes around the tile once the card has landed. This is
+   an outer box-shadow ring rather than a pseudo-element: .stack-ico is
+   transformed, so it owns a stacking context, and a z-index:-1 child would
+   paint OVER its gradient instead of behind it. */
+.stack-body.is-in .stack-ico { animation: icoHalo 4.5s var(--ease) 1.1s infinite; }
+@keyframes icoHalo {
+  0% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 10px 22px -10px color-mix(in srgb, var(--c1) 85%, transparent),
+      0 0 0 0 color-mix(in srgb, var(--c2) 40%, transparent);
+  }
+  60%, 100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 10px 22px -10px color-mix(in srgb, var(--c1) 85%, transparent),
+      0 0 0 13px color-mix(in srgb, var(--c2) 0%, transparent);
+  }
+}
+.stack-card:hover .stack-ico { transform: translateY(-3px) rotate(-4deg) scale(1.06); }
+
+/* Line icons, not emoji: single-weight strokes, now reversed out of the
+   coloured tile so the set still reads as one refined system. */
+.stack-ico svg {
+  width: 27px; height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stack-inner h3 {
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  margin-bottom: 0.45rem;
+}
+.stack-lead {
+  margin: 0 0 1.35rem;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  max-width: 46ch;
+}
+
+.stack-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.stack-tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.45em 0.95em;
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--c2) 9%, var(--bg-tint));
+  border: 1px solid color-mix(in srgb, var(--c2) 26%, var(--border));
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-light);
+  /* Chips deal themselves out one after another once the card lands. */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease),
+              background-color 0.3s var(--ease), border-color 0.3s var(--ease),
+              box-shadow 0.3s var(--ease);
+}
+.stack-body.is-in .stack-tags li { opacity: 1; transform: none; }
+.stack-tags li:nth-child(1) { transition-delay: 0.30s; }
+.stack-tags li:nth-child(2) { transition-delay: 0.38s; }
+.stack-tags li:nth-child(3) { transition-delay: 0.46s; }
+.stack-tags li:nth-child(4) { transition-delay: 0.54s; }
+.stack-tags li:hover {
+  background: color-mix(in srgb, var(--c2) 20%, var(--bg-tint));
+  border-color: color-mix(in srgb, var(--c2) 55%, var(--border));
+  box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--c1) 90%, transparent);
+}
+.stack-tags li::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c2), var(--c1));
+}
+.stack-tags li em {
+  font-style: normal;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-accent);
+  background: linear-gradient(120deg, var(--green-bright), var(--green));
+  padding: 0.15em 0.5em;
+  border-radius: var(--r-full);
+}
+
+/* The big checkmark, top-right — its stroke draws in when the card reveals,
+   in the card's own light hue, with a matching glow behind it. */
+.stack-check {
+  position: absolute;
+  top: clamp(1.4rem, 3vw, 2.4rem);
+  right: clamp(1.4rem, 3vw, 2.4rem);
+  width: clamp(38px, 6vw, 56px);
+  height: clamp(38px, 6vw, 56px);
+  fill: none;
+  stroke: var(--c2);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--c2) 45%, transparent));
+}
+.stack-check path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  transition: stroke-dashoffset 0.85s var(--ease) 0.25s;
+}
+.stack-inner:has(.reveal.is-in) .stack-check path { stroke-dashoffset: 0; }
+
+@media (max-width: 700px) {
+  .stack {
+    --stack-top: 84px;
+    --stack-step: 16px;
+    gap: clamp(2rem, 6vh, 4rem);
+  }
+  .stack-ico { width: 50px; height: 50px; border-radius: 15px; }
+  .stack-num { font-size: 1.6rem; }
+}
+
+/* Everything above is decoration on top of a layout that already works. Strip
+   the motion, keep the colour. */
+@media (prefers-reduced-motion: reduce) {
+  .stack-body.is-in::after,
+  .stack-body.is-in .stack-ico { animation: none; }
+  .stack-ico,
+  .stack-tags li { transform: none; opacity: 1; transition: none; }
+  .stack-inner::after { transform: scaleX(1); transition: none; }
+  .stack-card:hover .stack-inner,
+  .stack-card:hover .stack-ico { transform: none; }
+
+  /* Keep the colour clouds, stop them drifting. */
+  .ambient span { animation: none; }
+}
+
+/* ── Ambient field ───────────────────────────────────────────────────────
+   Reusable decorative backdrop for the tall, sparse sections. Drop
+   <div class="ambient" aria-hidden="true"><span></span>×3</div> as the first
+   child of any `position: relative` section.
+
+   Deliberately filter-free: the obvious way to build soft colour clouds is
+   a solid circle plus `filter: blur(60px)`, but that forces the compositor to
+   re-blur a large surface on every frame it moves. These are radial-gradients
+   instead — already soft, so the drift animates transform alone and the layer
+   never repaints. */
+.ambient {
+  position: absolute;
+  z-index: 0;
+  /* Bleeds to the full viewport width, NOT to the section box. The sections
+     are max-width:1200px and centred, so `inset: 0` clipped the clouds and the
+     dot field along a hard vertical line down each side of the content. Safe
+     to overhang: body is already overflow-x: clip. */
+  top: -6%; bottom: -6%;
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+  overflow: hidden;
+  pointer-events: none;
+}
+/* Fine dot texture, faded out at the edges so it never meets a hard border. */
+.ambient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(31, 58, 42, 0.16) 1px, transparent 1px);
+  background-size: 28px 28px;
+  /* Fades at the sides and at the extreme top/bottom only. A tighter vertical
+     radius would confine the texture to a band in the middle — this section is
+     several thousand pixels tall, so percentages behave nothing like they do
+     on a viewport-sized box. */
+  -webkit-mask-image: radial-gradient(ellipse 62% 92% at 50% 50%, #000 45%, transparent 88%);
+  mask-image: radial-gradient(ellipse 62% 92% at 50% 50%, #000 45%, transparent 88%);
+}
+/* Heights are a PERCENTAGE of the section, not vw. The showcase runs seven
+   ~76vh steps — about 5,000px — and three vw-square blobs in that leaves most
+   of the scroll with no colour at all. Sized and spaced in %, the three clouds
+   hand off to each other the whole way down. */
+.ambient span {
+  position: absolute;
+  will-change: transform;
+}
+/* Whisper-faint emerald/neutral clouds now (were forest/gold/ocean) — just
+   enough to keep the porcelain from going dead-flat behind the mockup. */
+.ambient span:nth-child(1) {
+  width: 62vw; height: 34%;
+  top: 1%; left: -14%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(30, 122, 80, 0.07), transparent 68%);
+  animation: ambientDrift 26s ease-in-out infinite alternate;
+}
+.ambient span:nth-child(2) {
+  width: 70vw; height: 38%;
+  top: 32%; right: -18%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(16, 21, 18, 0.04), transparent 66%);
+  animation: ambientDrift 34s ease-in-out infinite alternate-reverse;
+}
+/* Ocean, bottom-left — the coolest note, to stop the page going all-warm. */
+.ambient span:nth-child(3) {
+  width: 58vw; height: 34%;
+  bottom: 1%; left: -8%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(30, 122, 80, 0.05), transparent 68%);
+  animation: ambientDrift 42s ease-in-out infinite alternate;
+}
+@keyframes ambientDrift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(4%, -5%, 0) scale(1.14); }
+}
+
+/* ── Sticky showcase ─────────────────────────────────────────────────── */
+.scrolly { max-width: var(--wrap); position: relative; }
+.scrolly-inner {
+  position: relative;   /* above .ambient */
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* Progress rail — the seven steps are ~76vh apart, which leaves a lot of dead
+   column between them. The rail turns that gap into the thing that shows you
+   how far through the tour you are: a hairline track, a gold fill scaled from
+   --rail-fill (written by scroll.js), and a node per step that lights when its
+   screenshot is on screen. No extra markup — the nodes are .step::before. */
+.scrolly-steps {
+  --rail-gap: clamp(1.7rem, 3vw, 2.8rem);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--rail-gap);
+}
+.scrolly-steps::before,
+.scrolly-steps::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 6vh; bottom: 6vh;
+  width: 2px;
+  border-radius: 2px;
+}
+.scrolly-steps::before {
+  background: linear-gradient(180deg, transparent, var(--border-strong) 7%,
+              var(--border-strong) 93%, transparent);
+}
+.scrolly-steps::after {
+  background: linear-gradient(180deg, var(--primary-light), var(--green) 60%, var(--green-ink));
+  box-shadow: 0 0 12px rgba(30, 122, 80, 0.45);
+  transform: scaleY(var(--rail-fill, 0));
+  transform-origin: top;
+}
+
+.step {
+  position: relative;
+  min-height: 76vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0.3;
+  filter: blur(2px);
+  transition: opacity 0.55s var(--ease), filter 0.55s var(--ease);
+}
+/* The rail node for this step, centred on the track. */
+.step::before {
+  content: "";
+  position: absolute;
+  left: calc(1px - var(--rail-gap));
+  top: calc(50% - 6px);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border-strong);
+  transition: transform 0.45s var(--ease), border-color 0.45s var(--ease),
+              background-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.step.is-active { opacity: 1; filter: none; }
+.step.is-active::before {
+  background: linear-gradient(140deg, var(--primary-light), var(--green));
+  border-color: var(--green);
+  transform: scale(1.45);
+  box-shadow: 0 0 0 6px rgba(30, 122, 80, 0.14),
+              0 6px 16px -6px rgba(30, 122, 80, 0.8);
+}
+.step-num {
+  font-family: var(--font-brand);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+  margin-bottom: var(--s-3);
+}
+.step h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.08;
+}
+.step p { color: var(--text-muted); max-width: 46ch; margin: 0; }
+
+.scrolly-stage {
+  position: sticky;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* A warm halo bedded under the mockup, so the frame sits IN the page instead
+   of floating on flat cream. Sized past the frame on every side; it reads as
+   light spill, not as a second box. */
+.scrolly-stage::before {
+  content: "";
+  position: absolute;
+  inset: -14% -10%;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(30, 122, 80, 0.10), transparent 62%),
+    radial-gradient(ellipse at 30% 80%, rgba(16, 21, 18, 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+/* The seven screenshots are stacked absolutely in one frame; exactly one is
+   visible at a time and scroll.js cross-fades between them. WITHOUT the
+   opacity:0 base, every screenshot paints at full opacity and the last one in
+   DOM order simply covers the rest — the frame then shows the same page no
+   matter which step you're reading. */
+#scrollyScreen img { opacity: 0; transition: opacity 0.6s var(--ease); }
+#scrollyScreen img.is-active { opacity: 1; }
+
+/* ── Device frames ───────────────────────────────────────────────────── */
+.frame {
+  border-radius: var(--r-lg);
+  background: #1a1f1c;
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+.frame-bar { display: flex; gap: 7px; padding: 11px 15px; background: #262c28; }
+.frame-bar span { width: 11px; height: 11px; border-radius: 50%; }
+.frame-bar span:first-child  { background: #E0565B; }
+.frame-bar span:nth-child(2) { background: #E5B23C; }
+.frame-bar span:nth-child(3) { background: #4A6E58; }
+
+/* A viewport onto a much taller screenshot. Everything that "scrolls inside a
+   device" on this page is just this box plus a translated <img>. */
+.frame-screen {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+.frame-browser .frame-screen { aspect-ratio: 16 / 10; }
+/* The hero frame holds a 16:9 screen RECORDING, while every other browser
+   frame on the page holds a 16:10 still. Scoped to this modifier rather than
+   changed on .frame-browser — the scrolly stage and the feature frames still
+   depend on 16:10, and widening them would crop their screenshots. */
+/* Specificity matters here: `.frame-browser .frame-screen` above is two
+   classes, so a bare `.frame-screen-video` LOSES to it and the box stays
+   16:10. The video is 16:9, and object-fit: cover then quietly crops its left
+   and right edges — taking the app's sidebar with them. Match the selector
+   weight; do not shorten this back to one class. */
+.frame-browser .frame-screen-video { aspect-ratio: 16 / 9; }
+.frame-screen-video video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.frame-screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+}
+
+.frame-phone {
+  width: 285px;
+  border-radius: 40px;
+  padding: 11px;
+  border: 2px solid #333b36;
+  position: relative;
+  flex: none;
+}
+.frame-phone .frame-screen { border-radius: 29px; aspect-ratio: 9 / 19.5; }
+.frame-notch {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 104px;
+  height: 21px;
+  background: #1a1f1c;
+  border-radius: 0 0 13px 13px;
+  z-index: 2;
+}
+
+/* ── Automation flow ─────────────────────────────────────────────────── */
+.flow {
+  list-style: none;
+  margin: var(--lead) auto 0;
+  padding: 0;
+  /* Was 760px against the FAQ's 820px and the legal column's 820px — three
+     reading measures within 8% of each other, i.e. three attempts at the same
+     number. One step. */
+  max-width: var(--wrap-prose);
+  position: relative;
+}
+/* The spine. scroll.js scales --flow-fill 0→1 to "draw" it. */
+.flow::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--edge-dark);
+}
+.flow::after {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--green-bright), var(--green));
+  transform: scaleY(var(--flow-fill, 0));
+  transform-origin: top;
+  box-shadow: 0 0 14px rgba(70, 201, 138, 0.4);
+}
+
+.flow-node {
+  position: relative;
+  padding: 0 0 2.1rem 3.6rem;
+  opacity: 0.35;
+  transform: translateX(-10px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.flow-node.is-lit { opacity: 1; transform: none; }
+.flow-node:last-child { padding-bottom: 0; }
+.fn-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  border: 2px solid var(--edge-dark-strong);
+  color: var(--ink-dark-2);
+  font-family: var(--font-brand);
+  font-weight: 800;
+  font-size: 0.85rem;
+  transition: background-color 0.45s var(--ease), color 0.45s var(--ease),
+              border-color 0.45s var(--ease), transform 0.45s var(--ease);
+}
+.flow-node.is-lit .fn-dot {
+  background: var(--green);
+  border-color: var(--green-bright);
+  color: var(--on-accent);
+  transform: scale(1.08);
+}
+.flow-node strong {
+  display: block;
+  font-family: var(--font-brand);
+  font-size: var(--fs-md);
+  color: var(--text-inverse);
+  padding-top: 0.35rem;
+}
+.fn-sub { font-size: var(--fs-base); color: var(--ink-dark-2); }
+
+/* ── Marketing center (roadmap) ──────────────────────────────────────── */
+.marketing { text-align: center; }
+.marketing .soon-tag { display: inline-block; margin: 0 0 1.2rem; }
+.chip-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  justify-content: center;
+  margin-top: var(--lead);
+}
+.chip-cloud span {
+  padding: 0.55em 1.1em;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.5);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease),
+              color 0.25s var(--ease);
+}
+.chip-cloud span:hover {
+  transform: translateY(-3px);
+  border-color: var(--green);
+  color: var(--text);
+}
+
+/* ── Split (mobile section) ──────────────────────────────────────────── */
+.split {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+.phones {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  min-height: 560px;
+}
+.phone-back {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  transform: rotate(-6deg) scale(0.9);
+  opacity: 0.85;
+}
+.phone-front { position: relative; z-index: 1; transform: rotate(2deg); }
+
+.ticks { list-style: none; padding: 0; margin: 2rem 0 0; }
+.ticks li {
+  position: relative;
+  padding-left: 1.9rem;
+  margin-bottom: var(--s-3);
+  font-size: var(--fs-base);
+}
+/* These checkmarks are meaningful, not decorative — they are what marks a line
+   as "included", so WCAG 1.4.11 holds them to 3:1 against their background.
+   Brand gold --accent is 2.35:1 on cream and ~2.5:1 on a white card, i.e. it
+   failed on every light plan. --accent-dark is the same gold one step down and
+   clears it at 3.37:1. On the dark grounds the relationship inverts, so those
+   keep the brighter hue — see the override below. */
+.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 1.05rem;
+  height: 0.55rem;
+  border-left: 2.5px solid var(--green);
+  border-bottom: 2.5px solid var(--green);
+  transform: rotate(-45deg);
+}
+/* Dark grounds: the mobile section's tick list and the featured pricing card.
+   .price-card.featured is NOT inside a .section.dark, so it needs naming. */
+.section.dark .ticks li::before,
+.price-card.featured .ticks li::before {
+  border-left-color: var(--green-bright);
+  border-bottom-color: var(--green-bright);
+}
+
+/* ── Night Dim crossfade ─────────────────────────────────────────────── */
+.dim-demo { text-align: center; }
+.dim-copy { max-width: 700px; margin: 0 auto 3.5rem; }
+.dim-stage { max-width: var(--wrap-panel); margin-inline: auto; }
+/* scroll.js drives --dim-mix from 0 → 1 across this section. */
+.dim-stage .dim-dark { opacity: var(--dim-mix, 0); }
+.dim-hint {
+  margin-top: var(--s-5);
+  font-size: var(--fs-label-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Video gallery ───────────────────────────────────────────────────── */
+.tour { text-align: center; }
+.video-grid {
+  display: grid;
+  --card-min: 264px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--card-min), 1fr));
+  gap: var(--s-5);
+  margin-top: var(--lead);
+  text-align: left;
+}
+.video-card { margin: 0; }
+.video-card.wide { grid-column: span 2; }
+
+/* Two-clip variant: two equal, centered tiles instead of the 5-up auto-fit,
+   so wide screens don't leave dead columns. Collapses to a single column at
+   720px — the same breakpoint scroll.js uses to switch to the mobile clip. */
+.video-grid--duo {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: var(--wrap-panel);
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 720px) {
+  .video-grid--duo { grid-template-columns: 1fr; }
+}
+
+.video-play {
+  display: block;
+  width: 100%;
+  /* 16:9 — matches the source recordings (1920×1080). At 16:10 the poster was
+     letterboxed and the card washed out along the bottom edge. */
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.video-play::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, transparent 40%, rgba(13, 31, 22, 0.5));
+}
+.video-play:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+/* Touch has no hover, so without this the only feedback for tapping a video
+   tile was the lightbox appearing. Settles back through the hover lift. */
+.video-play:active { transform: translateY(-1px) scale(0.99); }
+.video-play:active .play-icon { transform: scale(1.04); }
+.play-icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 62px; height: 62px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--on-accent);
+  z-index: 1;
+  box-shadow: 0 8px 24px rgba(13, 31, 22, 0.35);
+  transition: transform 0.3s var(--ease);
+}
+.video-play:hover .play-icon { transform: scale(1.12); }
+.video-card figcaption {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  font-family: var(--font-brand);
+  font-weight: 600;
+  color: var(--text);
+  font-size: var(--fs-base);
+}
+.video-card figcaption span { color: var(--text-muted); font-weight: 500; }
+
+/* ── Lightbox ────────────────────────────────────────────────────────── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: rgba(13, 31, 22, 0.92);
+  backdrop-filter: blur(6px);
+}
+.lightbox[hidden] { display: none; }
+.lightbox video {
+  width: min(1200px, 100%);
+  max-height: 84vh;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-xl);
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  width: 44px; height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(250, 245, 234, 0.14);
+  color: var(--text-inverse);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox-close:hover { background: rgba(250, 245, 234, 0.28); }
+
+/* ── Testimonials ────────────────────────────────────────────────────── */
+.testimonials { text-align: center; }
+.quote-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.4rem;
+  margin-top: var(--lead);
+  text-align: left;
+}
+.quote-grid blockquote {
+  margin: 0;
+  padding: 1.9rem 1.7rem;
+  border-radius: var(--r-md);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.quote-grid blockquote:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.stars { color: var(--green); letter-spacing: 0.15em; margin-bottom: 0.9rem; }
+.quote-grid p {
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+.quote-grid footer {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+.q-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--bg-tint);
+  color: var(--text-muted);
+}
+.quote-grid footer strong { display: block; color: var(--text); font-size: 0.94rem; }
+.quote-grid footer span { font-size: 0.85rem; color: var(--text-muted); }
+
+/* ── Pricing ─────────────────────────────────────────────────────────── */
+/* Surface rhythm. Between the automation slab and the footer the page runs
+   five consecutive sections on flat --bg — marketing centre, night dim, tour,
+   pricing, FAQ — with only the mobile slab breaking them up. The two sections
+   at the TOP of that run (.problem, .counters) each carry a bloom and a dot
+   grid; the bottom of the run has nothing, so the page visibly loses its
+   surface right where it starts asking for money.
+
+   Pricing gets the treatment because it is the decision moment and because a
+   price grid is the one block on the page that benefits from being seated on
+   something. Same two ingredients as .problem — a warm bloom for a light
+   source, a masked dot grid for tooth — deliberately reusing the SAME 26px
+   cell so the three textured sections read as one material. Change the cell
+   here and you have to change it in .problem::after and .counters::after too. */
+.pricing { text-align: center; position: relative; isolation: isolate; }
+.pricing::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -4% -10% auto;
+  height: 520px;
+  background: radial-gradient(56% 100% at 50% 0%, rgba(30, 122, 80, 0.06), transparent 70%);
+  pointer-events: none;
+  /* Offset again from .problem (24s) and .counters (29s) so no two blooms on
+     the page ever swell in step. */
+  animation: bloom-breathe 33s ease-in-out infinite 11s;
+}
+.pricing::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(31, 58, 42, 0.16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.7;
+  -webkit-mask-image: radial-gradient(74% 58% at 50% 54%, #000 30%, transparent 78%);
+          mask-image: radial-gradient(74% 58% at 50% 54%, #000 30%, transparent 78%);
+  pointer-events: none;
+}
+
+.price-grid {
+  display: grid;
+  /* Shares .cards' collapse point — see the note there. 270 vs 264 is not a
+     different layout decision, it is the same one made twice. */
+  --card-min: 264px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--card-min), 1fr));
+  gap: var(--s-5);
+  margin-top: var(--lead);
+  text-align: left;
+  /* Was `center`, which vertically centred three cards of different heights —
+     so the three "Book a demo / Start free / Talk to us" buttons landed at
+     three different heights, and so did the three feature lists. A pricing
+     table is read ACROSS, and nothing signals "hand-made" faster than a CTA
+     row that zigzags. Stretch equalises the cards; the buttons are then pinned
+     to the bottom by the `margin-top: auto` below, so they line up regardless
+     of how many bullets a tier carries. Growth still stands proud — that comes
+     from its dark fill, its badge and its heavier padding, not from being a
+     different height. */
+  align-items: stretch;
+}
+.price-card {
+  position: relative;
+  padding: 2.2rem 1.9rem;
+  border-radius: var(--r-lg);
+  /* Column flex exists purely so the CTA can be pushed to the bottom edge. */
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+/* Takes up the slack in a shorter card so every tier's button sits on one
+   line across the row. The .ticks bottom margin survives as a minimum gap. */
+.price-card .btn { margin-top: auto; }
+.price-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.price-card.featured {
+  /* The one graphite card in the grid — the plan the page steers you toward.
+     A near-black surface with a faint emerald bloom from the top-left (tying it
+     to the emerald "Most popular" badge and the green CTA on it) makes it the
+     obvious hero without shouting. */
+  background:
+    radial-gradient(95% 65% at 15% 0%, rgba(40, 120, 82, 0.16), transparent 60%),
+    linear-gradient(165deg, #161A18 0%, var(--graphite) 58%, #080A09 100%);
+  border-color: rgba(255, 255, 255, 0.12);
+  /* The `padding-block: 3rem` that used to be here was how this card was made
+     to stand out back when .price-grid centred three unequal cards. Now that
+     they stretch to a shared height it does the opposite of its job: 0.8rem of
+     extra padding at each end pushed this card's title 13px DOWN and its CTA
+     13px UP relative to its neighbours, so the row read as three misaligned
+     cards rather than one emphasised one. Matching the base padding puts all
+     three titles on one baseline and all three buttons on another. The
+     emphasis is carried entirely by the dark fill, the badge and the gold
+     CTA — which is more than enough. */
+  box-shadow: var(--shadow-lg);
+}
+.price-card.featured h3,
+.price-card.featured .pc-amt { color: var(--text-inverse); }
+.price-card.featured .pc-for,
+.price-card.featured .ticks li { color: var(--ink-dark-1); }
+
+.pc-badge {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3em 0.9em;
+  border-radius: var(--r-full);
+  /* The ONE gold moment on the site — the "Most popular" badge. Deliberately
+     gold (not the green CTA colour it sits above) so it reads as a small
+     jewel, the single warm accent the brief allows. Dark ink on gold clears
+     contrast where white would not. */
+  background: linear-gradient(180deg, var(--accent-light), var(--accent) 70%);
+  color: #17120A;
+  font-family: var(--font-brand);
+  font-size: var(--fs-label-sm);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* The badge straddles the card's top edge, so it is the one element on the
+     page that has to read as sitting IN FRONT of a surface rather than on it.
+     A cast shadow plus the same lit top edge as .btn-accent does that; without
+     them it looks like a sticker that was pasted slightly wrong. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 4px 12px -3px rgba(200, 155, 60, 0.55);
+}
+.pc-for { font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: var(--s-4); }
+.pc-amt {
+  font-family: var(--font-display);
+  font-size: 3.4rem;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: var(--s-5);
+  /* Prices are compared column-to-column, so the digits must sit on a fixed
+     advance width — proportional figures make 399 and 999 different lengths
+     and the two amounts stop lining up.
+
+     `font-variant-numeric` is NOT set here, deliberately: it is set once, with
+     `lining-nums` alongside `tabular-nums`, in the display-figures block near
+     the top of this file. Re-declaring the property here wins on source order
+     and drops the lining-nums half of it — which left the whole fix resting on
+     the `font-feature-settings: "lnum"` fallback rather than on the property
+     that is actually meant to do the job. */
+}
+/* The peso sign. `vertical-align: super` is a relative shift with no defined
+   magnitude — browsers put it somewhere around a third of the parent's
+   font-size, which on a 3.4rem numeral parked the ₱ well above the cap line
+   and left an obvious notch of air under it. It also inflates the line box,
+   which is what was making the three .pc-amt rows sit at fractionally
+   different heights across the grid.
+
+   Aligned explicitly instead: baseline, then lifted by a share of its OWN
+   size so it hangs from the numeral's cap height. inline-block keeps the
+   translate from being ignored on an inline box, and the line box stops
+   growing, so the three cards' amounts land on one baseline. */
+.pc-amt span {
+  display: inline-block;
+  /* 1.4rem read as a footnote next to a 3.4rem numeral — the symbol that
+     tells you the currency was the least legible thing in the card. 0.45 of
+     the amount is the usual ratio for a raised currency mark. */
+  font-size: 1.55rem;
+  font-weight: 500;
+  vertical-align: baseline;
+  transform: translateY(-0.62em);
+  margin-right: 0.06em;
+}
+.pc-amt em { font-style: normal; font-size: var(--fs-base); font-weight: 500; color: var(--text-muted); }
+.price-card .ticks { margin: 0 0 1.8rem; }
+.price-card .ticks li { font-size: var(--fs-sm); }
+/* The property count is the thing the tier is actually sold on, so it is the
+   one bolded line in each card. */
+.price-card .ticks li strong { color: var(--primary); font-weight: 700; }
+.price-card.featured .ticks li strong { color: var(--text-inverse); }
+
+/* Annual + trial line under the grid. */
+.price-note {
+  margin: 2.2rem auto 0;
+  max-width: 54ch;
+  text-align: center;
+  font-size: var(--fs-base);
+  color: var(--text-muted);
+}
+.price-note strong { color: var(--primary); font-weight: 700; }
+
+/* ── FAQ ─────────────────────────────────────────────────────────────── */
+.faq { max-width: var(--wrap-prose); }
+.faq-list { margin-top: var(--lead); }
+.faq details {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--bg-card);
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.faq details[open] { border-color: var(--green-bright); box-shadow: var(--shadow-md); }
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1.25rem 3.2rem 1.25rem 1.5rem;
+  position: relative;
+  font-family: var(--font-brand);
+  font-weight: 600;
+  color: var(--text);
+  font-size: var(--fs-md);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "";
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  width: 9px; height: 9px;
+  border-right: 2px solid var(--green-ink);
+  border-bottom: 2px solid var(--green-ink);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.3s var(--ease);
+}
+.faq details[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
+.faq summary:hover { background: var(--bg-subtle, #FDFAF0); }
+
+/* The accordion slide. details/summary can't transition height on its own, so
+   the body is wrapped and animated on open. */
+.faq-body {
+  padding: 0 1.5rem 1.4rem;
+  animation: faq-open 0.35s var(--ease);
+}
+.faq-body p { margin: 0; color: var(--text-muted); font-size: var(--fs-base); }
+@keyframes faq-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Final CTA ───────────────────────────────────────────────────────── */
+.cta { text-align: center; }
+.request-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  max-width: 620px;
+  margin: 3rem auto 1.2rem;
+}
+.request-form input {
+  padding: 0.95em 1.15em;
+  border: 1px solid var(--edge-dark-strong);
+  border-radius: var(--r-full);
+  background: rgba(250, 245, 234, 0.07);
+  color: var(--text-inverse);
+  font-family: var(--font);
+  font-size: var(--fs-base);
+}
+/* These placeholders are the ONLY labels these fields have, so they are read
+   as content, not as hint text — which puts them at the 4.5:1 AA floor rather
+   than the 3:1 one. At 0.45 they measured 4.17:1 and failed. --ink-dark-2 is
+   6.4:1 and still sits clearly below the typed value in weight.
+   (Standing recommendation: give these four inputs real visible labels. That
+   is a markup change, so it is left for you to approve — see the audit note.) */
+.request-form input::placeholder { color: var(--ink-dark-2); opacity: 1; }
+/* `outline: none` used to live here. It was the single reason keyboard focus
+   was invisible on the conversion form: it stripped the UA ring and put
+   nothing back but a 1px border tint. The border/background shift is kept —
+   it is a nice affordance — and the ring now comes from the :focus-visible
+   system above. Do not re-add `outline: none`. */
+.request-form input:focus {
+  border-color: var(--green);
+  background: rgba(250, 245, 234, 0.12);
+}
+.cta-note { font-size: var(--fs-sm); color: var(--ink-dark-2); }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+/* Every colour in this footer was a hand-picked cream alpha, and three of them
+   failed AA against --primary-dark: the section headings (0.40 → 3.57:1), the
+   copyright line (0.35 → 3.04:1) and the tagline (0.45 → 4.17:1). They now run
+   off the --ink-dark-* roles, so the footer's hierarchy is expressed in two
+   legible steps instead of six illegible ones. */
+.footer {
+  background: var(--primary-dark);
+  color: var(--ink-dark-2);
+  padding: var(--s-9) clamp(1.2rem, 4vw, 3rem) var(--s-6);
+  border-top: 1px solid var(--edge-dark);
+}
+.footer-top {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  /* Grid items stretch by default, and .footer-brand is a flex box with
+     `align-items: center` — so the brand lockup was being centred down the
+     full height of the tallest column (Product, four links). The result was a
+     logo floating ~35px below the column headings with an ~80px hole punched
+     between it and its own tagline, instead of the 0.5rem the tagline asks
+     for. Top-aligning the row puts all four columns on one edge and lets the
+     tagline sit where it was written to sit. */
+  align-items: start;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+/* The footer sits on --primary-dark and never changes state, so it takes the
+   white artwork directly — no swap pair, and no second pair of requests. */
+.footer-brand .brand-mark { height: 32px; }
+.footer-brand .brand-word { height: 19px; }
+.footer-brand .tagline {
+  width: 100%;
+  margin: 0.5rem 0 0;
+  font-family: var(--font);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-dark-2);
+}
+/* .footer-brand is a wrapping flex row and .tagline already claims width:100%,
+   so the badge lands on its own line without needing a wrapper. line-height:0
+   kills the inline descender gap under the SVG. */
+.footer-badge {
+  display: inline-block;
+  max-width: 100%;
+  margin-top: 0.9rem;
+  line-height: 0;
+}
+.footer-badge img {
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 456 / 160;
+  display: block;
+  opacity: 0.88;
+  border-radius: 8px;
+  transition: opacity 0.25s var(--ease);
+}
+.footer-badge:hover img,
+.footer-badge:focus-visible img { opacity: 1; }
+
+.footer-col { display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-col h4 {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-label-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dark-2);
+  font-weight: 700;
+}
+.footer-col a {
+  /* Links are the footer's content, so they take the primary ink step — this
+     also puts a real weight gap between a column's heading and its items,
+     which the old 0.40/0.72 pair had backwards in perceived emphasis. */
+  color: var(--ink-dark-1);
+  text-decoration: none;
+  font-size: var(--fs-base);
+  transition: color 0.2s var(--ease), transform 0.2s var(--ease);
+  width: fit-content;
+}
+.footer-col a:hover { color: var(--green-bright); transform: translateX(3px); }
+
+.footer-bottom {
+  max-width: var(--wrap);
+  margin: var(--s-8) auto 0;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--edge-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+/* ── Minimal footer, for the legal pages ─────────────────────────────────
+   privacy.html and terms.html carry a cut-down footer: the bottom bar only,
+   no link columns. They were achieving that with three inline `style`
+   declarations on the .footer-bottom div — margin-top:0; border-top:0;
+   padding-top:0 — which is the one place in this project where presentation
+   had leaked into the markup, and it had to be kept in sync by hand across
+   two files. Same result, declared once, and the pages get a real modifier
+   class they can be styled through in future. */
+.footer--minimal { padding-block: var(--s-7) var(--s-6); }
+.footer--minimal .footer-bottom {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.footer-bottom p { margin: 0; font-size: var(--fs-xs); color: var(--ink-dark-2); }
+.footer-bottom nav { display: flex; gap: 1.4rem; }
+.footer-bottom a {
+  color: var(--ink-dark-2);
+  text-decoration: none;
+  font-size: var(--fs-xs);
+}
+.footer-bottom a:hover { color: var(--green-bright); }
+
+/* ── Scroll reveal ───────────────────────────────────────────────────────
+   One class, several entrances. The transition is always opacity + transform
+   + filter; only the FROM state differs, which keeps it to one composited
+   animation per element regardless of which entrance is used. */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease),
+              filter 0.75s var(--ease);
+}
+.reveal[data-anim="up"]    { transform: translateY(30px); }
+.reveal[data-anim="left"]  { transform: translateX(-40px); }
+.reveal[data-anim="right"] { transform: translateX(40px); }
+.reveal[data-anim="scale"] { transform: scale(0.92); }
+.reveal[data-anim="blur"]  { filter: blur(12px); transform: translateY(16px); }
+.reveal[data-anim="fade"]  { transform: none; }
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.reveal[data-delay="1"] { transition-delay: 0.09s; }
+.reveal[data-delay="2"] { transition-delay: 0.18s; }
+.reveal[data-delay="3"] { transition-delay: 0.27s; }
+.reveal[data-delay="4"] { transition-delay: 0.36s; }
+.reveal[data-delay="5"] { transition-delay: 0.45s; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .float-booking { left: -2%; }
+  .float-cal { left: -1%; }
+  .float-stat { right: -1%; }
+}
+
+@media (max-width: 900px) {
+  /* The bar becomes: brand · [CTA] [burger]. The inline links move into
+     .nav-panel and Sign in goes with them — three items is what fits on a
+     320px bar (the CTA alone is ~110px), and Sign in is the one of the four
+     that can wait behind a tap. `margin-left: auto` moves from .nav-links to
+     the CTA, which is now the first item on the right. */
+  .nav-links { display: none; }
+  .nav-signin { display: none; }
+  .nav-cta { margin-left: auto; }
+  .nav-toggle { display: grid; }
+  .nav-panel { display: block; }
+
+  /* Three columns stop working here: each track is ~280px, so the longest item
+     wraps to three lines while its neighbours take one, and the row's ragged
+     baseline is more distracting than a stack. One column, left-aligned, held
+     to a readable measure and centred as a block — the ticks line up in a
+     single vertical rule, which is what makes it read as a deliberate list. */
+  .hero-proof {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-3);
+    width: min(100%, 34rem);
+  }
+
+  /* The floating cards crowd the mockup on a tablet. Phones get a reworked
+     version of them instead — see the max-width: 600px block below. */
+  .float-card { display: none; }
+
+  .scrolly-inner { grid-template-columns: 1fr; }
+  .scrolly-stage {
+    position: sticky;
+    top: 76px;
+    transform: none;
+    order: -1;
+    margin-bottom: 2rem;
+    /* REQUIRED, not cosmetic. Grid/flex items paint in *order-modified*
+       document order, so `order: -1` alone drops the sticky mockup BEHIND the
+       step text — which then scrolls straight across the screenshot. z-index on
+       a positioned element overrides that painting order. */
+    z-index: 2;
+    /* And once it is on top it needs to be opaque, or the text is still visible
+       through it. The band is the section's own cream so it reads as the page,
+       not as a panel; ::after feathers the bottom edge so steps dissolve out
+       instead of being guillotined by a hard line. */
+    background: var(--bg);
+    padding-bottom: 0.5rem;
+  }
+  .scrolly-stage::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    height: 34px;
+    background: linear-gradient(180deg, var(--bg), transparent);
+    pointer-events: none;
+  }
+  .step { min-height: 58vh; }
+  /* One column has no spare width for a rail beside the text. */
+  .scrolly-steps { --rail-gap: 1.35rem; }
+  .scrolly-steps::before, .scrolly-steps::after { left: 3px; }
+  .step::before { width: 10px; height: 10px; top: calc(50% - 5px); }
+  /* The clouds are sized in vw; unchecked they swallow a phone screen. */
+  .ambient span { opacity: 0.6; }
+  .ambient::before { background-size: 22px 22px; }
+
+  .split { grid-template-columns: 1fr; }
+  .split-stage { order: -1; }
+  .phones { min-height: 500px; }
+  .phone-back { display: none; }
+
+  .video-card.wide { grid-column: span 1; }
+
+  .request-form { grid-template-columns: 1fr; }
+
+  .footer-top { grid-template-columns: 1fr 1fr; }
+
+  #heroFrame { transform: perspective(1800px) rotateX(10deg) scale(0.97); }
+}
+
+/* ── Phone-only: bring the hero's floating cards back ────────────────────
+   The ≤900px rule above hides them because at tablet width they sit on top of
+   a mockup that is still legible. On a phone the dashboard shot is a 1569px
+   image rendered at ~356px — illegible texture — and the cards are the only
+   readable proof in the hero, so they earn their place.
+
+   They are positioned to straddle the frame's corners from OUTSIDE it rather
+   than sit on it. The stage gets vertical padding, the frame keeps the middle,
+   and each card hangs into a corner by ~35-45px. That is roughly 15% of the
+   frame covered instead of the ~45% you get by placing them at top/bottom
+   inside the frame's own box. Do not remove the stage padding without also
+   moving the cards back inward — they will overlap the hero copy above and the
+   "Built for" row below. */
+@media (max-width: 600px) {
+  .hero-stage {
+    padding: 54px 0 50px;
+    /* Claw back most of the height the padding just added, so the hero does
+       not grow ~100px taller on the smallest screens. */
+    margin-top: clamp(0.75rem, 2.5vh, 2rem);
+  }
+
+  .float-card {
+    display: block;
+    width: clamp(132px, 41vw, 190px);
+    padding: 0.7rem 0.8rem;
+    font-size: 0.78rem;
+    border-radius: var(--r-sm);
+    box-shadow: 0 12px 30px rgba(13, 31, 22, 0.26);
+  }
+  /* Anchored to the stage's padding box, i.e. above/below the frame. */
+  .float-booking { top: 0; bottom: auto; left: -3%; right: auto; }
+  .float-stat    { bottom: 0; top: auto; right: -3%; left: auto; }
+  /* Three cards leave only ~68px of visible frame between the columns and the
+     mockup stops reading as a screenshot at all. The calendar is the weakest of
+     the three — the others carry a name, a status, an amount and a trend. */
+  .float-cal     { display: none; }
+
+  /* Internals scaled individually: a uniform transform: scale() would take the
+     body text under 10px and defeat the point of showing the cards. */
+  .fc-avatar { width: 27px; height: 27px; font-size: 0.66rem; }
+  .fc-row { gap: 0.5rem; }
+  .fc-row strong { font-size: 0.79rem; }
+  .fc-row > div { min-width: 0; }
+  .fc-sub { font-size: 0.69rem; display: block; }
+  .fc-foot { margin-top: 0.55rem; padding-top: 0.5rem; }
+  .pill { font-size: 0.62rem; }
+  .fc-label, .fc-delta { font-size: 0.66rem; }
+  .fc-big { font-size: 1.1rem; }
+  /* The booking card carries the most text — a little extra width keeps
+     "Villa Anilao · 3 nights" on one line. Truncating it to an ellipsis
+     instead reads as a bug rather than a design. */
+  .float-booking { width: clamp(150px, 45vw, 200px); }
+}
+
+@media (max-width: 560px) {
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-bottom { justify-content: center; text-align: center; }
+
+  /* Keep brand + Sign in + CTA on one line without overflow. */
+  .nav { gap: 0.9rem; }
+  .nav-signin { font-size: 0.88rem; }
+  .nav-cta { padding: 0.55em 0.95em; font-size: 0.85rem; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   PHONE SCALE (≤600px)
+
+   Why this block exists at all: almost every size on this page is a
+   `clamp(min, Nvw, max)`, and on a phone **the vw term never wins** — the
+   viewport is too narrow, so the value pins to the MIN. Those minimums were
+   chosen as "the smallest this should get on a laptop", not as a phone size,
+   so the whole page arrived on mobile at roughly desktop scale. .hero-copy h1
+   is the clearest case: `clamp(2.75rem, 5.6vw, 4.6rem)` crosses over at a
+   786px viewport, so every phone rendered the headline at a flat 44px.
+
+   That is also why the fixes live HERE rather than in the base clamps. Editing
+   a min in place is invisible at desktop width (the vw term is winning there),
+   but it silently changes the 600-900px tablet band too. Scoping to ≤600px
+   makes "desktop is untouched" a property of the file instead of a claim.
+
+   The ramp below is one system, not per-element guesses:
+     h1 32px · h2 27px · card h3 17px · body 15.5px · small 13px · caption 11.5px
+   (at 390px wide, with the vw terms letting it breathe up to 600px). Anything
+   under ~11px is a legibility failure, so nothing is allowed below that.
+   ════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* ── The ramp, restated for the phone ───────────────────────────────────
+     Every per-component override further down this block predates the type
+     tokens and still wins on source order, so nothing below changes
+     behaviour today. What this buys is that ANY rule using the ramp — and
+     anything added later — lands at phone scale automatically instead of
+     needing a matching override to be remembered. The steps compress
+     unevenly on purpose: the label sizes are already at the ~11px legibility
+     floor and cannot give anything back, while the two largest steps have
+     the most air to lose. */
+  :root {
+    --fs-label: 0.7rem;      /* 10.9px — floor. Do not reduce. */
+    --fs-label-sm: 0.68rem;
+    --fs-xs: 0.78rem;
+    --fs-sm: 0.84rem;
+    --fs-base: 0.9rem;
+    --fs-md: 0.96rem;
+    --fs-lg: 1.02rem;
+
+    /* Section rhythm compresses with everything else. --lead at 3.5rem is
+       56px of cream between a heading and its content on a 390px screen —
+       roughly a seventh of the viewport spent on one gap. */
+    --lead: 2rem;
+  }
+
+  /* ── Base type ─────────────────────────────────────────────────────── */
+  body { font-size: 15.5px; line-height: 1.6; }
+
+  /* ── Hard line breaks in headings ───────────────────────────────────────
+     Five h2s carry a <br> to art-direct a two-line shape on desktop
+     ("You already have a system.<br>It's just held together by hand.").
+     h1 deliberately does not, and the markup says why: a forced break is a
+     decision made at one width and applied at all of them. On a 360px screen
+     each of those h2s becomes two forced lines that then wrap again — four
+     ragged lines, with the break landing mid-thought.
+
+     Neutralising the break here keeps the desktop art direction intact and
+     hands the phone over to `text-wrap: balance`, which is already set on
+     every h2 and does the right thing at any width. */
+  .section h2 br,
+  .hero-copy h1 br { display: none; }
+
+  /* Sideways entrances become vertical ones. Two reasons, one of them not
+     cosmetic: a 292px-wide card offset by 40px reaches 346px on a 320px
+     screen, and every not-yet-revealed card on the page sits in that state.
+     body's `overflow-x: clip` does contain it, so nothing scrolls today — but
+     it is the page's only remaining source of horizontal extent, and relying
+     on clip to hide a real 32px overhang is a bet on every mobile browser
+     propagating it the same way. Vertical entrances cannot overhang at all.
+     A ±40px slide is also simply too wide a gesture on a phone; the same
+     motion reads as a wobble rather than an entrance. */
+  .reveal[data-anim="left"],
+  .reveal[data-anim="right"] { transform: translateY(24px); }
+
+  /* Nav is ~60px tall here, not 90. */
+  html { scroll-padding-top: 68px; }
+
+  h1 { font-size: clamp(1.95rem, 8.4vw, 2.75rem); line-height: 1.08; }
+  h2 { font-size: clamp(1.65rem, 7vw, 2.3rem); line-height: 1.1; }
+  h3 { font-size: 1.06rem; }
+
+  .eyebrow {
+    /* 11.2px. The ramp's floor — uppercase, tracked, and often gold on cream,
+       so this is the one label that cannot be shaved any further. */
+    font-size: 0.7rem;
+    /* 0.18em of tracking on a 3-word eyebrow is ~40px of pure air on a phone;
+       the old "REFINED STAYS. PREMIUM MANAGEMENT." wrapped to two lines
+       because of it. */
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+  .lede { font-size: 1rem; }
+
+  /* ── Buttons ───────────────────────────────────────────────────────── */
+  .btn { padding: 0.7em 1.25em; font-size: 0.875rem; }
+  .btn-lg { padding: 0.8em 1.4em; font-size: 0.92rem; }
+
+  /* ── Nav ───────────────────────────────────────────────────────────────
+     The reported bug: "Book a demo" ran off the right edge. It was not one
+     oversized element — brand + Sign in + CTA simply measured wider than a
+     320px viewport, so the flex row overflowed and body's overflow-x: clip
+     amputated the last item. Every value below is shaved to buy that width
+     back; the CTA is the one thing on this bar that must never be clipped. */
+  .nav {
+    gap: 0.6rem;
+    padding-inline: 0.9rem;
+    padding-block: 0.7rem;
+  }
+  .nav.is-stuck { padding-block: 0.5rem; }
+  /* Both scale by height only — see the lockup block. Held to the same 1.7:1
+     mark-to-wordmark height ratio as desktop so the pairing doesn't redraw
+     itself on a phone. */
+  .nav-brand { gap: 0.45rem; }
+  .nav-brand .brand-mark { height: 28px; }
+  .nav-brand .brand-word { height: 16px; }
+  /* Padding, not font-size: a bare inline link was a 19px-tall tap target.
+     (Below 900px this lives in .nav-panel and the bar copy is hidden — the
+     rule is kept for the tablet range above that breakpoint.) */
+  .nav-signin { font-size: 0.8rem; padding-block: 0.4rem; }
+  /* The panel's text must start on the same vertical as the brand mark above
+     it, so its inline padding tracks the bar's rather than its own clamp. */
+  .nav-panel { padding-inline: 0.9rem; }
+  .nav-panel-links a { font-size: 1rem; }
+  .nav-cta {
+    padding: 0.5em 0.9em;
+    font-size: 0.78rem;
+    /* Belt and braces: the label must not wrap to two lines inside the pill,
+       and the pill must not be the item flex chooses to shrink. */
+    white-space: nowrap;
+    flex: none;
+  }
+
+  /* ── Sections ──────────────────────────────────────────────────────────
+     `clamp(5rem, 11vh, 8.5rem)` pinned to 80px top AND bottom on a phone —
+     160px of dead cream between every pair of sections, which is most of why
+     the page ran 20,000px tall at 320px. */
+  .section { padding: 3.25rem 1rem; }
+
+  /* ── Hero ──────────────────────────────────────────────────────────── */
+  .hero { padding: 4.75rem 1rem 2.5rem; }
+  .hero-copy h1 {
+    /* The one override that matters most — was a flat 44px on every phone.
+       Stepped down from 8.2vw/2.6rem when the display face moved to Fraunces:
+       it sets ~8-10% wider than Cormorant per glyph, so "property" ran off the
+       right edge of a 390px screen at the old size. This holds the longest word
+       inside the viewport with room to spare. */
+    font-size: clamp(1.7rem, 7.2vw, 2.4rem);
+    /* Belt-and-braces: if an even narrower phone or a longer word ever appears,
+       break rather than overhang into body's overflow-x: clip. */
+    overflow-wrap: break-word;
+    margin-bottom: 0.35em;
+  }
+  .hero-copy .lede { font-size: 0.97rem; }
+  .hero-actions { gap: var(--s-2); margin: var(--s-5) 0 var(--s-3); }
+  .hero-note { font-size: 0.78rem; }
+
+  /* Same one-column stack as ≤900px, re-stated at phone metrics. The tick
+     column narrows to 14px to match the smaller type, and the gap between
+     items opens relative to the line-height so two wrapped items never look
+     like one four-line paragraph. */
+  .hero-proof {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-3);
+    width: 100%;
+    margin-top: var(--s-5);
+  }
+  .hero-proof li {
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  .hero-proof svg { width: 14px; height: 14px; }
+
+  .hero-audience { margin-top: 2.5rem; gap: 0.75rem; }
+  .hero-audience > span { font-size: 0.68rem; letter-spacing: 0.1em; }
+  .hero-audience li { font-size: 0.76rem; padding: 0.35em 0.8em; }
+
+  /* ── Generic cards (the problem section) ───────────────────────────── */
+  .cards { gap: 0.9rem; margin-top: 2rem; }
+  .card { padding: 1.35rem 1.2rem; }
+  .card p { font-size: 0.88rem; }
+  .card-icon svg { width: 26px; height: 26px; }
+  .problem .card-icon { width: 40px; height: 40px; margin-bottom: 0.7rem; }
+  .problem .card-icon svg { width: 21px; height: 21px; }
+
+  /* ── Counters (the KPI block) ──────────────────────────────────────────
+     Two columns, not one. auto-fit's 180px track means a phone gets a single
+     column, i.e. four 42px numerals stacked down ~400px of panel. As a 2×2 the
+     block is a quarter of the height and reads as a dashboard, which is the
+     whole point of the section. */
+  .counter-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.1rem 0.75rem;
+    margin-top: 2rem;
+    padding: 1.7rem 0.9rem 1.4rem;
+  }
+  .counter { padding-inline: 0.2rem; }
+  .counter strong { font-size: clamp(1.45rem, 6.8vw, 2.1rem); }
+  .counter strong::after { width: 26px; margin: 0.55rem auto 0.45rem; }
+  .counter span { font-size: 0.72rem; line-height: 1.35; }
+
+  /* ── Feature stack ─────────────────────────────────────────────────────
+     Supersedes the ≤700px block above. These cards were the worst offenders
+     for vertical space: a 27px-floor padding on all four sides, a 58px icon
+     tile and a 1.9rem numeral, all stacked five deep. */
+  .stack {
+    --stack-top: 72px;
+    --stack-step: 12px;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-bottom: 6vh;
+  }
+  .stack-inner { padding: 1.15rem 1.1rem 1.25rem; border-radius: var(--r-md); }
+  /* Held at 1.4rem, not the 1.25rem this was. The display face wants a floor on
+     this page — see the type note in :root and in <head> — and 1.25rem (20px)
+     sat under it. With a gradient clipped to the glyph, a chapter numeral this
+     small loses its thin strokes to hinting and turns grey and furry. This was
+     the only place in the file that had drifted below the floor. The 2.4px it
+     costs, five cards deep, is 12px of page. */
+  .stack-num { font-size: 1.4rem; }
+  .stack-ico {
+    width: 42px; height: 42px;
+    border-radius: 13px;
+    margin: 0.6rem 0 0.8rem;
+  }
+  .stack-ico svg { width: 21px; height: 21px; }
+  .stack-inner h3 {
+    font-size: 1.12rem;
+    /* Keeps the title clear of the checkmark parked in the top-right corner. */
+    padding-right: 2.25rem;
+    margin-bottom: 0.35rem;
+  }
+  .stack-lead { font-size: 0.88rem; margin-bottom: 0.9rem; }
+  .stack-tags { gap: 0.4rem; }
+  .stack-tags li { font-size: 0.75rem; padding: 0.35em 0.7em; gap: 0.35em; }
+  .stack-tags li::before { width: 5px; height: 5px; }
+  /* Held at the desktop badge size rather than scaled with the rest — "SOON"
+     is four uppercase characters and 0.55rem took it to 8.8px. */
+  .stack-tags li em { font-size: 0.62rem; padding: 0.1em 0.4em; }
+  .stack-check { width: 26px; height: 26px; top: 1.1rem; right: 1.1rem; stroke-width: 3; }
+
+  /* ── Sticky showcase ───────────────────────────────────────────────── */
+  .scrolly-stage { top: 68px; }
+  .step { min-height: 46vh; }
+  .step-num { font-size: 0.66rem; margin-bottom: 0.5rem; }
+  .step h3 { font-size: 1.45rem; }
+  .step p { font-size: 0.9rem; }
+  .scrolly-steps { --rail-gap: 1.1rem; }
+
+  /* ── Device frames ─────────────────────────────────────────────────── */
+  .frame { border-radius: var(--r-md); }
+  .frame-bar { padding: 8px 11px; gap: 5px; }
+  .frame-bar span { width: 8px; height: 8px; }
+  /* Was a hard 285px — wider than the content box at 320px, so the phone
+     mockup itself was pushing the page sideways. */
+  .frame-phone {
+    width: min(255px, 76vw);
+    border-radius: 32px;
+    padding: 8px;
+  }
+  .frame-phone .frame-screen { border-radius: 25px; }
+  .frame-notch { width: 88px; height: 18px; top: 8px; border-radius: 0 0 11px 11px; }
+  .phones { min-height: 0; }
+
+  /* ── Automation flow ───────────────────────────────────────────────── */
+  .flow { margin-top: 2.25rem; }
+  .flow::before, .flow::after { left: 17px; }
+  .flow-node { padding: 0 0 1.5rem 2.9rem; }
+  .fn-dot { width: 36px; height: 36px; font-size: 0.75rem; }
+  .flow-node strong { font-size: 1rem; padding-top: 0.25rem; }
+  .fn-sub { font-size: 0.82rem; }
+
+  /* ── Roadmap chips ─────────────────────────────────────────────────── */
+  .chip-cloud { gap: 0.45rem; margin-top: 1.6rem; }
+  .chip-cloud span { font-size: 0.78rem; padding: 0.45em 0.9em; }
+
+  /* ── Split / ticks ─────────────────────────────────────────────────── */
+  .ticks { margin-top: 1.4rem; }
+  .ticks li { font-size: 0.9rem; padding-left: 1.6rem; margin-bottom: 0.6rem; }
+  .ticks li::before { width: 0.9rem; height: 0.48rem; }
+
+  /* ── Night Dim ─────────────────────────────────────────────────────── */
+  .dim-copy { margin-bottom: 2rem; }
+  .dim-hint { font-size: 0.7rem; margin-top: 1rem; }
+
+  /* ── Video gallery ─────────────────────────────────────────────────── */
+  .video-grid { gap: 1rem; margin-top: 2rem; }
+  .play-icon { width: 46px; height: 46px; }
+  .play-icon svg { width: 20px; height: 20px; }
+  .video-card figcaption { font-size: 0.82rem; padding-top: 0.6rem; }
+  .lightbox { padding: 1rem; }
+  .lightbox-close { top: 0.75rem; right: 0.9rem; width: 38px; height: 38px; font-size: 1.5rem; }
+
+  /* ── Testimonials ──────────────────────────────────────────────────── */
+  .quote-grid { gap: 1rem; margin-top: 2rem; }
+  .quote-grid blockquote { padding: 1.3rem 1.2rem; }
+  .quote-grid p { font-size: 0.9rem; }
+  .stars { font-size: 0.85rem; margin-bottom: 0.6rem; }
+  .quote-grid footer { margin-top: 1rem; padding-top: 0.9rem; gap: 0.65rem; }
+  .q-avatar { width: 34px; height: 34px; }
+  .q-avatar svg { width: 17px; height: 17px; }
+  .quote-grid footer strong { font-size: 0.86rem; }
+  .quote-grid footer span { font-size: 0.76rem; }
+
+  /* ── Pricing ───────────────────────────────────────────────────────── */
+  .price-grid { gap: 1.1rem; margin-top: 2.25rem; }
+  .price-card { padding: 1.5rem 1.25rem; border-radius: var(--r-md); }
+  .price-card.featured { padding-block: 1.9rem; }
+  .pc-badge { font-size: 0.6rem; top: -11px; }
+  .pc-for { font-size: 0.8rem; margin-bottom: 0.9rem; }
+  .pc-amt { font-size: 2.4rem; margin-bottom: 1.1rem; }
+  .pc-amt span { font-size: 1.15rem; }
+  .pc-amt em { font-size: 0.8rem; }
+  .price-card .ticks { margin-bottom: 1.25rem; }
+  .price-card .ticks li { font-size: 0.84rem; }
+  .price-note { font-size: 0.85rem; margin-top: 1.5rem; }
+
+  /* ── FAQ ───────────────────────────────────────────────────────────── */
+  .faq-list { margin-top: 2rem; }
+  .faq details { margin-bottom: 0.6rem; }
+  .faq summary { font-size: 0.92rem; padding: 0.95rem 2.5rem 0.95rem 1.1rem; }
+  .faq summary::after { right: 1.1rem; width: 8px; height: 8px; }
+  .faq-body { padding: 0 1.1rem 1.1rem; }
+  .faq-body p { font-size: 0.88rem; }
+
+  /* ── Final CTA ─────────────────────────────────────────────────────── */
+  .request-form { gap: 0.65rem; margin: 1.75rem auto 1rem; }
+  .request-form input { padding: 0.85em 1.05em; font-size: 0.9rem; }
+  .cta-note { font-size: 0.78rem; }
+
+  /* ── Footer ────────────────────────────────────────────────────────── */
+  .footer { padding: 2.75rem 1rem 1.5rem; }
+  .footer-top { gap: 1.6rem; }
+  .footer-brand { font-size: 1rem; }
+  .footer-brand .tagline { font-size: 0.78rem; margin-top: 0.35rem; }
+  /* Footer links are a dense list of 22px-tall inline targets. The padding
+     (not a bigger font) lifts each to ~29px and the reduced gap keeps the
+     column the same overall height, so nothing grows to pay for it. */
+  .footer-col { gap: 0.15rem; }
+  .footer-col h4 { font-size: 0.68rem; }
+  .footer-col a { font-size: 0.85rem; padding-block: 0.28rem; }
+  .footer-bottom { margin-top: 2rem; padding-top: 1.2rem; }
+  .footer-bottom p, .footer-bottom a { font-size: 0.75rem; }
+  .footer-bottom nav { gap: 1rem; }
+  .footer-bottom a { display: inline-block; padding-block: 0.3rem; }
+
+  /* ── Legal pages ───────────────────────────────────────────────────── */
+  .legal { padding: 5.5rem 1rem 3rem; }
+  .legal-head { margin-bottom: 1.75rem; padding-bottom: 1.4rem; }
+  .legal-head h1 { font-size: clamp(1.8rem, 7.5vw, 2.4rem); }
+  .legal-meta { font-size: 0.82rem; }
+  .legal-note { padding: 0.9rem 1.05rem; font-size: 0.85rem; margin: 1.4rem 0; }
+  .legal-toc { padding: 1.1rem 1.2rem; margin: 1.75rem 0; }
+  .legal-toc ol { font-size: 0.85rem; }
+  /* Same tap-target treatment as the footer: the TOC is ~20 links in a row. */
+  .legal-toc li { margin-bottom: 0.1rem; }
+  .legal-toc a { display: inline-block; padding-block: 0.3rem; }
+  .legal h2 { font-size: 1.4rem; margin-top: 2rem; scroll-margin-top: 68px; }
+  .legal h2 .legal-num { font-size: 0.85rem; }
+  .legal h3 { font-size: 0.98rem; }
+  .legal-back { margin-top: 2.25rem; font-size: 0.85rem; }
+}
+
+/* ── 320–380px: the last squeeze ──────────────────────────────────────────
+   Only the things that still do not fit on the narrowest phones in service.
+   Kept separate from the block above so the common case (375–430px) is not
+   penalised for the iPhone SE. */
+@media (max-width: 380px) {
+  .nav { gap: 0.5rem; padding-inline: 0.75rem; }
+  .nav-brand .brand-mark { height: 25px; }
+  /* Mark only down here. Measured, not guessed: bar + "Sign in" + the CTA
+     need ~332px with the wordmark in, so a 320px phone was ~12px short and
+     the CTA was the item that gave — flex-shrink squeezed "Schedule a Demo"
+     onto two lines. The wordmark is the widest single piece at ~76px, and
+     dropping it is free: .nav-brand carries the accessible name in its
+     aria-label, so the link still announces "Pace Lodgix — home" with no
+     image present. Reclaims ~83px and the bar sits on one line again. */
+  .nav-brand .brand-word { display: none; }
+  .nav-signin { font-size: 0.75rem; }
+  .nav-cta { padding: 0.45em 0.8em; font-size: 0.73rem; }
+  .nav-panel { padding-inline: 0.75rem; }
+  /* 44px each side of a 320px bar is a lot of the width; the target keeps its
+     height and gives back only the horizontal slack it was padding with. */
+  .nav-toggle { width: 38px; margin-right: -0.25rem; }
+
+  .section { padding-inline: 0.85rem; }
+  .hero { padding-inline: 0.85rem; }
+  .counter-grid { padding-inline: 0.6rem; gap: 0.9rem 0.5rem; }
+  .stack-inner { padding-inline: 0.95rem; }
+
+  /* Two full-width buttons read better than two cramped ones side by side. */
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
+}
+
+/* Motion is decoration. Everything above must stay legible without it. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; filter: none; }
+  .step { opacity: 1; filter: none; }
+  /* The blanket rule above collapses transition-DURATION but not delay, and
+     .nav-panel parks its visibility switch on a 0.28s delay so the sheet is
+     still painted while it slides out. With the slide gone that delay is
+     just a pause, so drop it and let the menu appear and vanish outright. */
+  .nav-panel { transform: none; transition-delay: 0s; }
+  .flow-node { opacity: 1; transform: none; }
+  .flow::after { transform: scaleY(1); }
+  #heroFrame { transform: none; }
+  .dim-stage .dim-dark { opacity: 0; }
+
+  /* The old sun/lantern layers needed opacity pinned here, because the blanket
+     rule above dropped them to an undeclared base of 1 and blew out the sun.
+     The blobs don't: .blob declares its own opacity, so killing the drift
+     leaves them at exactly the intended brightness. Nothing to pin. */
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Legal pages — privacy.html, terms.html
+
+   These are plain long-form documents: no hero, no reveals, no scroll.js.
+   Two consequences handled here:
+     1. The nav has nothing dark to sit over, so it must read as solid from
+        first paint. .nav-solid on <header> pins the "is-stuck" appearance
+        (scroll.js normally toggles that class; these pages don't load it).
+     2. The content column is a readable measure with a table of contents.
+   ════════════════════════════════════════════════════════════════════════ */
+/* Must stay in lockstep with .nav.is-stuck — this is the same bar in the same
+   state, just pinned from markup instead of from scroll. When one changes,
+   change both, or the legal pages start looking like a different site. */
+.nav-solid {
+  background: rgba(250, 245, 234, 0.82);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow:
+    inset 0 -1px 0 rgba(31, 58, 42, 0.09),
+    0 8px 28px -12px rgba(13, 31, 22, 0.18);
+  padding-block: calc(0.6rem + 3px) 0.6rem;
+}
+/* The brand lockup's light-surface swap is handled with .nav.is-stuck up in
+   the lockup block — .nav-solid is listed alongside it there. */
+.nav-solid .nav-links a { color: var(--text-light); }
+.nav-solid .nav-links a:hover { color: var(--primary); }
+
+.legal {
+  max-width: var(--wrap-prose);
+  margin: 0 auto;
+  padding: clamp(7.5rem, 14vh, 9.5rem) clamp(1.2rem, 4vw, 2rem) 5rem;
+}
+.legal-head { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+.legal-head .eyebrow { margin-bottom: 0.75rem; }
+.legal-head h1 { font-size: clamp(2.4rem, 5.2vw, 3.8rem); text-align: left; margin-bottom: 0.6rem; }
+.legal-meta { color: var(--text-muted); font-size: var(--fs-base); margin: 0; }
+.legal-meta strong { color: var(--text-light); font-weight: 600; }
+
+/* Amber "please read" callout — reuses the placeholder-ring aesthetic. */
+.legal-note {
+  margin: 2rem 0;
+  padding: 1.1rem 1.35rem;
+  background: rgba(200, 155, 60, 0.09);
+  border: 1px solid rgba(200, 155, 60, 0.32);
+  border-left: 3px solid var(--green);
+  border-radius: var(--r-md);
+  font-size: var(--fs-base);
+  color: var(--text-light);
+}
+.legal-note strong { color: var(--text); }
+
+.legal-toc {
+  margin: 2.5rem 0;
+  padding: 1.5rem 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+.legal-toc h2 {
+  font-family: var(--font);
+  font-size: var(--fs-label-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  margin: 0 0 0.9rem;
+}
+.legal-toc ol {
+  margin: 0;
+  padding-left: 1.2rem;
+  columns: 2;
+  column-gap: var(--s-6);
+  font-size: var(--fs-base);
+}
+.legal-toc li { margin-bottom: var(--s-1); break-inside: avoid; }
+.legal-toc a { color: var(--text-light); text-decoration: none; }
+.legal-toc a:hover { color: var(--green-ink); text-decoration: underline; }
+
+.legal h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.2vw, 2.2rem);
+  text-align: left;
+  margin: 3rem 0 0.4rem;
+  scroll-margin-top: 90px;
+}
+.legal h2 .legal-num {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--green-ink);
+  margin-right: var(--s-2);
+  vertical-align: 0.35em;
+}
+.legal h3 { margin: 1.8rem 0 0.4rem; font-size: 1.05rem; }
+.legal p, .legal li { color: var(--text-light); }
+.legal ul, .legal ol { padding-left: 1.4rem; margin: 0 0 1em; }
+.legal li { margin-bottom: 0.45rem; }
+.legal a { color: var(--green-ink); text-decoration: underline; text-underline-offset: 2px; }
+.legal a:hover { color: var(--primary); }
+.legal strong { color: var(--text); font-weight: 600; }
+.legal .legal-fill {
+  background: rgba(200, 155, 60, 0.16);
+  border-radius: 4px;
+  padding: 0 0.3em;
+  font-style: normal;
+  color: var(--primary);
+  font-weight: 600;
+}
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--s-8);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--green-ink);
+  text-decoration: none;
+}
+.legal-back:hover { color: var(--primary); }
+
+@media (max-width: 640px) {
+  .legal-toc ol { columns: 1; }
+}

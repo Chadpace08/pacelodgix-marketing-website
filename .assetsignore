@@ -1,0 +1,19 @@
+# Non-public files in marketing/ — never serve these from the Worker.
+.wrangler
+node_modules
+wrangler.jsonc
+.assetsignore
+index.zip
+Marketing SEO Prompt.txt
+Marketing Resort Image.png
+
+# Brand artwork masters. These are the 1536x1024 source renders the assets/
+# logo-mark-*.png and wordmark-*.png files are derived from — ~2MB each, and
+# they were being served publicly. Keep them here as the masters to re-export
+# from, but never ship them.
+Pace Lodgix Logo White.png
+Pace Lodgix Wordmark v2.png
+
+# Internal notes. The Worker serves this whole folder, so anything dropped in
+# here is public by default — keep working docs listed.
+*.md

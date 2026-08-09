@@ -1,0 +1,269 @@
+You are an expert SaaS copywriter, SEO strategist, conversion copywriter, and UX content specialist.
+
+Your task is to rewrite the entire marketing website for my SaaS Property Management System called **Pace Lodgix**.
+
+## PRIMARY GOAL
+
+Rewrite every piece of website copy so it:
+
+• Sounds premium, modern, and trustworthy
+• Hooks visitors within the first few seconds
+• Clearly communicates value instead of just listing features
+• Converts more visitors into demo requests or sign-ups
+• Is optimized for both Google SEO and AI Search (ChatGPT, Claude, Gemini, Perplexity)
+• Maintains a warm, professional, and human tone
+
+The writing should make visitors think:
+
+> "This is exactly the property management system I've been looking for."
+
+----------------------------------------------------
+ABOUT THE PRODUCT
+----------------------------------------------------
+
+Pace Lodgix is a modern Property Management System (PMS) designed for:
+
+• Vacation rentals
+• Staycations
+• Beach resorts
+• Villas
+• Apartments
+• Short-term rental businesses
+
+Core capabilities include:
+
+- Booking management
+- Reservation calendar
+- Guest management
+- Automated invoices
+- Email notifications
+- Check-in & check-out tracking
+- Income & expense tracking
+- Financial reports with Excel export
+- KPI dashboard
+- Occupancy monitoring
+- Payment tracking
+- Booking source analytics
+- Marketing source tracking
+- Mobile-friendly interface
+- Multi-property management
+
+Do not simply describe features.
+
+Instead, explain how each feature saves time, reduces errors, increases bookings, or improves the guest experience.
+
+Always focus on BENEFITS before FEATURES.
+
+----------------------------------------------------
+TARGET AUDIENCE
+----------------------------------------------------
+
+Primary audience:
+
+• Airbnb hosts
+• Vacation rental owners
+• Resort owners
+• Villa operators
+• Property managers
+• Hospitality entrepreneurs
+• Small to medium accommodation businesses
+
+Their biggest pain points include:
+
+- Double bookings
+- Manual spreadsheets
+- Lost reservations
+- Missed payments
+- Time-consuming administration
+- Poor financial tracking
+- Disorganized guest information
+- Slow communication with guests
+- Difficulty managing multiple properties
+
+Show how Pace Lodgix solves these problems.
+
+----------------------------------------------------
+SEO REQUIREMENTS
+----------------------------------------------------
+
+Optimize the entire website for search engines and AI Search.
+
+Identify:
+
+• Primary keyword
+• Secondary keywords
+• Semantic keywords
+
+Naturally include keywords throughout the copy.
+
+Create or improve:
+
+• SEO page title
+• Meta description
+• URL slug recommendations
+• H1
+• H2
+• H3 headings
+
+Do NOT keyword stuff.
+
+Write naturally.
+
+----------------------------------------------------
+AI SEARCH OPTIMIZATION
+----------------------------------------------------
+
+Structure content so AI assistants can easily understand and recommend it.
+
+Use:
+
+• Clear definitions
+• Answer-first writing
+• FAQ opportunities
+• Semantic language
+• Natural questions
+• Helpful explanations
+
+----------------------------------------------------
+CONVERSION COPYWRITING
+----------------------------------------------------
+
+Rewrite the copy using proven conversion principles.
+
+Improve:
+
+• Hero headline
+• Hero subheadline
+• Calls-to-action
+• Section introductions
+• Feature descriptions
+• Benefit statements
+• Testimonials section (leave placeholders if needed)
+• FAQ section
+• Pricing section (if applicable)
+• Final CTA
+
+Every CTA should encourage visitors to:
+
+• Book a demo
+• Start a free trial
+• Contact us
+• Learn more
+
+Avoid weak CTAs such as:
+
+"Click here"
+
+Instead use stronger action-oriented language.
+
+----------------------------------------------------
+TONE
+----------------------------------------------------
+
+Professional
+
+Premium
+
+Modern
+
+Friendly
+
+Trustworthy
+
+Confident
+
+Human
+
+Never sound robotic.
+
+Avoid AI clichés like:
+
+- Unlock the power of...
+- In today's fast-paced world...
+- Delve into...
+- Revolutionize...
+- Game-changing...
+
+----------------------------------------------------
+READABILITY
+----------------------------------------------------
+
+Use:
+
+• Short paragraphs
+• Short sentences
+• Bullet lists
+• Clear headings
+• White space
+• Active voice
+
+Write at approximately an 8th–10th grade reading level.
+
+----------------------------------------------------
+UX WRITING
+----------------------------------------------------
+
+Every section should answer:
+
+Why should I care?
+
+How does this help me?
+
+What problem does it solve?
+
+Why should I trust Pace Lodgix?
+
+Why should I act now?
+
+----------------------------------------------------
+WEBSITE REVIEW
+----------------------------------------------------
+
+Review every section of the website, including:
+
+- Navigation
+- Hero section
+- Features
+- Benefits
+- Dashboard section
+- Financial section
+- Calendar section
+- Automation section
+- Testimonials
+- FAQ
+- Pricing
+- Footer
+- Contact section
+- About section
+
+Identify weak areas before rewriting.
+
+Explain WHY each recommendation improves user experience, SEO, or conversion.
+
+----------------------------------------------------
+OUTPUT FORMAT
+----------------------------------------------------
+
+For each website section provide:
+
+1. Current issue (if any)
+
+2. Why it should be improved
+
+3. Rewritten copy
+
+4. SEO notes
+
+5. Conversion notes
+
+6. AI Search notes
+
+At the end, provide:
+
+• Overall SEO score (0–100)
+• Conversion score (0–100)
+• Readability score
+• Trust/E-E-A-T score
+• Top 10 recommendations for further improvement
+
+The objective is to make Pace Lodgix look like a premium, trustworthy, high-end Property Management System that competes with leading PMS platforms while remaining clear, approachable, and persuasive.

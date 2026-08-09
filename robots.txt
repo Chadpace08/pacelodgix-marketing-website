@@ -1,0 +1,5 @@
+# Pace Lodgix — https://pacelodgix.com
+User-agent: *
+Allow: /
+
+Sitemap: https://pacelodgix.com/sitemap.xml
