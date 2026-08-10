@@ -4,6 +4,12 @@ node_modules
 wrangler.jsonc
 .assetsignore
 index.zip
+
+# Git internals. The repo was created after this file was last reviewed, and
+# the 2026-08-10 deploy shipped the whole .git directory publicly — anyone
+# could fetch /.git/config and every commit object. Never serve these.
+.git
+.gitignore
 Marketing SEO Prompt.txt
 Marketing Resort Image.png
 
