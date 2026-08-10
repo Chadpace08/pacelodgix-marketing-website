@@ -19,10 +19,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Restores a previous dismissal of the beta bar before first paint — see
+       the matching note in index.html. -->
+  <script>try{if(localStorage.getItem('pl-beta-dismissed')==='1')document.documentElement.classList.add('beta-off');}catch(e){}</script>
 </head>
 <body>
 
 <a class="skip-link" href="#top">Skip to content</a>
+
+<div class="beta-bar" id="betaBar" role="region" aria-label="Product status">
+  <span class="beta-chip">Beta</span>
+  <p class="beta-text">
+    <span class="beta-full">Pace Lodgix is live and in active beta — early users get direct support from the founder.</span>
+    <span class="beta-short">Live in beta — early users get founder support.</span>
+  </p>
+  <a class="beta-cta" href="index.html#cta">Talk to us <span aria-hidden="true">&rarr;</span></a>
+  <button class="beta-close" id="betaClose" type="button" aria-label="Dismiss beta notice">&times;</button>
+</div>
 
 <!-- Solid nav: this page has no dark hero for the transparent nav to sit over,
      and it doesn't load scroll.js, so .nav-solid pins the "stuck" look. -->
@@ -158,7 +172,7 @@
   <p>Pace Lodgix uses a minimal set of browser storage mechanisms, focused on making the Service work rather than on tracking:</p>
   <ul>
     <li><strong>Strictly necessary:</strong> your authenticated session, stored in local storage, keeps you signed in.</li>
-    <li><strong>Preferences:</strong> your appearance mode (Light / Night Dim / Auto) is stored per device and is not tied to your identity.</li>
+    <li><strong>Preferences:</strong> your appearance mode (Light / Night Dim / Auto), and whether you have dismissed the beta notice on our website, are stored per device and are not tied to your identity.</li>
     <li><strong>Analytics &amp; advertising:</strong> we do <strong>not</strong> use advertising cookies, tracking pixels, or third-party analytics tools on this website or in the Service.</li>
     <li><strong>Content delivery:</strong> our marketing website loads an animation library (GSAP) from Cloudflare's public content delivery network. As part of delivering that file, Cloudflare receives your IP address and browser type. It is not used to identify or profile you.</li>
   </ul>
@@ -250,6 +264,14 @@
     </nav>
   </div>
 </footer>
+
+<a class="chat-fab" href="https://m.me/pacedigitalworks" target="_blank" rel="noopener"
+   aria-label="Chat with us on Messenger">
+  <svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false">
+    <path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.15.26.35.27.57l.05 1.78c.02.57.6.94 1.12.71l1.99-.88c.17-.07.36-.09.53-.04 1.03.28 2.12.44 3.24.44 5.64 0 10-4.13 10-9.7S17.64 2 12 2Zm-6.01 12.54 2.94-4.66c.47-.74 1.47-.93 2.18-.4l2.34 1.75c.21.16.51.16.72 0l3.16-2.4c.42-.32.97.18.69.63l-2.94 4.66c-.47.74-1.47.93-2.18.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63Z"/>
+  </svg>
+  <span class="chat-fab-label">Chat with us</span>
+</a>
 
 <script src="nav.js"></script>
 </body>

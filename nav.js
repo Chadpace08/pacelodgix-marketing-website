@@ -80,3 +80,31 @@
   // The markup ships with inert already set, so the closed state is correct
   // before this file runs and there is nothing to initialise here.
 })();
+
+/* ════════════════════════════════════════════════════════════════════════
+   Beta notice bar — dismissal
+
+   A SEPARATE IIFE, deliberately. The block above returns early if any of the
+   three nav elements is missing, and the beta bar must not be collateral
+   damage of an unrelated markup change to the menu.
+
+   Showing it again is only a matter of clearing the key, so the state is
+   kept in localStorage rather than a cookie: it is a per-device UI
+   preference, it never needs to reach the server, and the privacy policy
+   already declares local storage on that basis.
+   ════════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  const close = document.getElementById('betaClose');
+  if (!close) return;
+
+  close.addEventListener('click', () => {
+    // The class both hides the bar and zeroes --beta-h, which pulls the nav,
+    // the progress bar and the page's top padding back up in one step.
+    document.documentElement.classList.add('beta-off');
+    // Throws in Safari private mode. The bar is already gone for this page
+    // view either way; only the memory of it is lost.
+    try { localStorage.setItem('pl-beta-dismissed', '1'); } catch (e) {}
+  });
+})();

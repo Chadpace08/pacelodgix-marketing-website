@@ -48,6 +48,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="styles.css">
 
+  <!-- Restores a previous dismissal of the beta bar BEFORE first paint. Inline
+       and in <head> on purpose: loading this from nav.js would paint the bar,
+       then remove it, and every repeat visitor would see the whole page jump
+       42px. Wrapped in try/catch because localStorage throws outright in
+       Safari private mode rather than returning null. -->
+  <script>try{if(localStorage.getItem('pl-beta-dismissed')==='1')document.documentElement.classList.add('beta-off');}catch(e){}</script>
+
   <!-- Structured data. Keep the FAQ entries in sync with the #faq section below;
        Google shows these as rich results and AI search engines quote them. -->
   <script type="application/ld+json">
@@ -71,7 +78,7 @@
           "areaServed": "PH",
           "availableLanguage": ["en", "fil"]
         },
-        "sameAs": ["https://www.facebook.com/chadpace6"]
+        "sameAs": ["https://www.facebook.com/pacedigitalworks"]
       },
       {
         "@type": "WebSite",
@@ -179,6 +186,23 @@
 <!-- Keyboard users hit seven nav stops before the headline on every page load.
      Visually hidden until focused; see .skip-link in styles.css. -->
 <a class="skip-link" href="#top">Skip to content</a>
+
+<!-- ═══════════════════════════ BETA NOTICE ═══════════════════════════
+     Placed after the skip link so the skip link stays the first focusable
+     thing on the page — a visitor tabbing in should still be able to jump
+     past the chrome, not land on a dismiss button.
+
+     Two versions of the sentence, one shown at a time by CSS. See the note
+     on .beta-text: this bar must never wrap to two lines. -->
+<div class="beta-bar" id="betaBar" role="region" aria-label="Product status">
+  <span class="beta-chip">Beta</span>
+  <p class="beta-text">
+    <span class="beta-full">Pace Lodgix is live and in active beta — early users get direct support from the founder.</span>
+    <span class="beta-short">Live in beta — early users get founder support.</span>
+  </p>
+  <a class="beta-cta" href="#cta">Talk to us <span aria-hidden="true">&rarr;</span></a>
+  <button class="beta-close" id="betaClose" type="button" aria-label="Dismiss beta notice">&times;</button>
+</div>
 
 <!-- Scroll progress indicator -->
 <div class="progress" id="progress" aria-hidden="true"><span></span></div>
@@ -1008,7 +1032,7 @@
     <nav class="footer-col">
       <h4>Contact</h4>
       <a href="https://wa.me/639563800054" target="_blank" rel="noopener">WhatsApp</a>
-      <a href="https://www.facebook.com/chadpace6" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.facebook.com/pacedigitalworks" target="_blank" rel="noopener">Facebook</a>
       <a href="mailto:hello@pacelodgix.com">hello@pacelodgix.com</a>
     </nav>
   </div>
@@ -1026,6 +1050,23 @@
   <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
   <video id="lightboxVideo" controls playsinline></video>
 </div>
+
+<!-- ═══════════════════════ MESSENGER BUTTON ═══════════════════════
+     Opens a Messenger conversation with the Page in a new tab. Not Meta's
+     embedded chat plugin — see the note above .chat-fab in styles.css for
+     why (it would put Facebook's tracking SDK on every page and contradict
+     privacy.html).
+
+     One path with fill-rule="evenodd": the bolt is a hole punched through
+     the bubble, so it shows the button's green rather than needing a second
+     fill that would have to be kept in sync with the background. -->
+<a class="chat-fab" href="https://m.me/pacedigitalworks" target="_blank" rel="noopener"
+   aria-label="Chat with us on Messenger">
+  <svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false">
+    <path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.15.26.35.27.57l.05 1.78c.02.57.6.94 1.12.71l1.99-.88c.17-.07.36-.09.53-.04 1.03.28 2.12.44 3.24.44 5.64 0 10-4.13 10-9.7S17.64 2 12 2Zm-6.01 12.54 2.94-4.66c.47-.74 1.47-.93 2.18-.4l2.34 1.75c.21.16.51.16.72 0l3.16-2.4c.42-.32.97.18.69.63l-2.94 4.66c-.47.74-1.47.93-2.18.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63Z"/>
+  </svg>
+  <span class="chat-fab-label">Chat with us</span>
+</a>
 
 <script src="nav.js"></script>
 <script src="scroll.js"></script>

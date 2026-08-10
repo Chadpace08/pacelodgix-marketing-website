@@ -3913,3 +3913,182 @@ main:focus-visible { outline: 0; box-shadow: none; }
 @media (max-width: 640px) {
   .legal-toc ol { columns: 1; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   BETA NOTICE BAR  +  MESSENGER BUTTON
+   Added 2026-08-10. Both appear on all three pages.
+
+   The bar is a fourth fixed layer on a page that already had three, so it
+   does not simply sit "at the top" — everything pinned to the viewport top
+   has to move down by exactly its height, and everything that scrolls to an
+   anchor has to clear it too. That height is --beta-h, declared once here
+   and consumed by every rule that needs it. Dismissing the bar sets it to
+   0px rather than special-casing each rule.
+
+   --beta-h lives on :root, not on body, because the head script that
+   restores a previous dismissal runs before <body> exists.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root { --beta-h: 42px; }
+/* Set by the inline head script on a repeat visit after dismissal, and by
+   the close button. On :root so it applies before first paint — putting it
+   on body would let the bar flash in and then vanish. */
+:root.beta-off { --beta-h: 0px; }
+:root.beta-off .beta-bar { display: none; }
+
+.beta-bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--beta-h);
+  /* Above .nav (50) and above .progress (60) — it is the topmost band. */
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0 2.4rem 0 clamp(0.9rem, 3vw, 1.5rem);
+  /* Graphite, not green: the bar stacks directly on top of the transparent
+     nav over the dark hero, and a green band there read as a second brand
+     surface competing with the hero field. Graphite reads as chrome. */
+  background: var(--graphite);
+  color: var(--ink-dark-1);
+  font-size: 0.82rem;
+  line-height: 1.2;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.beta-chip {
+  flex: none;
+  padding: 0.25em 0.6em;
+  border-radius: var(--r-full);
+  background: var(--gold);
+  color: #1A1508;
+  font-family: var(--font-brand);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* One line, always. A beta notice that wraps to two lines on a phone doubles
+   the height of the bar and pushes the hero headline off the first screen,
+   so the long sentence is swapped for a short one rather than allowed to
+   wrap. */
+.beta-text {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.beta-short { display: none; }
+
+.beta-cta {
+  flex: none;
+  color: var(--green-bright);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.beta-cta:hover { text-decoration: underline; }
+
+.beta-close {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--on-dark-2);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+.beta-close:hover {
+  color: var(--on-dark);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+@media (max-width: 760px) {
+  .beta-full { display: none; }
+  .beta-short { display: inline; }
+}
+@media (max-width: 460px) {
+  .beta-cta { display: none; }   /* the whole bar is a nudge; the chip carries it */
+}
+
+/* ── Everything the bar displaces ─────────────────────────────────────────
+   These four rules restate properties set earlier in this file. They are
+   appended rather than edited in place so the bar can be deleted in one
+   block later without unpicking the nav and hero rules. */
+.nav      { top: var(--beta-h); }
+.progress { top: var(--beta-h); }
+.hero     { padding-top: calc(clamp(5.5rem, 11vh, 7.5rem) + var(--beta-h)); }
+.legal    { padding-top: calc(clamp(7.5rem, 14vh, 9.5rem) + var(--beta-h)); }
+
+/* Anchor landings. Without these, clicking "Pricing" puts the section title
+   underneath the nav, which is now 42px lower than the offsets at the top of
+   this file assume. */
+html { scroll-padding-top: calc(90px + var(--beta-h)); }
+.legal h2 { scroll-margin-top: calc(90px + var(--beta-h)); }
+
+@media (max-width: 900px) {
+  html { scroll-padding-top: calc(68px + var(--beta-h)); }
+  .legal h2 { scroll-margin-top: calc(68px + var(--beta-h)); }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   MESSENGER BUTTON
+
+   A link, not Meta's chat plugin. The plugin would load Facebook's SDK on
+   every page and set tracking cookies, which would contradict the "we use no
+   third-party trackers" statement in privacy.html — and it needs the Page's
+   numeric id plus a domain whitelist in Meta Business Suite before it renders
+   at all. This opens m.me in a new tab instead: no third-party code, nothing
+   to configure, and the message still lands in the Page inbox.
+   ════════════════════════════════════════════════════════════════════════ */
+
+.chat-fab {
+  position: fixed;
+  right: clamp(1rem, 3vw, 1.75rem);
+  bottom: clamp(1rem, 3vw, 1.75rem);
+  z-index: 65;                    /* over the page, under the beta bar */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.15rem 0.7rem 0.95rem;
+  border-radius: var(--r-full);
+  background: var(--green);
+  color: var(--on-accent);
+  font-family: var(--font-brand);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 30px -10px rgba(10, 13, 11, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.chat-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px -12px rgba(10, 13, 11, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.chat-fab svg { flex: none; width: 22px; height: 22px; }
+
+/* Below 560px the label goes and the button becomes a circle. A pill wide
+   enough for "Chat with us" covers a meaningful slice of a 360px screen, and
+   it sits over the pricing cards and the FAQ. */
+@media (max-width: 560px) {
+  .chat-fab { padding: 0.8rem; }
+  .chat-fab-label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-fab, .chat-fab:hover { transition: none; transform: none; }
+}
