@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — Pace Lodgix</title>
   <meta name="description" content="How Pace Lodgix collects, uses, protects and shares personal information — for property owners using our vacation rental property management software and for the guests who book through it.">
-  <link rel="canonical" href="https://pacelodgix.com/privacy.html">
+  <!-- No .html. The Worker's asset handler 307-redirects /privacy.html to
+       /privacy, so the extensionless URL is the only one that answers 200 and
+       therefore the only one that can be canonical. Pointing this at
+       /privacy.html made the canonical a redirect — Google then files the page
+       under "Page with redirect" instead of indexing it. Keep this in step
+       with sitemap.xml, which lists the same extensionless URLs. -->
+  <link rel="canonical" href="https://pacelodgix.com/privacy">
   <meta name="robots" content="index, follow">
 
   <!-- Favicon is the --primary silhouette, not the white render: browser tabs

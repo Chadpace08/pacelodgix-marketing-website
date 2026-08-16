@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Service — Pace Lodgix</title>
   <meta name="description" content="The terms that govern your use of Pace Lodgix — the vacation rental property management system. Accounts, subscriptions, acceptable use, data, and liability.">
-  <link rel="canonical" href="https://pacelodgix.com/terms.html">
+  <!-- No .html. The Worker's asset handler 307-redirects /terms.html to /terms,
+       so the extensionless URL is the only one that answers 200 and therefore
+       the only one that can be canonical. Pointing this at /terms.html made the
+       canonical a redirect — Google then files the page under "Page with
+       redirect" instead of indexing it. Keep this in step with sitemap.xml,
+       which lists the same extensionless URLs. -->
+  <link rel="canonical" href="https://pacelodgix.com/terms">
   <meta name="robots" content="index, follow">
 
   <!-- Favicon is the --primary silhouette, not the white render: browser tabs

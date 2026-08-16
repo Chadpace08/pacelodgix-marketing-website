@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  EXTENSIONLESS URLs, deliberately. This listed /privacy.html and /terms.html,
+  but the Worker's asset handler 307-redirects those to /privacy and /terms.
+  A sitemap entry that redirects is not indexed as listed — Google follows it,
+  then files the destination under "Page with redirect", and the entry itself
+  is wasted. Only URLs that answer 200 belong in here. The canonical tags in
+  privacy.html and terms.html were corrected to match; keep the three in step.
+
+  <lastmod> is the one optional field Google still uses, and only while it
+  stays honest. Update it when a page's CONTENT changes, never on a deploy
+  that only touched styling — a sitemap whose dates always say "today" is
+  treated as noise and ignored.
+
+  <changefreq> and <priority> are ignored by Google entirely. They are left
+  here because Bing still reads them and they cost nothing.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pacelodgix.com/</loc>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pacelodgix.com/privacy.html</loc>
+    <loc>https://pacelodgix.com/privacy</loc>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://pacelodgix.com/terms.html</loc>
+    <loc>https://pacelodgix.com/terms</loc>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
