@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vacation Rental Property Management Software &amp; PMS | Pace Lodgix</title>
+  <title>[PREVIEW] Vacation Rental Property Management Software &amp; PMS | Pace Lodgix</title>
   <meta name="description" content="Pace Lodgix is a modern property management system for vacation rentals, Airbnb hosts and resorts. Manage bookings, calendar sync, guests, payments and financial reports in one platform. Start free.">
   <meta name="keywords" content="vacation rental software, property management system, PMS, Airbnb management software, short-term rental software, channel manager, booking management, direct booking website, guest management, reservation management">
   <link rel="canonical" href="https://pacelodgix.com/">
-  <!-- Matches the top stop of the hero field. The hero is a dark chapter now,
-       so a cream value here caps it with a pale band of browser chrome on a
-       phone — the page appears to start below a mismatched strip. -->
+  <!-- Matches the hero field's top stop, so phone browser chrome continues the
+       dark chapter instead of capping it with a cream band. Live index.html
+       stays #FBFBF9 for its light hero. -->
   <meta name="theme-color" content="#061009">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <!-- Preview build: noindex, so this can never compete with the real page in
+       search even if it accidentally ships. The live index.html keeps
+       "index, follow, max-image-preview:large" — restore that on merge. -->
+  <meta name="robots" content="noindex, nofollow">
 
   <!-- Open Graph -->
   <meta property="og:title" content="Vacation Rental Property Management Software &amp; PMS | Pace Lodgix">
@@ -68,6 +71,11 @@
   <link rel="preload" href="assets/fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <!-- REDESIGN PREVIEW ONLY. Loads after styles.css and overrides two things:
+       the hero field (light canvas → dark forest chapter) and the features
+       section (5 sticky cards → bento grid). Nothing else is touched, so
+       everything here can be merged into styles.css later, or thrown away. -->
+  <link rel="stylesheet" href="preview.css">
 
   <!-- Restores a previous dismissal of the beta bar BEFORE first paint. Inline
        and in <head> on purpose: loading this from nav.js would paint the bar,
@@ -411,26 +419,15 @@
     <h1 class="reveal" data-anim="blur">
       <!-- No hard <br>. text-wrap: balance (set on h1 globally) splits this into
            even lines and adapts as it narrows.
-
-           LENGTH NOTE — this headline and the h1 clamp in styles.css move
-           together, so change them in the same pass. The line has been three
-           lengths so far: ~55 characters at clamp(2.75rem, 5.6vw, 4.6rem),
-           then ~104 at clamp(2.1rem, 4.2vw, 3.4rem) — stepped down because at
-           the larger ramp it set in five lines and pushed the dashboard shot
-           clean off the fold — and now ~81, back up to
-           clamp(2.3rem, 4.6vw, 3.7rem). The constraint is the fold, not taste:
-           everything above the mockup has to fit AND leave enough viewport for
-           the mockup to read as a screenshot rather than a sliver.
-
+           LENGTH NOTE: this headline is ~104 characters — roughly double the
+           previous one — so .hero-copy h1 in styles.css was stepped down from
+           clamp(2.75rem, 5.6vw, 4.6rem) to clamp(2.1rem, 4.2vw, 3.4rem) to keep
+           it to three lines and stop it pushing the dashboard shot off the fold.
+           If this copy is ever shortened, raise that clamp back up.
            The wording carries the primary keywords on purpose ("vacation
-           rental", "property management", "Airbnb hosts", "property
-           managers"); see "Marketing SEO Prompt.txt".
-
-           The green italic used to sit on "without the spreadsheets" and moved
-           to the second sentence when that phrase was cut. It is the only
-           accent in the headline — if the whole line should be plain white,
-           drop the <em> and the sentence reads the same. -->
-      Vacation rental property management. <em class="hero-green">Built for Airbnb hosts and property managers.</em>
+           rental", "property management", "Airbnb hosts", "property managers");
+           see "Marketing SEO Prompt.txt". -->
+      Vacation rental property management — <em class="hero-green">without the spreadsheets.</em> Built for Airbnb hosts and property managers.
     </h1>
     <p class="lede reveal" data-anim="up" data-delay="1">
       Run bookings, guests, payments, calendars and reports from one place — built for the way
@@ -578,14 +575,7 @@
       <h3>The booking inbox</h3>
       <p>One guest messages you on Facebook. Another on Airbnb. You reply from memory and hope the dates are still open.</p>
     </article>
-    <!-- The middle card is the dark one. Three identical white cards in a row
-         give the eye nowhere to land; inverting the centre one makes the row a
-         composition instead of a list. It is also the right card to pick —
-         "the spreadsheet" is the single thing this whole product replaces, and
-         it is the phrase the headline above used to carry.
-         Position-dependent: if these three cards are ever reordered, move
-         .card-dark with the spreadsheet, not with the middle slot. -->
-    <article class="card glass card-dark reveal" data-anim="up" data-delay="2">
+    <article class="card glass reveal" data-anim="up" data-delay="2">
       <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M3 14.5h18"/><path d="M9 4v16"/></svg></div>
       <h3>The spreadsheet</h3>
       <p>Weekday rate, weekend rate, cleaning fee, extra guest, long-stay discount. Worked out by hand, every single time.</p>
@@ -1156,55 +1146,16 @@
       <a href="https://app.pacelodgix.com/">Sign in</a>
     </nav>
 
-    <!-- Contact, as icons rather than words.
-         ACCESSIBILITY: there is no visible text in these links, so the
-         aria-label IS the link's entire accessible name — a screen reader
-         announces nothing else. Never remove one, and never let it drift from
-         where the link actually goes. Each icon is aria-hidden so the label is
-         not read twice. `title` gives sighted mouse users the same information
-         on hover, which a bare icon otherwise hides.
-
-         The marks are the official WhatsApp and Facebook glyphs but drawn in
-         the footer's own light ink, not in #25D366 and #1877F2. Two saturated
-         brand colours in a quiet dark footer pull harder than the CTA above
-         them, and the blue in particular fights the emerald. They pick up the
-         brand emerald on hover instead. -->
-    <nav class="footer-col" aria-label="Contact">
+    <nav class="footer-col">
       <h4>Contact</h4>
-      <ul class="footer-social">
-        <li>
-          <a href="https://wa.me/639563800054" target="_blank" rel="noopener"
-             aria-label="Message us on WhatsApp" title="WhatsApp">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.174.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 0 1 6.988 2.896 9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://www.facebook.com/pacedigitalworks" target="_blank" rel="noopener"
-             aria-label="Pace Lodgix on Facebook" title="Facebook">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="mailto:hello@pacelodgix.com"
-             aria-label="Email hello@pacelodgix.com" title="hello@pacelodgix.com">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg>
-          </a>
-        </li>
-      </ul>
+      <a href="https://wa.me/639563800054" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://www.facebook.com/pacedigitalworks" target="_blank" rel="noopener">Facebook</a>
+      <a href="mailto:hello@pacelodgix.com">hello@pacelodgix.com</a>
     </nav>
   </div>
 
   <div class="footer-bottom">
-    <!-- The address is written out here because the contact column above is
-         icons only, and an envelope glyph is the one contact detail a visitor
-         cannot read without clicking it. Plain-text contact details are also a
-         small trust signal for real people and for search engines, and this is
-         now the only place on the homepage the address appears in words.
-         privacy.html and terms.html already carry it in their body copy. -->
-    <p>© 2026 Pace Lodgix. All Rights Reserved.
-      <span class="footer-dot" aria-hidden="true">·</span>
-      <a class="footer-email" href="mailto:hello@pacelodgix.com">hello@pacelodgix.com</a>
-    </p>
+    <p>© 2026 Pace Lodgix. All Rights Reserved.</p>
     <nav>
       <a href="privacy.html">Privacy policy</a>
       <a href="terms.html">Terms</a>

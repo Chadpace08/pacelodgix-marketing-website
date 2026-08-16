@@ -1,4 +1,99 @@
 /* ════════════════════════════════════════════════════════════════════════
+   SELF-HOSTED TYPE — Fraunces (display) + Inter (everything else)
+
+   These used to load from fonts.googleapis.com / fonts.gstatic.com. They do
+   not any more, and that is a privacy fix rather than a performance tweak:
+   an external font request hands every visitor's IP address to a third party
+   before the page can draw a single word, and a German court has already
+   awarded damages over exactly that. Nothing on this site needs to leave the
+   visitor's connection to us.
+
+   It is also faster. The old <link> was a render-blocking stylesheet on
+   another origin, so the browser had to resolve two extra domains, open two
+   TLS connections and parse a CSS file before it even learned which font
+   files to fetch. Now the font files are named directly in the stylesheet
+   that is already loading, and index.html preloads the two that paint first.
+
+   VARIABLE FONTS, deliberately. Google's default export is one file per
+   weight; requesting the axis ranges instead gives one file that carries
+   every weight AND Fraunces' optical-size axis. That axis is not decoration
+   here — `font-optical-sizing: auto` below is what gives the 3.7rem hero
+   headline its high-contrast, flared cut while a 1.15rem h3 gets a sturdier
+   one, with no manual switching. Replace these with static weights and the
+   display face quietly loses its whole reason for being chosen.
+
+   SUBSETS: latin and latin-ext only. Google also serves Cyrillic, Greek and
+   Vietnamese cuts; this site is English and Filipino, both of which sit
+   inside latin. `unicode-range` means latin-ext is only downloaded if a
+   character actually needs it, so a typical visitor fetches the latin cuts
+   and nothing else.
+
+   LICENCE: both families are SIL Open Font License 1.1, which explicitly
+   permits self-hosting and redistribution. See assets/fonts/OFL.txt.
+
+   TO UPDATE: re-request the CSS from Google's css2 API with the axis ranges
+   (…Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700 and
+   Inter:wght@400..800), download the latin and latin-ext woff2 files into
+   assets/fonts/, and repoint the src values below. Keep the unicode-range
+   lines exactly as Google supplies them.
+   ════════════════════════════════════════════════════════════════════════ */
+/* Fraunces italic — latin-ext */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('assets/fonts/fraunces-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Fraunces italic — latin */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('assets/fonts/fraunces-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Fraunces normal — latin-ext */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('assets/fonts/fraunces-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Fraunces normal — latin */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('assets/fonts/fraunces-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Inter normal — latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Inter normal — latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
    Pace Lodgix — marketing site
 
    Standalone by design: it does NOT import the app's global.css. That
@@ -1041,71 +1136,112 @@ main:focus-visible { outline: 0; box-shadow: none; }
   isolation: isolate;
 }
 
-/* ── Hero field ───────────────────────────────────────────────────────────
-   The dark green wash the headline sits on. Three jobs, inherited from the
-   scrim this replaced: carry the top dark enough that the fixed nav and the
-   H1 read in white, hold a lit centre so the hero isn't a flat slab, and
-   dissolve into --bg at the bottom so the dashboard emerges from the page
-   instead of being pasted onto a seam.
+/* ── Hero floor ───────────────────────────────────────────────────────────
+   The hero's own dark. Deliberately NOT --graphite (#0C0F0E, the near-black
+   the .section.dark slabs use) and NOT the raw brand Deep Forest (#1F3A2A,
+   which at full-bleed size goes flat and muddy). This is a near-black carrying
+   just enough forest to read as the brand colour at a glance, while leaving
+   white type at roughly 18:1. The dark sections further down the page stay
+   graphite, so the hero reads as the warm end of one family rather than as a
+   different site.
 
-   Keep the last stop as var(--bg). If it ever stops matching the page
-   background you get a visible horizontal band across the hero. */
+   These are dark on purpose and it is a contrast budget, not a taste call: the
+   darker the floor, the more the product mockup, the grid blocks and the
+   emerald CTA earn from being the only lit things on screen. */
+:root {
+  --hero-floor:    #061009;
+  --hero-floor-2:  #0A1B12;   /* the lit middle — still green, just quieter */
+  --hero-floor-3:  #040B07;   /* the settled bottom */
+}
+
+/* ── Hero field ───────────────────────────────────────────────────────────
+   THE HERO IS A DARK CHAPTER. It was a white canvas with five light pools on
+   it at 0.09–0.16 alpha, which is below what most laptop screens resolve — so
+   the work was invisible and every band of the page sat within a few percent
+   of the same brightness. A page with no dark note in it reads as unfinished
+   rather than as expensive. On a dark field the same five pools become the
+   whole effect and the product video stops sitting on the page and starts
+   glowing out of it.
+
+   Full height, not the old 90%. The light field faded to --bg before the hero
+   ended so the dashboard could emerge from the page; on a dark field that same
+   fade puts the audience pills half on dark and half on cream. The chapter now
+   runs the full section and ends on a crisp edge, and .hero::after draws the
+   lit hairline that finishes it.
+
+   NO GOLD ON THIS FIELD. There was a gold catch-light over the upper right and
+   a matching gold glow, and between them the right-hand third of the hero went
+   warm olive-brown — which is what gold does at any alpha once it mixes into
+   dark green as a large soft wash. Gold has not left the brand: it still runs
+   the hero's .sq-gold blocks, where it is small, crisp and high-alpha, plus
+   the badges and the cream feature cards. Do not reintroduce it here as a
+   gradient. */
 .hero-field {
   position: absolute;
   inset: 0 0 auto 0;
-  height: 90%;
+  height: 100%;
   z-index: -2;
   overflow: hidden;
   isolation: isolate;
-  /* PURE LUXURY WHITE CANVAS — Vibrant Emerald & Gold Accents with Luminous Depth
-     No cream/yellow off-white paper tones; pure #FFFFFF base with rich atmospheric light pools.
-     1. Luminous white spotlight directly behind headline.
-     2. Rich emerald ambient bloom washing down from top nav.
-     3. Warm champagne gold catch-light on the upper right.
-     4. Fresh mint accent light on the upper left for asymmetric 3D depth.
-     5. Ambient emerald bottom pool rising behind the floating dashboard.
-     6. Crisp pure white base gradient (#FFFFFF). */
   background:
-    radial-gradient(45% 28% at 50% 22%, rgba(255, 255, 255, 1) 0%, transparent 75%),
-    radial-gradient(70% 55% at 50% -8%, rgba(30, 122, 80, 0.16) 0%, rgba(30, 122, 80, 0.04) 55%, transparent 80%),
-    radial-gradient(65% 50% at 88% 12%, rgba(199, 154, 59, 0.14) 0%, transparent 65%),
-    radial-gradient(60% 48% at 12% 18%, rgba(52, 169, 114, 0.12) 0%, transparent 65%),
-    radial-gradient(85% 65% at 50% 100%, rgba(30, 122, 80, 0.09) 0%, transparent 70%),
+    /* 1 · the lit centre, directly behind the headline */
+    radial-gradient(48% 32% at 50% 24%, rgba(70, 201, 138, 0.08) 0%, transparent 72%),
+    /* 2 · emerald bloom washing down from behind the nav. Keep it modest —
+           turned up, the top quarter washes out to mid-green and the fixed nav
+           loses the dark ground its white logo needs. */
+    radial-gradient(72% 55% at 50% -10%, rgba(30, 122, 80, 0.30) 0%, rgba(30, 122, 80, 0.08) 55%, transparent 82%),
+    /* 3 · mint accent, upper left. Deliberately off-centre and the only such
+           source, so the field is lit from one side rather than reading as a
+           symmetrical vignette. */
+    radial-gradient(52% 42% at 8% 16%, rgba(70, 201, 138, 0.09) 0%, transparent 68%),
+    /* 4 · the pool the dashboard sits in — the brightest thing on the field,
+           on purpose. It is what lifts the product shot off the page. */
+    radial-gradient(80% 48% at 50% 88%, rgba(30, 122, 80, 0.16) 0%, transparent 72%),
+    /* 5 · the floor */
     linear-gradient(180deg,
-      #FFFFFF 0%,
-      #FFFFFF 60%,
-      var(--porcelain) 100%);
+      var(--hero-floor)   0%,
+      var(--hero-floor-2) 42%,
+      var(--hero-floor)   74%,
+      var(--hero-floor-3) 100%);
 }
 
-/* Texture, layer 1 — Modern micro-dot matrix & fine architectural grid (Vercel/Linear tech aesthetic). */
-.hero-field::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-image:
-    radial-gradient(rgba(30, 122, 80, 0.12) 1.2px, transparent 1.2px),
-    linear-gradient(rgba(30, 122, 80, 0.035) 1px, transparent 1px);
-  background-size: 28px 28px, 112px 112px;
-  -webkit-mask-image: radial-gradient(68% 52% at 50% 20%, #000 12%, transparent 82%);
-          mask-image: radial-gradient(68% 52% at 50% 20%, #000 12%, transparent 82%);
-  pointer-events: none;
-}
+/* Texture, layer 1 — RETIRED. A 28px dot matrix plus a 112px rule grid used to
+   live on .hero-field::before. It is gone because .hero-grid below draws a
+   single clean square grid, and running both meant three repeating patterns on
+   one field: the dots beat against the squares at every zoom level and the
+   whole thing shimmered. One grid, one rhythm. The pseudo-element is not
+   redefined anywhere — deleting the rule is the whole change. */
 
-/* Texture, layer 2 — Glassmorphic radiant light sweep (replaces paper noise overlay). */
+/* Texture, layer 2 — the wash. It pulls the field down to something type can
+   live on, adds a vignette so the corners settle, and keeps one soft highlight
+   behind the headline so the middle stays lit.
+
+   The highlight is what separates the H1 from the field now that the floor is
+   this dark, so it is the value to raise if the headline ever looks pasted on.
+   The vignette is deliberately gentle: the floor is already dark, and a heavy
+   one here darkens twice and swallows the square grid whole. */
 .hero-field::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 2;
   background:
-    radial-gradient(80% 50% at 50% 35%, rgba(255, 255, 255, 0.6) 0%, transparent 70%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 40%, rgba(30, 122, 80, 0.03) 100%);
+    radial-gradient(62% 40% at 50% 26%, rgba(255, 255, 255, 0.055) 0%, transparent 68%),
+    radial-gradient(120% 100% at 50% 40%, transparent 45%, rgba(3, 8, 6, 0.55) 100%),
+    linear-gradient(180deg, rgba(3, 8, 6, 0.20) 0%, transparent 40%, rgba(3, 8, 6, 0.30) 100%);
   pointer-events: none;
 }
 
-/* Oversized soft-mesh shapes — Vibrant ambient lighting pools drifting behind headline and stage. */
-.hero-field .blobs { z-index: 0; }
+/* Oversized soft-mesh shapes — ambient lighting pools drifting behind the
+   headline and the stage.
+
+   z-index 4 and `screen` blending. Screen is additive, so on the old white
+   field it meant "no change" — a second reason the light pools never showed
+   there. On a dark field it is genuine light. Sitting ABOVE .hero-grid
+   (z-index 3) is what makes the grid look lit from behind: a block caught
+   inside a drifting glow is brighter than the same block outside it, so the
+   wall gains slow highs and lows for free. */
+.hero-field .blobs { z-index: 4; mix-blend-mode: screen; }
 .hero-glow {
   position: absolute;
   border-radius: 50%;
@@ -1116,14 +1252,18 @@ main:focus-visible { outline: 0; box-shadow: none; }
 .hero-glow-green {
   width: 880px; height: 880px;
   top: -180px; left: -120px;
-  background: radial-gradient(circle, rgba(30, 122, 80, 0.20), rgba(30, 122, 80, 0.04) 50%, transparent 75%);
+  /* Modest on purpose. Screen-blended on the dark floor, anything much above
+     this blows the upper left out to a flat mid-green disc with a visible
+     circular edge — the blur cannot hide a shape that bright. */
+  background: radial-gradient(circle, rgba(30, 122, 80, 0.22), rgba(30, 122, 80, 0.05) 50%, transparent 74%);
   animation: hero-glow-drift-a 35s ease-in-out infinite;
 }
+/* OFF in the hero. This was the second gold source that pushed the right-hand
+   side to olive — see the note on .hero-field. The element stays in the markup
+   because the same .blobs pattern is reused by the final CTA section, which
+   sits on a flat dark ground where gold does work. */
 .hero-glow-gold {
-  width: 780px; height: 780px;
-  top: 18%; right: -150px;
-  background: radial-gradient(circle, rgba(199, 154, 59, 0.16), rgba(199, 154, 59, 0.03) 55%, transparent 75%);
-  animation: hero-glow-drift-b 42s ease-in-out infinite;
+  display: none;
 }
 @keyframes hero-glow-drift-a {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
@@ -1135,6 +1275,108 @@ main:focus-visible { outline: 0; box-shadow: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-glow { animation: none; }
+}
+
+/* ── The animated square grid ─────────────────────────────────────────────
+   Pure CSS — no video, no canvas, no JavaScript. This element draws the grid
+   lines itself with two repeating gradients; the <span> children in index.html
+   are the blocks that light up and fade back out. Under 2KB against roughly
+   4MB for the same effect shot as video, and sharp at any resolution.
+
+   THE ALIGNMENT TRICK, because it is not obvious and it will look broken if
+   anyone changes it by hand:
+
+   `background-position: 50% 0` does NOT mean "a line down the middle". A
+   percentage position aligns that percentage point of the TILE with the same
+   point of the BOX, so the first tile starts at (width - cell) / 2 and every
+   line therefore falls at width/2 - cell/2 + n·cell. That is why each block's
+   `left` carries the same `- var(--cell) / 2` term. The offset is a constant,
+   independent of viewport width, which is what lets a block sit perfectly
+   inside a cell at 320px and at 2560px with no media queries.
+
+   Consequence: --cell must be one value used by BOTH the lines and the
+   blocks. Never hard-code a pixel size into either.
+
+   z-index 3 puts this above the field's wash (::after, z-index 2) so the lines
+   stay crisp instead of being flattened by the vignette, and below .blobs
+   (z-index 4) so the drifting glows wash over it as light. */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+
+  /* Small enough on a phone that several cells still read as a grid, capped on
+     desktop before the cells get big enough to look like a spreadsheet. */
+  --cell: clamp(46px, 4.4vw, 68px);
+
+  background-image:
+    linear-gradient( 90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  background-position: 50% 0;
+
+  /* Fades the grid out toward every edge and, importantly, well before the
+     dashboard mockup. Unmasked it runs to the corners and the hero stops being
+     a hero and starts being graph paper — and the lines moiré against the
+     product video's own pixel grid wherever the two overlap. */
+  -webkit-mask-image: radial-gradient(78% 58% at 50% 30%, #000 0%, rgba(0, 0, 0, 0.5) 56%, transparent 86%);
+          mask-image: radial-gradient(78% 58% at 50% 30%, #000 0%, rgba(0, 0, 0, 0.5) 56%, transparent 86%);
+}
+
+/* One block. Everything that varies between them — position, size, timing,
+   colour — arrives as a custom property from the markup; this rule holds only
+   what they all share. See the comment block in index.html for each one. */
+.hero-grid span {
+  position: absolute;
+  width:  calc(var(--w, 1) * var(--cell));
+  height: calc(var(--h, 1) * var(--cell));
+  left: calc(50% + var(--x) * var(--cell) - var(--cell) / 2);
+  top:  calc(var(--y) * var(--cell));
+
+  /* A gradient rather than a flat fill, and that is the difference between a
+     lit block and a grey postage stamp: it is brightest at its top-left corner
+     and falls off, so it reads as light catching a panel. Raise BOTH stops if
+     the wall ever looks faint again — the first alpha alone just makes the top
+     corner hot. */
+  background: var(--sq, linear-gradient(150deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04)));
+  /* Starts invisible. Without this the whole wall flashes on at first paint,
+     before any delay has elapsed, and then goes dark — which looks like a bug.
+     No will-change: there are around forty of these, and forty forced
+     compositor layers costs more than the opacity animation ever saves. */
+  opacity: 0;
+  animation: hero-grid-pulse var(--t, 6s) ease-in-out var(--d, 0s) infinite;
+}
+
+/* The gold blocks. Gold gets to be genuinely bright here — roughly four times
+   the alpha of a white block, plus a ring and a halo — because this is the one
+   place on the dark field where it works: small, crisp, high-alpha shapes
+   rather than a soft wash that would mix to olive. Four of these across the
+   whole grid is the budget; see the colour note in index.html. */
+.hero-grid span.sq-gold {
+  background: linear-gradient(150deg, rgba(216, 190, 121, 0.55), rgba(199, 154, 59, 0.14));
+  box-shadow:
+    inset 0 0 0 1px rgba(216, 190, 121, 0.45),
+    0 0 28px rgba(199, 154, 59, 0.30);
+}
+
+/* Lit for a bit over a third of the cycle, dark for the rest. Get this ratio
+   wrong in either direction and the effect dies: too narrow and the wall is
+   blank most of the time and looks broken rather than subtle; past about 55%
+   they are all lit at once and it goes back to being a static texture. */
+@keyframes hero-grid-pulse {
+  0%,  100% { opacity: 0; }
+  14%       { opacity: 1; }
+  46%       { opacity: 1; }
+  62%       { opacity: 0; }
+}
+
+/* Motion is the whole point of this layer, so under reduced-motion it must not
+   simply stop mid-flash. The blocks settle at a fixed low level and the grid
+   becomes the static texture it would otherwise have been. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid span { animation: none; opacity: 0.55; }
 }
 
 /* Wider than the 900px it used to be, and a step down in size: the same
@@ -1154,12 +1396,16 @@ main:focus-visible { outline: 0; box-shadow: none; }
 }
 .hero-copy h1 {
   color: var(--ink);
-  /* Stepped down from clamp(2.75rem, 5.6vw, 4.6rem). The SEO headline is ~104
-     characters against the old one's 55, so at the previous ramp it set in five
-     lines (~380px) and pushed the dashboard shot clean off the fold. This holds
-     it to three lines at desktop and four on a phone. Tied to the copy — if the
-     h1 in index.html is ever shortened, put the old clamp back. */
-  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  /* TIED TO THE COPY. This has tracked the headline through three lengths:
+     clamp(2.75rem, 5.6vw, 4.6rem) at ~55 characters, then
+     clamp(2.1rem, 4.2vw, 3.4rem) at ~104 — the long SEO line set in five lines
+     (~380px) at the larger ramp and pushed the dashboard shot clean off the
+     fold — and now this, at ~81 characters with "without the spreadsheets"
+     cut. Deliberately NOT a return to the original 4.6rem: 81 characters is
+     still half again the length that ramp was built for. This holds two lines
+     on a desktop and keeps the mockup on the fold.
+     Re-measure here whenever the h1 in index.html changes length. */
+  font-size: clamp(2.3rem, 4.6vw, 3.7rem);
   /* The global h1 sets 1.05, which is right for the one- or two-line display
      headline this used to be. At three lines on desktop and five on a phone
      that tracks as a solid block — the descenders of one line almost touch the
@@ -1287,23 +1533,31 @@ main:focus-visible { outline: 0; box-shadow: none; }
   transform: perspective(1800px) rotateX(17deg) scale(0.94);
   transform-origin: 50% 0%;
   will-change: transform;
+  /* Near-black and much deeper than the light-hero version, plus a 1px light
+     hairline. On a dark floor a soft grey cast is invisible, so the shadow has
+     to be genuinely black to register, and the hairline is what gives the
+     bright screen a defined edge instead of bleeding into the field. */
   box-shadow:
-    0 4px 12px rgba(10, 13, 11, 0.035),
-    0 16px 32px -8px rgba(10, 13, 11, 0.075),
-    0 36px 72px -16px rgba(10, 13, 11, 0.11),
-    0 70px 130px -28px rgba(10, 13, 11, 0.09);
+    0 4px 12px rgba(0, 0, 0, 0.34),
+    0 18px 40px -10px rgba(0, 0, 0, 0.46),
+    0 44px 90px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.07);
 }
 
-/* Ambient light & soft shadow pool under the mockup for physical hover elevation. */
+/* The halo under the mockup. On a light page this was an ambient tint plus a
+   soft dark cast; on a dark floor a dark cast is invisible, so the mockup has
+   to be separated by LIGHT behind it rather than shadow beneath it. Both
+   layers are therefore emerald — a tight bright pool and a wider soft one that
+   spreads the halo without warming it. */
 .hero-stage::before {
   content: "";
   position: absolute;
   inset: -10% -8% -22%;
   z-index: -1;
   background:
-    radial-gradient(65% 52% at 50% 46%, rgba(30, 122, 80, 0.095) 0%, transparent 68%),
-    radial-gradient(85% 70% at 50% 64%, rgba(10, 13, 11, 0.07) 0%, transparent 75%);
-  filter: blur(28px);
+    radial-gradient(62% 50% at 50% 44%, rgba(70, 201, 138, 0.34) 0%, transparent 68%),
+    radial-gradient(88% 72% at 50% 60%, rgba(30, 122, 80, 0.16) 0%, transparent 74%);
+  filter: blur(46px);
   pointer-events: none;
 }
 
@@ -1490,6 +1744,158 @@ main:focus-visible { outline: 0; box-shadow: none; }
   background: var(--bg-card);
   color: var(--text);
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HERO — EVERYTHING THAT SITS ON THE DARK FIELD
+
+   The hero is the only dark chapter above the fold, and every rule above this
+   point was written for a light canvas. Rather than fork each of those rules,
+   this block re-states just the parts that flip. It has to come AFTER the
+   generic .nav, .float-card and .hero-audience rules it overrides, which is
+   why it sits at the end of the hero section rather than beside each original.
+
+   Nothing here invents a colour. These are the --on-dark / --ink-dark-* roles
+   the palette already defines and already measures for contrast on dark
+   ground.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* The seam. A dark chapter ending on a raw horizontal cut looks like a
+   rendering bug; the same cut with a lit edge on it looks like a decision.
+   Three pixels, fading out at both ends so it never reads as a full-width
+   rule. Emerald, not gold — one gold bar under an otherwise all-green chapter
+   reads as leftover rather than as an accent. */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  z-index: 3;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(30, 122, 80, 0.45) 18%,
+    rgba(70, 201, 138, 0.80) 50%,
+    rgba(30, 122, 80, 0.45) 82%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* ── Type ────────────────────────────────────────────────────────────── */
+.hero-copy h1 { color: #FFFFFF; }
+/* --green-ink (#15613E) is the emerald that clears AA on LIGHT. On this floor
+   it measures about 2:1 and the italic phrase all but disappears.
+   --green-bright is the token that exists for exactly this surface. */
+.hero-copy h1 .hero-green,
+.hero-copy h1 .text-green { color: var(--green-bright); }
+.hero-copy .lede { color: var(--ink-dark-1); }
+.hero-proof li   { color: var(--ink-dark-1); }
+.hero-proof svg  { stroke: var(--green-bright); }
+
+/* --ink-dark-2 (rgba(236,237,234,0.60)) is NOT safe here, and this is measured
+   rather than assumed. That token is calibrated against --graphite (#0C0F0E),
+   the flat near-black the .section.dark slabs use, where it clears AA. This
+   hero floor is not flat: the light pools lift it under the headline and again
+   toward the bottom, and the same token measured close to 3:1 at those spots.
+   Both lines are small text, so both needed 4.5. 0.80 alpha composites to
+   roughly 4.8:1 at the lightest point. If the field is ever brightened,
+   re-measure these rather than nudging them. */
+.hero-note            { color: rgba(236, 237, 234, 0.80); }
+.hero-audience > span { color: rgba(236, 237, 234, 0.80); }
+
+/* ── Controls ────────────────────────────────────────────────────────── */
+
+/* Audience pills — glass on dark instead of white-on-white. */
+.hero-audience li {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  color: var(--ink-dark-1);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+}
+.hero-audience li:hover {
+  background: rgba(70, 201, 138, 0.16);
+  border-color: var(--green-bright);
+  color: #FFFFFF;
+}
+
+/* The secondary CTA. The on-dark treatment for this button already exists — it
+   is just scoped to .section.dark and .cta, neither of which the hero is.
+   Borrowed rather than written a third time. */
+.hero .btn-glass {
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--on-dark);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+.hero .btn-glass:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+/* ── The three floating cards ────────────────────────────────────────────
+   These break outright on a dark field, and the reason is worth writing down:
+   the shipped background is a gradient running
+   rgba(255,255,255,0.96) → rgba(--tint,0.04) → rgba(255,255,255,0.92),
+   so the MIDDLE of every card is 96% transparent. On a white page that is
+   invisible and harmless — white showing through white. On a dark field the
+   same card becomes a dark hole with near-black text sitting in it, and
+   "Villa Anilao · 3 nights" is effectively unreadable.
+
+   So the gradient goes opaque. It keeps its shape — a cool-white top raking to
+   a faintly tinted bottom — it just never drops below 96% alpha, and the tint
+   moves from the brand hue to a neutral so the card does not go grey-green
+   against the field behind it. */
+.hero .float-card {
+  background: linear-gradient(155deg,
+    rgba(255, 255, 255, 0.99) 0%,
+    rgba(247, 250, 248, 0.97) 55%,
+    rgba(255, 255, 255, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    0 22px 54px -18px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+/* The calendar card keeps its warm note, at the same opacity floor. */
+.hero .float-cal {
+  background: linear-gradient(155deg,
+    rgba(255, 255, 255, 0.99) 0%,
+    rgba(252, 249, 241, 0.97) 55%,
+    rgba(255, 255, 255, 0.98) 100%);
+}
+
+/* ── The nav, over a dark hero ───────────────────────────────────────────
+   The bar is transparent until .is-stuck, so at the top of the page it now
+   sits on the dark field with near-black links on it. Everything below applies
+   in that one state only.
+
+   Excluded: .is-stuck (frosted cream — dark links are correct again),
+   .is-menu-open (fills with flat --bg on phones), .nav-solid (privacy/terms).
+   Miss any of those and the links turn white on a cream bar. */
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-links a,
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-signin {
+  color: rgba(255, 255, 255, 0.82);
+}
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-links a:hover,
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-signin:hover {
+  color: #FFFFFF;
+}
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-links a::after {
+  background: var(--green-bright);
+}
+
+/* The logo. The supplied artwork is white-only; the two colour cuts (white for
+   dark surfaces, --primary silhouette for light ones) are cross-faded by
+   opacity. The white cut was retired when the hero went light — this brings it
+   back for the top-of-page state only, which is what the two-copy system was
+   built for. See BRAND-UPDATE-HANDOVER.md. */
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .brand-on-dark  { opacity: 1; }
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .brand-on-light { opacity: 0; }
+
+/* The burger's bars are drawn in --ink. */
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-toggle { color: #FFFFFF; }
+
 
 /* ── Sections ────────────────────────────────────────────────────────── */
 .section {
@@ -1816,6 +2222,59 @@ main:focus-visible { outline: 0; box-shadow: none; }
               0 6px 18px -6px rgba(30, 122, 80, 0.28);
 }
 
+/* ── The dark card in the middle ─────────────────────────────────────────
+   One of the three is inverted. Three identical white cards in a row give the
+   eye nowhere to land — it reads as a list rather than as a composition — and
+   the centre is the natural place to break the pattern because it is the only
+   position that keeps the row symmetrical.
+
+   Same gradient, same direction and the same floor family as .stack-dark and
+   .counter-grid, so this is another beat of a rhythm the page already has
+   rather than a new colour arriving. Which card carries it is decided in the
+   markup, not here; see the note in index.html. */
+.problem .card-dark {
+  background: linear-gradient(158deg, #16352A 0%, #0E241A 48%, #081712 100%);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 44px -22px rgba(8, 23, 18, 0.55),
+    0 40px 90px -40px rgba(8, 23, 18, 0.45);
+}
+.problem .card-dark h3 { color: #FFFFFF; }
+/* --text-muted is a grey calibrated for the cream ground and lands near 2:1
+   on this card. 0.78 light ink clears 4.5 with room, and still sits clearly
+   below the heading. */
+.problem .card-dark p { color: rgba(236, 237, 234, 0.78); }
+
+/* The gilded top edge is drawn from --green, which on a near-black card is
+   almost the card itself. --green-bright is the token for dark ground. */
+.problem .card-dark::before {
+  background: linear-gradient(90deg, var(--green-bright), var(--primary-light) 60%, transparent);
+}
+
+/* The icon tile is emerald-tinted glass over cream; over near-black that same
+   recipe is a dark square on a dark square. White glass instead — the same
+   treatment the hero's audience pills use — with the glyph in the bright
+   emerald so the card keeps its green note. */
+.problem .card-dark .card-icon {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  color: var(--green-bright);
+}
+.problem .card-dark:hover .card-icon {
+  background: rgba(70, 201, 138, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(70, 201, 138, 0.45),
+              0 6px 18px -6px rgba(70, 201, 138, 0.30);
+}
+/* --shadow-lg is built to lift a white card off a cream page and is invisible
+   under this one. Deeper and near-black, so the lift still reads. */
+.problem .card-dark:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 26px 60px -24px rgba(8, 23, 18, 0.7),
+    0 50px 110px -45px rgba(8, 23, 18, 0.55);
+}
+
 /* ── Animated counters ───────────────────────────────────────────────── */
 /* Third and last beat of the textured run that starts at the hero. Same two
    ingredients as .problem — a warm bloom for a light source and a dot grid for
@@ -1853,6 +2312,22 @@ main:focus-visible { outline: 0; box-shadow: none; }
    section read as unfinished next to the carded sections either side. Seating
    them on a panel gives the numbers an edge to sit against and lets the dot
    grid show around them instead of behind them. */
+/* A DARK PANEL ON A LIGHT SECTION. This was white-on-near-white: --surface
+   (#FFFFFF) sitting on --porcelain (#FBFBF9), separated by a hairline and a
+   soft shadow. Those are about 1.5% apart in brightness, which is under what
+   most laptop screens resolve, so the box did not read as a panel at all —
+   the four figures looked like they were floating loose on the section.
+
+   Inverting it is the cheapest fix and the right one: this is the page's proof
+   block, the one place where four numbers are the entire argument, and it
+   should be the thing your eye lands on when this section scrolls in. The
+   heading, eyebrow and lede above stay on the light ground on purpose — the
+   contrast is between the panel and the section, so darkening both would put
+   us right back where we started.
+
+   The gradient runs the same direction as .stack-dark's, and the floor is the
+   same family as the hero's, so this reads as one more beat of an existing
+   rhythm rather than as a new colour arriving halfway down the page. */
 .counter-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1860,26 +2335,36 @@ main:focus-visible { outline: 0; box-shadow: none; }
   margin-top: var(--lead);
   padding: 2.8rem 1.6rem 2.4rem;
   border-radius: var(--r-lg);
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(158deg, #16352A 0%, #0E241A 48%, #081712 100%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  /* --shadow-md is tuned to lift a white card off a white page. A dark panel
+     needs a deeper, warmer-black cast or it looks pasted on, plus the inset
+     top highlight that gives it a lit edge. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 44px -22px rgba(8, 23, 18, 0.55),
+    0 40px 90px -40px rgba(8, 23, 18, 0.45);
 }
 .counter strong {
   display: block;
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 4.6vw, 3.8rem);
   font-weight: 600;
-  /* Ink, not green — big editorial numerals in the display face, with the
-     emerald spent only on the little rule beneath. Restraint reads richer than
-     four green figures. */
-  color: var(--ink);
+  /* White, not emerald — big editorial numerals in the display face, with the
+     green spent only on the little rule beneath. Restraint reads richer than
+     four green figures. (This was --ink for the white panel; on the dark one
+     it measured about 1.2:1, i.e. black numbers on a black box.) */
+  color: #FFFFFF;
   line-height: 1.05;
   /* Figure style AND advance width are both set by the .num-lining rule near
      the top of this file — re-declaring `font-variant-numeric` here would win
      on source order and silently drop `lining-nums` from it, leaving the
      lining figures propped up by the font-feature-settings fallback alone. */
 }
-.counter span { font-size: var(--fs-sm); color: var(--text-muted); }
+/* --text-muted is a grey calibrated for the light canvas and lands near 2:1
+   here. These are small labels, so they need 4.5 — 0.78 alpha light ink clears
+   it with room to spare while still sitting clearly below the figures. */
+.counter span { font-size: var(--fs-sm); color: rgba(236, 237, 234, 0.78); }
 
 /* Four big numerals in a row read as a spreadsheet without something to
    separate and seat them. A hairline between columns plus a short gold rule
@@ -1890,7 +2375,10 @@ main:focus-visible { outline: 0; box-shadow: none; }
   position: absolute;
   left: 0; top: 12%; bottom: 12%;
   width: 1px;
-  background: linear-gradient(180deg, transparent, var(--border-strong), transparent);
+  /* Was --border-strong (#DBDBD4), a near-solid light grey meant to divide two
+     white columns. On the dark panel that is a bright white line — it competed
+     with the figures it was supposed to be seating. */
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.16), transparent);
 }
 .counter strong::after {
   content: "";
@@ -1898,7 +2386,11 @@ main:focus-visible { outline: 0; box-shadow: none; }
   width: 34px; height: 2px;
   margin: 0.85rem auto 0.7rem;
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--green), var(--primary-light));
+  /* --green (#1E7A50) is the emerald for solid fills on LIGHT. On this panel
+     it sinks into the background and the rule all but disappears, taking the
+     one green note in the block with it. --green-bright is the token that
+     exists for dark ground. */
+  background: linear-gradient(90deg, var(--green-bright), var(--primary-light));
   transform: scaleX(0);
   transition: transform 0.6s var(--ease) 0.25s;
 }
@@ -2185,6 +2677,164 @@ main:focus-visible { outline: 0; box-shadow: none; }
   transition: stroke-dashoffset 0.85s var(--ease) 0.25s;
 }
 .stack-inner:has(.reveal.is-in) .stack-check path { stroke-dashoffset: 0; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE STACK, ALTERNATING — deep forest / warm cream / deep forest / …
+
+   The layout above does not change at all. This is colour only.
+
+   All five cards used to share one near-black-and-emerald pair
+   (--c1:#101512, --c2:#1E7A50), so the pile read as five copies of the same
+   card. They now alternate forest, cream, forest, cream, forest. Because each
+   card pins over the one before it as you scroll, the alternation is FELT as
+   a rhythm — dark, light, dark — rather than seen all at once, and the dark
+   cards give this section the same contrast the hero has.
+
+   --c1 and --c2 are set INLINE in index.html, not here. An inline custom
+   property beats any stylesheet rule, so the per-card palette has to live in
+   the markup; everything below reads those two values exactly as the generic
+   rules above already do. The .stack-dark / .stack-cream classes carry only
+   what cannot be derived from them — chiefly which way the text has to run.
+
+   (A bento grid was built here once and removed. Tidier laid flat, but it
+   threw away the pin-and-hand-over scroll behaviour that is the point of this
+   section. Don't re-litigate it.)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Deep forest cards (01, 03, 05) ────────────────────────────────────── */
+
+.stack-dark .stack-inner {
+  /* Lit from the top-left and settling toward the bottom-right, so a pinned
+     card has a direction to it rather than being a flat slab. */
+  background: linear-gradient(158deg, #16352A 0%, #0E241A 48%, #081712 100%);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 44px -22px rgba(0, 0, 0, 0.75),
+    0 40px 90px -40px rgba(0, 0, 0, 0.6);
+}
+
+/* The card's own graded wash. The generic rule builds this from --c2 at 22%
+   over the top-right and --c1 at 9% over the bottom-left; on a dark ground the
+   second half is invisible, so the emerald half is turned up and works alone. */
+.stack-dark .stack-inner::before {
+  background:
+    radial-gradient(120% 140% at 100% 0%,
+      color-mix(in srgb, var(--c2) 20%, transparent), transparent 58%),
+    radial-gradient(90% 120% at 0% 100%,
+      rgba(70, 201, 138, 0.07), transparent 62%);
+}
+
+.stack-dark .stack-inner h3 { color: #FFFFFF; }
+/* --text-muted is a grey calibrated for the light canvas; on this card it
+   measures under 3:1. Explicit light ink instead. */
+.stack-dark .stack-lead { color: rgba(236, 237, 234, 0.78); }
+
+/* The numeral is a gradient clipped to the glyph. Running it from --c1 (near
+   black) on a near-black card would erase half of it, so on the dark cards it
+   runs from white into the emerald instead. */
+.stack-dark .stack-num {
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFFFFF, var(--c2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Chips: --bg-tint is a light-canvas surface, so the generic rule (a color-mix
+   of --c2 into --bg-tint) resolves to a pale mint block that destroys the
+   card. Glass on dark instead. */
+.stack-dark .stack-tags li {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(236, 237, 234, 0.92);
+}
+.stack-dark .stack-tags li:hover {
+  background: color-mix(in srgb, var(--c2) 18%, rgba(255, 255, 255, 0.06));
+  border-color: color-mix(in srgb, var(--c2) 55%, transparent);
+}
+/* The "Soon" pill uses --green-bright over --green; on a dark card that
+   green-on-green loses its edge, so it takes the gold it can afford here. */
+.stack-dark .stack-tags li em {
+  background: linear-gradient(120deg, var(--accent-light), var(--gold));
+  color: #1A1508;
+}
+
+/* The travelling sheen. At the generic 0.55 white it reads as a torch beam
+   across a dark card; halved, it reads as light moving over a surface. */
+.stack-dark .stack-body::after {
+  background: linear-gradient(100deg, transparent,
+              rgba(255, 255, 255, 0.22) 45%, transparent);
+}
+
+/* The gilded top edge wipes in from --c1 → --c2 → a light mix → --c1. On the
+   dark cards --c1 is invisible against the card itself, so the ends fade out
+   instead of showing as black stubs. */
+.stack-dark .stack-inner::after {
+  background: linear-gradient(90deg,
+    transparent, var(--c2), color-mix(in srgb, var(--c2) 40%, #FFFFFF),
+    var(--c2), transparent);
+}
+
+/* ── Warm cream cards (02, 04) ─────────────────────────────────────────── */
+
+.stack-cream .stack-inner {
+  /* Warm Cream from the brand palette, graded rather than flat so it does not
+     read as an unstyled panel next to the forest cards. */
+  background: linear-gradient(158deg, #FFFDF6 0%, #FDFAF0 52%, #F7F1E1 100%);
+  border-color: #EBE1C9;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 16px 40px -22px rgba(56, 44, 16, 0.28),
+    0 36px 80px -42px rgba(56, 44, 16, 0.3);
+}
+
+/* --c2 is gold on these cards, so the generic wash already resolves warm; it
+   just needs to be gentler, because gold at 22% over cream goes muddy. */
+.stack-cream .stack-inner::before {
+  background:
+    radial-gradient(120% 140% at 100% 0%,
+      color-mix(in srgb, var(--c2) 13%, transparent), transparent 60%),
+    radial-gradient(90% 120% at 0% 100%,
+      color-mix(in srgb, var(--c1) 7%, transparent), transparent 62%);
+}
+
+/* The icon tile is built as linear-gradient(150deg, --c2, --c1). On these cards
+   that runs gold → forest, and gold and green meet in the middle as olive — the
+   same murk that keeps gold off the hero field. The tile therefore takes flat
+   brand forest, and the gold does its work where it stays clean: the numeral,
+   the checkmark and the chip borders. */
+.stack-cream .stack-ico {
+  background: linear-gradient(150deg, #2E5A43, #1F3A2A);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 10px 22px -10px rgba(31, 58, 42, 0.85);
+}
+
+.stack-cream .stack-inner h3 { color: var(--ink); }
+/* Warmed one step off --text-muted: the cooler grey sits oddly on cream. */
+.stack-cream .stack-lead { color: #4A4C42; }
+
+.stack-cream .stack-tags li {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: #E7DBC0;
+  color: var(--ink-2);
+}
+.stack-cream .stack-tags li:hover {
+  background: #FFFFFF;
+  border-color: color-mix(in srgb, var(--c2) 60%, #E7DBC0);
+}
+/* Gold on cream is not readable as a filled pill, so the "Soon" flag keeps the
+   emerald it has everywhere else. */
+.stack-cream .stack-tags li em {
+  background: linear-gradient(120deg, var(--green-bright), var(--green));
+  color: #FFFFFF;
+}
+
+/* A pinned card must fully cover the ones behind it — the pile is only legible
+   because each card is opaque. Both backgrounds above are opaque; this is the
+   guard rail if either is ever given an alpha. */
+.stack-inner { backdrop-filter: none; }
 
 @media (max-width: 700px) {
   .stack {
@@ -3154,6 +3804,59 @@ main:focus-visible { outline: 0; box-shadow: none; }
 }
 .footer-col a:hover { color: var(--green-bright); transform: translateX(3px); }
 
+/* ── Contact, as icon buttons ────────────────────────────────────────────
+   The contact column is icons only. Three notes on why it is built this way:
+
+   1. Glass tiles, not bare glyphs. A 20px icon floating on the footer floor
+      has no target and no relationship to the buttons elsewhere on the page.
+      The tile is the same treatment as the hero's audience pills — faint
+      white fill, faint white edge — so it reads as part of one language.
+
+   2. 44px is a minimum, not a style choice. It is the smallest reliable touch
+      target on a phone, and with no text label there is nothing else to tap.
+
+   3. The glyphs are the official WhatsApp and Facebook marks, deliberately
+      NOT in #25D366 and #1877F2 — see the note in index.html. `fill:
+      currentColor` is what lets one colour rule drive all three. */
+.footer-social {
+  display: flex;
+  gap: var(--s-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* .footer-col is a 0.6rem-gap column and its first item would otherwise sit
+     tight under the heading. The word links had their own line-height doing
+     this work; a row of tiles does not. */
+  margin-top: 0.15rem;
+}
+.footer-social a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--ink-dark-1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease),
+              border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.footer-social svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+/* Lifts, rather than inheriting the 3px sideways nudge .footer-col a uses. A
+   row of tiles sliding right looks like it is being dragged; the same tile
+   rising reads as a button responding. */
+.footer-social a:hover {
+  transform: translateY(-3px);
+  color: #FFFFFF;
+  background: rgba(70, 201, 138, 0.18);
+  border-color: var(--green-bright);
+}
+
 .footer-bottom {
   max-width: var(--wrap);
   margin: var(--s-8) auto 0;
@@ -3188,6 +3891,16 @@ main:focus-visible { outline: 0; box-shadow: none; }
   font-size: var(--fs-xs);
 }
 .footer-bottom a:hover { color: var(--green-bright); }
+
+/* The address sits in the same line as the copyright but is not the same kind
+   of thing: one is boilerplate nobody reads, the other is how a customer gets
+   hold of you. It takes the primary ink step so it separates from the notice
+   it shares a line with, without becoming loud enough to compete with the
+   contact icons above. The dot stays at the muted step and is aria-hidden —
+   it is punctuation, and a screen reader announcing "middle dot" between the
+   copyright and the address is noise. */
+.footer-bottom .footer-email { color: var(--ink-dark-1); }
+.footer-bottom .footer-dot { margin-inline: 0.35rem; opacity: 0.5; }
 
 /* ── Scroll reveal ───────────────────────────────────────────────────────
    One class, several entrances. The transition is always opacity + transform

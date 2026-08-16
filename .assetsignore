@@ -19,7 +19,16 @@ Marketing Resort Image.png
 # from, but never ship them.
 Pace Lodgix Logo White.png
 Pace Lodgix Wordmark v2.png
+# Guard, not a live exclusion. "Marketing Image.png" was sitting loose in this
+# folder unlisted, i.e. 2MB of source artwork publicly downloadable from the
+# site root. It has been moved up to 01-Businesses/PaceLodgix/. The line stays
+# so that dropping the file back in here cannot silently republish it.
+Marketing Image.png
 
 # Internal notes. The Worker serves this whole folder, so anything dropped in
 # here is public by default — keep working docs listed.
 *.md
+
+# Redesign preview — not public.
+preview.html
+preview.css

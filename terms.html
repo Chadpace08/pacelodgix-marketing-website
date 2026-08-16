@@ -15,9 +15,34 @@
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
   <link rel="icon" href="assets/logo-256.png" sizes="256x256">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
+  <!-- Type: Fraunces for display, Inter for everything else.
+       The APP uses Manrope for headings; the marketing site deliberately does
+       not. Fraunces is a variable serif with an optical-size axis (opsz 9–144):
+       set large, it takes on high contrast and flared, editorial detail that
+       reads genuinely premium; set small it would still hold, but it stays
+       display-only on purpose — anything under ~1.4rem is Inter. `opsz` is
+       driven automatically by font-optical-sizing (see styles.css), so a
+       3.7rem H1 and a 1.15rem H3 each get the right cut with no manual
+       switching.
+
+       SELF-HOSTED. The two preconnects and the fonts.googleapis.com
+       stylesheet that used to sit here are gone — see the type block at the
+       top of styles.css for why. Nothing on this page now touches a third
+       party before it paints.
+
+       These three preloads are the fonts that paint above the fold: the
+       headline's roman and italic cuts, and Inter for everything else. They
+       are declared here rather than left to styles.css because a browser only
+       discovers an @font-face src AFTER it has downloaded and parsed the
+       stylesheet, which is exactly the delay that makes text flash unstyled.
+       `crossorigin` is required on font preloads even for same-origin files —
+       fonts are always fetched in CORS mode, and without it the browser
+       fetches the file a second time.
+       Only preload what is genuinely above the fold. This page preloads two
+       rather than three: the legal pages set no display italic, so pulling
+       the italic cut here would be ~80KB fetched and never drawn. -->
+  <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 
   <!-- Restores a previous dismissal of the beta bar before first paint — see

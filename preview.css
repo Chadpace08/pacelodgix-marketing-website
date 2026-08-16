@@ -1,0 +1,28 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   PACE LODGIX — REDESIGN PREVIEW
+   Loaded by preview.html ONLY, after styles.css. Nothing here is ever live.
+
+   THIS FILE IS INTENTIONALLY EMPTY OF RULES. Everything it used to carry has
+   shipped:
+
+     · the dark hero chapter, the animated square grid, the removal of the
+       resort photo, and the removal of all gold from the hero field
+     · the alternating deep-forest / warm-cream feature stack
+
+   All of it now lives in styles.css and index.html, so preview.html inherits
+   it like any other page and currently renders identically to the live site.
+
+   DO NOT leave shipped rules sitting in here. This stylesheet loads AFTER
+   styles.css, so a stale copy silently overrides the live rules with older
+   values — and because the two look almost the same, that is a very hard bug
+   to see. When something merges, delete it from this file in the same pass.
+
+   HOW TO USE THIS LANE FOR THE NEXT ROUND
+
+     1. Write the proposed rules here as overrides, so the diff stays legible
+        and the change is reversible by deleting one block.
+     2. Review at preview.html, which is noindex and is excluded from the
+        Worker by .assetsignore — it is never served publicly.
+     3. On merge, move each block into its counterpart in styles.css rather
+        than appending it there, and clear it out of here.
+   ══════════════════════════════════════════════════════════════════════════ */
