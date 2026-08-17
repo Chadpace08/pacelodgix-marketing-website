@@ -1,0 +1,1600 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   PACE LODGIX — REDESIGN LAYER (ROUNDS 3–14)
+   LIVE. Loaded by index.html immediately after styles.css, and by preview.html
+   for side-by-side comparison. Everything here is an override.
+
+   WAS "preview.css". It was the review lane while rounds 3–14 were being
+   drawn, and it was excluded from the Worker by .assetsignore so it could
+   never be served. It has now been promoted: index.html loads it, and it is
+   public. Renamed so nothing on the live site is called "preview".
+
+   WHAT IT CARRIES — the redesign, in fourteen numbered rounds. The big two:
+     · ROUND 3+7 — the hero returns to LIGHT. This reverses commit 8eeaaf9's
+       dark hero deliberately; see Round 3's own note for the reasoning.
+     · ROUND 6 — #features becomes a sixteen-card floating mosaic, replacing
+       the five sticky stack cards.
+
+   WHY IT IS STILL A SEPARATE FILE rather than folded into styles.css. The
+   whole redesign stays reversible by deleting one <link> tag, which is worth
+   more right now than a tidy single stylesheet. It also keeps the rounds and
+   their reasoning readable as a set. Folding it in is a later, separate job —
+   and when it happens, each block should move into its counterpart section in
+   styles.css rather than being appended to the end.
+
+   THE ONE RULE WHILE IT STAYS SPLIT: this file loads AFTER styles.css, so
+   anything left in here outranks the live rules. If a block is ever merged
+   into styles.css, delete it from here in the SAME pass — a stale duplicate
+   silently overrides the newer value with an older one, and because the two
+   look almost the same, that is a very hard bug to see.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 6 — "SIXTEEN JOBS" AS A FLOATING CARD MOSAIC
+   Scope: #features only. Nothing else on the page is touched.
+
+   REPLACES ROUND 2, which put a photograph on top of every card. Sixteen
+   stock hospitality photographs are sixteen photographers, sixteen white
+   balances and sixteen crops; a wash held them together but never made them
+   one set, and none of them showed the job its card was naming. The biggest
+   element on every card was carrying no information. Drawn icons carry the
+   meaning in a fraction of the weight, and the page loses sixteen image
+   requests on the way.
+
+   THE REFERENCE stays the one we agreed. Linear supplies the discipline —
+   one hairline, one radius, one spacing ramp, motion you barely notice.
+   Wander and Mews supply the warmth — cream rather than white, a soft light
+   in the field rather than a flat slab. What makes it read premium here is
+   not decoration, it is depth: a quiet field, cards that sit ABOVE it as
+   loose panes, and columns that drift at different rates so the layers are
+   felt rather than announced.
+
+   THE TWO VARIABLES THE WHOLE THING TURNS ON
+     --stack  the column's resting step down the diagonal (0 → 3).
+     --drift  how hard that column answers the scroll, mixed in sign so
+              neighbouring columns separate instead of moving as one slab.
+   Both are assigned per column, per breakpoint, at the bottom of this block —
+   never in the HTML, because the column a card lands in changes with width.
+
+   --shift is the single number redesign.js animates on the grid. It inherits
+   to every card, each of which multiplies it by its own --drift. One animated
+   property drives sixteen elements. It defaults to 0px, so with JavaScript or
+   GSAP unavailable the grid is complete, still, and correctly laid out.
+
+   WHY `translate:` AND NOT `transform:` — .jc keeps its .reveal class, and
+   styles.css animates .reveal on `transform`. These are two separate CSS
+   properties that compose in the browser, so the entrance and the parallax
+   run on the same element without fighting. Same trick the hero cards use
+   (see the layering note at the top of parallax.js).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#features .jobs-grid {
+  --jc-surface: #FFFCF6;    /* the card: porcelain with a trace of brand cream */
+  --jc-step: 22px;          /* one step of the diagonal */
+  --shift: 0px;             /* driven by redesign.js; 0 is a complete layout */
+
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-6) var(--s-5);
+  /* Cards size to their own copy instead of stretching to the tallest card in
+     the row. Grid's default is `stretch`, which gave a two-line card the same
+     height as a four-line one and left a hand's width of empty cream under it
+     — the thing that makes a grid look padded rather than composed. Loose
+     bottoms are correct here: these are meant to read as separate panes. */
+  align-items: start;
+
+  /* ── Headroom, both ends. Sized off redesign.js's TRAVEL (58px). ──────────
+     `translate` is NOT layout: a drifting card moves without the page making
+     room for it, so both ends of the travel have to be paid for here or the
+     cards collide with the lede above and the section below.
+
+     TOP. At the start of the scroll the down-drifting columns are at -58px,
+     i.e. 58px HIGHER than they sit at rest. Column 2 is the exposed one: it
+     is only one step (22px) down the diagonal, so it ends up 36px above the
+     grid's own top edge. --lead alone leaves 20px of daylight, which is a
+     margin nobody should trust to a font metric — hence the extra 26px.
+     Measured across the whole scroll, the tightest the gap ever gets is 24px.
+
+     BOTTOM. At the end of the scroll the same columns are 58px LOWER. 70px
+     covers that with room for the shadow underneath.
+
+     BOTH NUMBERS MOVE IF TRAVEL DOES. Raising TRAVEL in redesign.js without
+     raising these is what makes cards run into the lede — and it fails at the
+     two moments a reader is least likely to be looking, so it ships. */
+  margin-top: calc(var(--lead) + 26px);
+  padding-bottom: 70px;
+}
+
+/* ── The field ────────────────────────────────────────────────────────────
+   The cards need something to float above, or "floating" is just a word. Two
+   layers, both very quiet: a hairline ruling at 96px — the same grid the hero
+   uses, so the two sections are visibly the same drawing — and a warm pool
+   that follows the pointer across the grid. --mx/--my are written by
+   redesign.js and default to the centre, so with no pointer and no JS this is
+   a static gold bloom rather than a missing effect.
+
+   Sits at z-index 0 with the cards at 1: it is the surface, not an overlay,
+   and it never covers type. */
+#features .jobs-light {
+  --mx: 50%;
+  --my: 30%;
+  position: absolute;
+  inset: calc(-1 * var(--s-7)) calc(-1 * var(--s-6));
+  z-index: 0;
+  pointer-events: none;
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(360px 300px at var(--mx) var(--my), rgba(217, 178, 95, 0.16), transparent 70%),
+    radial-gradient(70% 50% at 50% 0%, rgba(30, 122, 80, 0.055), transparent 72%),
+    repeating-linear-gradient(90deg, rgba(16, 21, 18, 0.028) 0 1px, transparent 1px 96px),
+    repeating-linear-gradient(0deg,  rgba(16, 21, 18, 0.028) 0 1px, transparent 1px 96px);
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 45%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(75% 70% at 50% 45%, #000 55%, transparent 100%);
+}
+
+/* ── The card ─────────────────────────────────────────────────────────────
+   A flex column so the copy can grow without the icon or the number moving,
+   and so every card in a row keeps the same top edge relative to its own
+   step. margin-top is the resting diagonal; translate is the scroll drift.
+   They are deliberately different properties: one is layout and is permanent,
+   the other is motion and is disposable.
+
+   The shadow scales with --stack as well. A pane that sits lower in the
+   diagonal reads as nearer, and a nearer thing casts a longer shadow — that
+   consistency is most of what separates depth from a stagger. */
+#features .jc {
+  --stack: 0;
+  --drift: 0;
+
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: calc(var(--stack) * var(--jc-step));
+  translate: 0 calc(var(--drift) * var(--shift));
+  padding: var(--s-5) var(--s-5) calc(var(--s-5) + 2px);
+  text-align: left;   /* overrides .features{text-align:center} — see below */
+  /* The top light: a short white gradient along the card's upper edge, the way
+     a real pane catches the light source the field puts at 50% 0%. Written
+     into the card's own background rather than an overlay pseudo-element on
+     purpose — an inset:0 overlay paints above the heading and the icon tile
+     and quietly washes both out. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 38%),
+    var(--jc-surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  box-shadow:
+    0 1px 2px rgba(10, 13, 11, 0.04),
+    0 calc(6px + var(--stack) * 4px) calc(18px + var(--stack) * 8px)
+      calc(-6px - var(--stack) * 2px) rgba(10, 13, 11, calc(0.05 + var(--stack) * 0.012));
+}
+/* text-align is an override, not a preference: styles.css:2421 sets
+   `.features { text-align: center }` for the old sticky stack, and centred
+   copy inside a card kills the left edge that makes a grid read as a grid.
+   ON MERGE: narrow that rule to the section's header block instead. */
+
+/* NO HOVER STATE, on purpose — carried over from the photo version. The cards
+   used to lift, back when each one was a link. They are not links any more,
+   and a card that rises under the cursor and then does nothing when clicked is
+   a small lie the whole grid tells sixteen times. Motion is a promise of
+   behaviour; with nothing to click, the honest state is stillness. The only
+   pointer response in this section belongs to the field behind the cards. */
+
+/* ── The number ──────────────────────────────────────────────────────────
+   01 … 16. It does the counting the headline claims, which is the one job the
+   photographs never did, and it gives every card a fixed anchor in the top
+   right so sixteen cards of unequal copy still read as one system. Tabular
+   figures so 11 and 16 are the same width. aria-hidden in the markup — a
+   screen reader gets the sixteen headings, which is the same information
+   without the ornament. */
+#features .jc-num {
+  position: absolute;
+  top: var(--s-5);
+  right: var(--s-5);
+  font-size: var(--fs-label-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  opacity: 0.55;
+}
+
+/* ── The icon tile ───────────────────────────────────────────────────────
+   Same construction as .problem .card-icon in styles.css — forest tint,
+   inset hairline, green-ink stroke — deliberately, so the page keeps ONE icon
+   language from the problem cards down to here. Slightly smaller (42 vs 46)
+   because these sit sixteen to a screen rather than three. */
+#features .jc-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: var(--s-4);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(30, 122, 80, 0.13), rgba(30, 122, 80, 0.04));
+  box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.20);
+  color: var(--green-ink);
+}
+#features .jc-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#features .jc h3 {
+  font-family: var(--font);   /* Inter: the display serif starts at ~1.4rem */
+  font-size: clamp(1.06rem, 0.99rem + 0.3vw, 1.2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin: 0 0 var(--s-3);
+  padding-right: 2.2rem;      /* keeps a long title clear of the number */
+}
+#features .jc p {
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--text-light);
+  margin: 0;
+}
+
+/* "Soon" — the one place gold appears in this grid, so it has to earn it. */
+#features .jc-soon {
+  display: inline-block;
+  vertical-align: 3px;
+  margin-left: 0.4em;
+  padding: 0.15em 0.5em;
+  border-radius: var(--r-full);
+  background: rgba(217, 178, 95, 0.16);
+  color: var(--gold-ink);
+  font-size: var(--fs-label-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── The diagonal and the drift, per column ──────────────────────────────
+   Assigned by :nth-child, which means they have to be re-declared at every
+   breakpoint: at four columns card 5 is column 1, at three columns it is
+   column 2. Getting this wrong does not break the layout, it just makes the
+   diagonal look random — which is exactly the failure that is hard to see.
+
+   --drift is signed, and the signs STRICTLY ALTERNATE: column 1 travels up,
+   column 2 down, column 3 up, column 4 down. All four the same sign would
+   move sixteen cards as one slab, which is not parallax, it is a lurch.
+
+   THE MAGNITUDES WERE 1 / .55 / .8 / .45 AND ARE NOW NEARLY EQUAL. The old
+   spread was there to stop four columns reading as a pattern — but it had the
+   side effect that only column 1 really moved, and the alternation the whole
+   idea rests on was not legible. Near-equal magnitudes make "up, down, up,
+   down" obvious at a glance. They are not exactly equal (1 / .95 / .9 / 1)
+   because four identical values make the grid breathe in perfect time, which
+   reads as a mechanism rather than as depth. */
+#features .jc:nth-child(4n + 2) { --stack: 0;   --drift:  1;    }  /* col 1 ↑ */
+#features .jc:nth-child(4n + 3) { --stack: 1;   --drift: -0.95; }  /* col 2 ↓ */
+#features .jc:nth-child(4n + 4) { --stack: 2;   --drift:  0.9;  }  /* col 3 ↑ */
+#features .jc:nth-child(4n + 5) { --stack: 3;   --drift: -1;    }  /* col 4 ↓ */
+/* +2 … +5, not +1 … +4: .jobs-light is the grid's first child. It is inside
+   the grid so it can be positioned against it, and it is display:none to the
+   grid's flow only in the sense that it is absolutely positioned — but
+   :nth-child still counts it. Off-by-one here shifts the whole diagonal. */
+
+/* ── Responsive ──────────────────────────────────────────────────────────
+   4 → 3 → 2 → 1. The cards are text-led now rather than photo-led, so two
+   columns hold down to a small phone and one column is only needed at the
+   very bottom, where a 2-up card is too narrow for a title on one line.
+   The diagonal shallows as the columns reduce — three steps of 22px across a
+   1200px grid is a slope; the same three steps across 700px is a staircase. */
+/* Three and two columns keep the same strict up/down/up alternation. Each
+   breakpoint re-states its own headroom for the same reason the base rule
+   does — the travel does not shrink with the screen, so the padding cannot
+   either. */
+@media (max-width: 1080px) {
+  #features .jobs-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    --jc-step: 20px;
+    padding-bottom: 70px;
+  }
+  #features .jc:nth-child(3n + 2) { --stack: 0; --drift:  1;    }  /* ↑ */
+  #features .jc:nth-child(3n + 3) { --stack: 1; --drift: -0.95; }  /* ↓ */
+  #features .jc:nth-child(3n + 4) { --stack: 2; --drift:  0.9;  }  /* ↑ */
+}
+@media (max-width: 820px) {
+  #features .jobs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+    --jc-step: 18px;
+    padding-bottom: 70px;
+  }
+  #features .jc:nth-child(2n + 2) { --stack: 0; --drift:  0.9; }  /* ↑ */
+  #features .jc:nth-child(2n + 3) { --stack: 1; --drift: -0.9; }  /* ↓ */
+  #features .jobs-light { inset: calc(-1 * var(--s-5)) calc(-1 * var(--s-4)); }
+}
+@media (max-width: 520px) {
+  /* One column: the diagonal has nothing to be diagonal against, and drift on
+     a single column is just the page scrolling at the wrong speed. Both off.
+
+     `:nth-child(n)` matches every child and does nothing else. It is here for
+     SPECIFICITY, not selection: the four-, three- and two-column rules above
+     are all `.jc:nth-child(...)`, and a plain `#features .jc` is one
+     pseudo-class weaker, so it would lose to them and the diagonal would
+     survive into the single column. Matching their weight and coming later in
+     the file is what wins it. */
+  #features .jobs-grid {
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+    padding-bottom: var(--s-6);
+  }
+  #features .jc:nth-child(n) { --stack: 0; --drift: 0; }
+  #features .jc-icon { width: 38px; height: 38px; margin-bottom: var(--s-3); }
+  #features .jc-icon svg { width: 20px; height: 20px; }
+}
+
+/* Reduced motion: redesign.js returns before it writes either --shift or the
+   pointer light, so this is belt and braces — it guarantees the diagonal is
+   the only thing left even if a stale value is sitting on the element. */
+@media (prefers-reduced-motion: reduce) {
+  #features .jc { translate: none; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 3 — THE HERO RETURNS TO LIGHT
+
+   THIS REVERSES A DELIBERATE DECISION, so it should be reversed knowingly.
+   Commit 8eeaaf9 built the hero as "a dark chapter": a near-black forest floor,
+   an animated square grid, drifting emerald glows, and a lit seam at the
+   bottom edge. It is good work and it is well documented in styles.css. It is
+   also, precisely, the Linear look — and the agreed direction is Linear's
+   DISCIPLINE with Wander and Mews' WARMTH, on light ground, because the buyer
+   is a resort owner who is proud of their property, not an engineer. A dark
+   technical hero says "software company" before a single word is read.
+
+   Everything here is an override. Delete this block and the dark hero returns
+   intact — nothing in styles.css has been edited.
+
+   NO PHOTOGRAPH BEHIND THE HEADLINE, and that is a choice rather than an
+   omission. The obvious move was to bring back assets/hero-resort.webp, which
+   the dark redesign removed. Two reasons not to: it is an AI render and reads
+   like one at full-bleed size, and Mews — the best-looking company in this
+   category — does not put a photograph behind its headline either. The canvas
+   stays quiet, the product mockup is the hero image, and the photography does
+   its work further down the page where the feature grid already carries it.
+
+   BRAND AT ~30%: the canvas is warm neutral, not forest. Green appears on one
+   button, the italic phrase, and the proof ticks. Gold does not appear at all
+   up here. The brand is the accent; the warmth is the ground.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 4 — THE TYPEFACE. THIS IS THE ONE THAT WAS MISSING.
+
+   Rounds 2 and 3 changed colour, layout and spacing, and the page still did
+   not read as premium. The reason is that none of them touched the type, and
+   the type is what the eye reads first. Every reference on the list — Linear,
+   Vercel, Framer, Stripe, Mews, Wander — sets its headlines in a GROTESK SANS.
+   This site sets them in Fraunces, a high-contrast display serif. No amount of
+   spacing discipline gets a serif page to look like a sans one; it just makes
+   a well-spaced editorial page, which is a different thing and was never the
+   brief.
+
+   ONE TOKEN DOES IT. --font-display is referenced in five places in
+   styles.css (h1/h2 and four component headings), so repointing it here
+   converts the whole site at once. Delete these three declarations and
+   Fraunces returns everywhere, unharmed.
+
+   NO NEW FONT FILE. Inter is already self-hosted as a variable font carrying
+   400..800, so this costs zero extra download, no new licence and no new
+   render-blocking request. A second display family was the obvious move and
+   the wrong one: what reads as expensive at this size is weight and tracking
+   discipline, not an unusual typeface.
+
+   WHAT CHANGES WITH IT — a serif and a sans want opposite settings, so the
+   weight and tracking have to move too, or the page just looks like Fraunces
+   swapped for thin Inter:
+     · weight 500 -> 640. Fraunces at 500 is already high-contrast and reads
+       substantial; Inter at 500 across five rem is weak and washy.
+     · tracking -0.015em -> -0.032em. The styles.css comment says "a serif this
+       expressive does not want to be tracked in", which is correct and is
+       exactly why a grotesk is different: at display size Inter wants to be
+       pulled tight. This single number is most of the Linear look.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root { --font-display: 'Inter', system-ui, sans-serif; }
+
+h1, h2 {
+  font-weight: 640;
+  letter-spacing: -0.032em;
+  line-height: 1.03;
+}
+h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); }
+h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
+
+/* ── Big numerals, after the font swap ───────────────────────────────────
+   A REGRESSION FROM THE LINE ABOVE, and worth writing down because it is the
+   trap in any display-face swap: the two faces are not the same width.
+
+   Fraunces is a high-contrast display serif with narrow lining figures.
+   Inter at weight 600 is a grotesk with wide, even ones. "₱184,250" is eight
+   glyphs; at the shipped clamp of 3.8rem it measured roughly 290px against a
+   ~269px column in .counter-grid, so it overflowed into "82%" next door and
+   the hairline divider between the two columns disappeared behind it.
+
+   Fixed at the type, not the grid — widening the column would only move the
+   problem to the next long figure. The clamp comes down a step and the
+   tracking goes negative, which large numerals want anyway: set solid, a row
+   of grotesk digits reads loose. It still lands as the biggest thing in the
+   section.
+
+   nowrap is the guard. Without it a figure that does outgrow its column wraps
+   mid-number — "₱184," over "250" — which is worse than either overflow or a
+   smaller size, and it fails silently at widths nobody tests. */
+.counter strong {
+  font-size: clamp(2rem, 3.7vw, 3.15rem);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+/* Grid children default to min-width:auto, which lets content push a column
+   wider than its 1fr share instead of being contained by it. */
+.counter { min-width: 0; }
+
+/* Same face, same risk: the pricing figure is 3.4rem and fixed, in a narrower
+   card than the counters sit in. Tightened for the same reason. */
+.pc-amt { font-size: 3.1rem; letter-spacing: -0.03em; white-space: nowrap; }
+
+/* ── Buttons: pill -> rectangle ──────────────────────────────────────────
+   The other quiet reason the page read consumer rather than premium. Every
+   button on the site is --r-full, a full pill. Pills are friendly and they are
+   what mass-market apps use; Linear, Vercel, Stripe and Mews all sit between
+   6px and 10px. The label loses its positive tracking at the same time — that
+   was tuned for a bold serif-era pill, and on a tighter sans it reads loose. */
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+}
+
+/* ── The field ────────────────────────────────────────────────────────────
+   Porcelain warmed toward the brand cream as it rises, so the top of the page
+   is the warmest thing on it and the hero settles back to the section colour
+   by the time the mockup arrives. Three soft pools, all under 5% — enough to
+   stop a flat wash, not enough to notice as gradients. */
+.hero-field {
+  background:
+    radial-gradient(60% 40% at 50% 12%, rgba(217, 178, 95, 0.10) 0%, transparent 70%),
+    radial-gradient(50% 38% at 12% 22%, rgba(30, 122, 80, 0.045) 0%, transparent 72%),
+    radial-gradient(80% 45% at 50% 92%, rgba(30, 122, 80, 0.05) 0%, transparent 70%),
+    linear-gradient(180deg, #FDFBF4 0%, #FBFAF6 46%, var(--porcelain) 100%);
+}
+
+/* The dark field's vignette, which existed to sink the edges into black.
+   On light it would grey the corners, so it becomes a faint lift instead. */
+.hero-field::after {
+  background: radial-gradient(70% 46% at 50% 22%, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
+}
+
+/* ── The grid: gone ──────────────────────────────────────────────────────
+   The square wall was built from individually lit <span> blocks — light
+   catching a dark surface. That idea has no equivalent on porcelain: a lighter
+   block on a light field is invisible and a darker one is dirt. Round 3
+   replaced it with a hairline ruling instead, two repeating gradients at 3.4%
+   masked out behind the headline.
+
+   THAT IS NOW OFF TOO, and it is the right call rather than a compromise. A
+   ruled background is a software-industry signature — it says "developer tool"
+   before a word is read, which is the exact thing the light hero was made to
+   stop saying. The field already has three soft pools grading it; the grid was
+   adding pattern where the page wanted air, and on a warm cream canvas a cold
+   1px lattice reads as graph paper.
+
+   The whole layer goes rather than just its background, so the element stops
+   painting and stops being masked. See ROUND 12 at the bottom of this file,
+   which does the same across the rest of the page — this rule stays here
+   because it is Round 3's ruling and Round 3 should own its own removal. */
+.hero-grid { display: none; }
+
+/* Light pools blended with `screen`, which is additive: on a dark field they
+   are light, on this one they are arithmetically nothing. Removed rather than
+   left running, since they animate. */
+.hero-field .blobs { display: none; }
+
+/* The stage glow was an emerald pool lifting the mockup off black. On light a
+   pool that strong reads as a green stain, so this layer stays off and the
+   mockup is lifted by its own shadow instead — see ROUND 7, which does it on
+   #heroFrame's box-shadow rather than here.
+
+   IT HAS TO STAY OFF, and not just for taste: Round 5 makes .hero-stage
+   `position: static` above 1280px so the floating cards can escape it. A
+   ::before on a static parent is positioned against .hero instead, so this
+   pool would stop being a halo under the mockup and become a wash across the
+   entire hero at exactly the width most people are viewing on. */
+.hero-stage::before { display: none; }
+/* Superseded by ROUND 7 (and outranked anyway — #heroFrame is an ID). */
+.hero-stage .frame-browser { box-shadow: var(--shadow-xl); }
+
+/* The lit seam that closed the dark chapter. There is no chapter to close any
+   more — the hero and the section under it are now the same light ground, and
+   a glowing bar across an unbroken surface is a line looking for a reason. */
+.hero::after { display: none; }
+
+/* ── Type ─────────────────────────────────────────────────────────────────
+   The clamp goes back up. styles.css stepped it down to 2.3–3.7rem to hold a
+   ~104-character SEO headline to three lines; that headline is now ~52
+   characters and holds one line on a desktop, so it can carry display size
+   again. This is the single biggest change in the hero: a short headline set
+   large is the whole Linear/Wander effect, and a long one set small is what
+   made the old hero read as a paragraph in a serif. */
+.hero-copy h1 {
+  color: var(--ink);
+  font-size: clamp(2.25rem, 5.2vw, 4.05rem);
+  line-height: 1.02;
+  letter-spacing: -0.034em;
+}
+
+/* The h1's second sentence. Dropping it to 0.4em and to --ink-3 is what lets
+   both sentences live in one heading without the block going flat: the eye
+   reads a headline and a qualifier rather than two competing statements. It
+   stays inside the h1, so the heading text Google sees is the full supplied
+   wording, not just the first half. */
+.hero-copy h1 .hero-h1-sub {
+  display: block;
+  margin-top: 0.46em;
+  font-size: 0.4em;
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.016em;
+  color: var(--ink-3);
+}
+/* --green-bright is calibrated for the dark floor and measures near 2:1 here.
+   --green-ink is the token that clears AA on light — the same swap the
+   styles.css comment describes, run in the opposite direction. */
+.hero-copy h1 .hero-green,
+.hero-copy h1 .text-green { color: var(--green-ink); }
+
+.hero-copy .lede { color: var(--ink-2); }
+.hero-proof li   { color: var(--ink-2); }
+.hero-proof svg  { stroke: var(--green); }
+.hero-note            { color: var(--ink-3); }
+.hero-audience > span { color: var(--ink-3); }
+
+/* Audience pills: back off glass-on-dark to a hairline chip on light. */
+.hero-audience li {
+  background: var(--surface);
+  border-color: var(--hairline);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink-2);
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+}
+
+/* ── The secondary button, and the floating cards ────────────────────────
+   Both used to be handled here — the button was returned to a plain hairline
+   outline, and the cards were stripped back to a grey --shadow-lg. Between
+   them that is what left the hero quiet AND flat. Both now live in ROUND 7 at
+   the bottom of this file, as ONE rule each rather than a Round 3 rule and a
+   Round 7 rule fighting over the same selector. Nothing is set here. */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 5 — THE EMPTY MARGINS BESIDE THE HEADLINE
+
+   THE BRIEF WAS "it's just plain white, maybe colours". The diagnosis is the
+   opposite: the space does not need colour, it needs OBJECTS. Gradient washes
+   and floating blobs in hero margins are the single most reliable way to date
+   a software site, and they add nothing a reader can use. What was actually
+   wrong is that every element sat in one narrow centre column while the page
+   ran 1400px+ wide, so the hero read as a tall stack with two dead fields
+   either side of it.
+
+   THE FIX USES WHAT IS ALREADY THERE. Three product cards — a real booking, a
+   mini calendar, a stat — were bunched around the dashboard at the bottom.
+   Spread across the margins they turn dead space into proof, at the cost of
+   zero new assets. Stripe and Linear both compose their heroes this way.
+
+   THE COMPOSITION is a diagonal, not a symmetry: booking card upper LEFT,
+   headline centre, stat card mid RIGHT, dashboard bottom centre. The eye
+   travels down-right and lands on the product. Two cards mirrored at the same
+   height would read as a pair of brackets and stop the movement dead.
+
+   WHICH CARD GOES WHERE is a content decision, not a layout one. The booking
+   card gets the prime upper-left slot because it is the only one carrying a
+   named guest and a peso amount — the most concrete proof in the hero. The
+   stat card sits right, level with the buttons, where someone weighing up the
+   CTA is already looking. The calendar stays low, anchoring the group to the
+   dashboard so the three do not read as scattered.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ≥1280px ONLY, and the breakpoint is doing real work rather than being a
+   round number. These positions are measured from the centre line outward, so
+   they need roughly 1400px before the outer card clears the headline's own
+   measure. Below that the shipped layout — cards hugging the stage, outset
+   derived from --room — is still the correct one and is left completely
+   alone. Nothing here applies on a tablet or a phone. */
+@media (min-width: 1280px) {
+
+  /* The cards are DOM children of .hero-stage, so .hero-stage is their
+     containing block and they can only be placed relative to the dashboard.
+     Making it static promotes .hero — already position:relative — to that
+     role, which is what lets a card sit level with the headline several
+     hundred pixels above the stage.
+
+     Safe because --stage-w / --room / --card-out-* are custom properties:
+     they inherit to the cards regardless of positioning, so the shipped
+     clip-guard maths below 1280px is untouched.
+
+     PERSPECTIVE HAS TO GO WITH IT, and this is the part that is easy to miss:
+     `position: static` alone changes nothing here, because any `perspective`
+     value other than `none` ALSO makes an element a containing block for its
+     absolutely positioned descendants. .hero-stage carries perspective:1800px,
+     so the cards stayed pinned to the dashboard and the override looked like
+     it had simply failed.
+
+     Dropping it costs no visual 3D: #heroFrame sets its own
+     `transform: perspective(1800px) rotateX(17deg) scale(0.94)`, so the tilt
+     is self-contained in the frame and scroll.js interpolates that same
+     property. The stage-level perspective was only ever a second, redundant
+     source for the one child that already supplies its own. */
+  .hero-stage { position: static; perspective: none; }
+
+  /* Horizontal placement is measured from the centre, not from the edge, so
+     the cards keep a fixed relationship to the headline instead of drifting
+     apart as the monitor widens. max() is the guard: on a 1280-1400px screen
+     the centre-relative value would go negative and the card would be
+     amputated by body's overflow-x:clip, so it falls back to the hero's own
+     padding and sits flush in the gutter instead.
+
+     Vertical values are px against the hero's own box — the copy block is a
+     fixed stack of type at these widths, so a percentage would only add
+     indirection. */
+  .float-booking {
+    top: 148px;
+    left: max(clamp(1.2rem, 4vw, 3rem), calc(50% - 700px));
+    right: auto;
+  }
+  .float-stat {
+    top: 372px;
+    right: max(clamp(1.2rem, 4vw, 3rem), calc(50% - 700px));
+    left: auto;
+  }
+  /* Stays low and left, overlapping the dashboard's lower-left corner — the
+     tie between the two outboard cards and the product.
+
+     14%, not 4%: the hero does not end at the mockup. The "Built for …"
+     audience strip sits below it, and at 4% this card landed directly on the
+     word "BUILT FOR". Anchoring from the bottom means every element below the
+     card is in play, not just the one it is meant to overlap. */
+  .float-cal {
+    top: auto;
+    bottom: 14%;
+    left: max(clamp(1.2rem, 4vw, 3rem), calc(50% - 640px));
+    right: auto;
+  }
+}
+
+/* ── The nav, over a light hero ──────────────────────────────────────────
+   Reverses the block at styles.css:1870-1897 one selector at a time, matching
+   its specificity. That block applies only in the top-of-page state — not
+   .is-stuck, not .is-menu-open, not .nav-solid — so these do too. Anything
+   missed here goes white-on-porcelain and vanishes.
+
+   THE LOGO IS THE ONE THAT MATTERS. The master artwork is white-only, and the
+   two colour cuts are cross-faded by opacity. Over the dark hero the white cut
+   was shown at the top of the page; on porcelain that is an invisible logo
+   above the fold — the exact failure BRAND-UPDATE-HANDOVER.md warns about. The
+   forest cut comes back on, in every nav state. */
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-links a,
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-signin {
+  color: var(--ink-2);
+}
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-links a:hover,
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-signin:hover {
+  color: var(--green-ink);
+}
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-links a::after {
+  background: var(--green);
+}
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .brand-on-dark  { opacity: 0; }
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .brand-on-light { opacity: 1; }
+.nav:not(.is-stuck):not(.is-menu-open):not(.nav-solid) .nav-toggle { color: var(--ink); }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 7 — THE HERO'S OBJECTS, NOT ITS BACKGROUND
+
+   THE BRIEF was "the white background is too plain — make these stand out",
+   marking the booking card, the money card, the two buttons and the dashboard.
+
+   THE DIAGNOSIS IS NOT THE BACKGROUND. Round 3 took the hero to a quiet light
+   canvas on purpose and that decision holds: pattern and colour behind a
+   headline is the fastest way to date a software page. What went wrong is that
+   the same round flattened the OBJECTS on its way past. Converting the hero
+   from dark to light, it swapped the floating cards' tinted layered lift for a
+   plain grey --shadow-lg, returned the secondary button to a bare hairline
+   outline, and switched the mockup's halo off. The result was quiet AND flat,
+   when the whole idea was quiet field, loud objects.
+
+   So nothing below paints the field. Every rule gives one object more
+   presence: a warmer, deeper cast; a colour halo of its own; a live top edge;
+   and, on the two cards carrying real numbers, bigger figures.
+
+   ON GOLD. The Round 3 note says gold does not appear in the hero. That was
+   written about the DARK field, where gold as a large soft wash mixed to a
+   murky olive — and it is still true of washes. The field is warm porcelain
+   now and already carries a 10% gold pool, and the palette note in styles.css
+   says gold works as "small, crisp, high-alpha shapes". A card halo and a peso
+   figure are exactly that. A deliberate reversal of one line, not an oversight.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. The three floating cards ─────────────────────────────────────────
+   --tint is set per card in styles.css: emerald on the booking card, gold on
+   the calendar. The money card joins the gold side here. Two greens and one
+   gold left the trio reading as one colour with an odd one out; emerald on the
+   guest card and gold on the two number cards is a rule the eye can follow —
+   green is a person, gold is money. */
+.hero .float-stat { --tint: 199, 154, 59; }
+
+.hero .float-card {
+  padding: 1.05rem 1.15rem;
+  font-size: 0.86rem;
+  /* backdrop-filter off. It was blurring a plain three-stop gradient, i.e.
+     doing invisible work — on three cards, on every frame of their float, for
+     the whole time the hero is on screen. */
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  /* TWO LAYERS, AND THE SECOND ONE IS NOT OPTIONAL. The shipped gradient runs
+     white → rgba(tint, 0.04) → white, i.e. its middle stop is 96% TRANSPARENT,
+     not 96% white. That worked only because the card also carried
+     backdrop-filter: blur(16px), which frosted whatever showed through. Turn
+     the backdrop-filter off — as the rule above does — and the card's waist
+     goes see-through. Invisible on the desktop hero, where the porcelain field
+     is behind it; very visible below 900px, where the card sits ON the dark
+     dashboard and the screenshot reads straight through the middle of it.
+     So: the tint is a wash, and #FFFFFF underneath is the card. */
+  background:
+    linear-gradient(158deg,
+      rgba(var(--tint), 0) 0%,
+      rgba(var(--tint), 0.075) 62%,
+      rgba(var(--tint), 0) 100%),
+    #FFFFFF;
+  border: 1px solid rgba(var(--tint), 0.30);
+  /* Five layers, and each one is a different job rather than the same shadow
+     five times: the inset is the card's own top light; the 2px is the contact
+     edge that stops it looking pasted on; the 14px and 34px are the real cast,
+     warm-black rather than grey; the last is the card's colour bleeding into
+     the page, which is what actually separates it from a white field. */
+  box-shadow:
+    inset 0 1px 0 #FFFFFF,
+    0 2px 5px rgba(10, 13, 11, 0.05),
+    0 14px 30px -10px rgba(10, 13, 11, 0.13),
+    0 34px 64px -26px rgba(10, 13, 11, 0.20),
+    0 16px 40px -16px rgba(var(--tint), 0.42);
+}
+
+/* The halo. A blurred pool of the card's own tint, sitting BEHIND the card
+   (z-index -1, inside the stacking context .float-card's own z-index:3 makes)
+   and dropping below its bottom edge. This is the piece a flat shadow cannot
+   do: a shadow says "this is above the page", colour says "this is lit". The
+   inset starts 12% down so the pool sits under the card's lower half — light
+   from above, the same direction everything else on the page assumes. */
+.hero .float-card::before {
+  content: '';
+  position: absolute;
+  inset: 12% -6% -18%;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(62% 62% at 50% 55%, rgba(var(--tint), 0.27) 0%, transparent 72%);
+  filter: blur(26px);
+  pointer-events: none;
+}
+
+/* The lit top edge. Two pixels of the tint, faded out at both ends so it reads
+   as light catching a rim rather than as a coloured border. It is the smallest
+   thing in this block and it does more work than the shadows do — it is what
+   makes the card look like an object with a surface. */
+.hero .float-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 14%;
+  right: 14%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(var(--tint), 0.9), transparent);
+  pointer-events: none;
+}
+
+/* ── 2. What the cards actually say ──────────────────────────────────────
+   The cards are the only concrete proof above the fold — a named guest, a real
+   amount, a month's revenue — and all three were set at caption size. Nothing
+   here is invented; the figures are the ones already in the markup. They are
+   simply allowed to be the biggest thing on their own card. */
+.hero .fc-row strong { font-size: 0.92rem; }
+.hero .fc-amt {
+  font-size: 1.04rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+/* The status pill was a pale grey-green that read as disabled. Deeper ground,
+   darker label, and a ring so it holds its shape against the white card. */
+.hero .pill-confirmed {
+  background: #CFE4D6;
+  color: #10402A;
+  box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.24);
+}
+/* The initials disc is the one solid emerald in the hero besides the button.
+   A short green cast under it makes it a token sitting on the card rather than
+   a circle printed on it. */
+.hero .fc-avatar { box-shadow: 0 4px 10px -3px rgba(30, 122, 80, 0.5); }
+
+.hero .fc-big {
+  font-size: 1.7rem;
+  letter-spacing: -0.032em;
+}
+/* "▲ 18% vs. last" was loose green text on white and read as a caption. As a
+   chip it reads as a result — and it is the one line in the hero that says the
+   number went UP, which is the whole reason the card is there. */
+.hero .fc-delta {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.2em 0.6em;
+  border-radius: var(--r-full);
+  background: rgba(30, 122, 80, 0.13);
+  color: var(--green-ink);
+  box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.18);
+}
+
+/* ── 3. The two buttons ──────────────────────────────────────────────────
+   PRIMARY. The fill and the gradient are already right — what was missing is
+   that its shadow was --shadow-accent, a single 18px cast. One short shadow
+   makes a button look printed on the page. Three depths of the same emerald,
+   the longest at 54px, make it the one object clearly floating above
+   everything else, which is what a primary action is for. */
+.hero .btn-accent {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    0 2px 5px rgba(21, 97, 62, 0.24),
+    0 14px 28px -8px rgba(21, 97, 62, 0.40),
+    0 28px 54px -22px rgba(21, 97, 62, 0.42);
+}
+.hero .btn-accent:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    0 3px 8px rgba(21, 97, 62, 0.28),
+    0 20px 38px -10px rgba(21, 97, 62, 0.48),
+    0 36px 66px -24px rgba(21, 97, 62, 0.46);
+}
+
+/* SECONDARY. White surface, near-white page, hairline border — it was very
+   nearly not there, which is a real problem when it is the button that opens
+   the demo. The edge picks up a trace of emerald and the cast gets some of the
+   same, so it reads as the quieter member of a PAIR rather than as an outline
+   that failed to load. The label stays ink and only the play triangle turns
+   green: an outline button that borrows the primary's colour outright stops
+   being secondary. */
+.hero .btn-glass {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid rgba(30, 122, 80, 0.30);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 2px 5px rgba(10, 13, 11, 0.05),
+    0 12px 26px -8px rgba(10, 13, 11, 0.12),
+    0 12px 30px -14px rgba(30, 122, 80, 0.26);
+}
+.hero .btn-glass svg { color: var(--green); }
+.hero .btn-glass:hover {
+  background: var(--surface);
+  border-color: rgba(30, 122, 80, 0.52);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 3px 7px rgba(10, 13, 11, 0.06),
+    0 18px 34px -10px rgba(10, 13, 11, 0.14),
+    0 18px 40px -16px rgba(30, 122, 80, 0.30);
+}
+
+/* ── 4. The dashboard ────────────────────────────────────────────────────
+   DONE ON THE FRAME'S OWN SHADOW, NOT ON A HALO ELEMENT, and the reason is
+   structural rather than aesthetic: Round 5 makes .hero-stage `position:
+   static` above 1280px so the floating cards can be placed against the hero
+   instead of the stage. Any absolutely positioned halo hung off .hero-stage
+   would silently re-anchor to .hero at that width and spread across the whole
+   section. A box-shadow cannot re-anchor — it is always drawn around the box
+   it belongs to, at every width, under every override.
+
+   #heroFrame, not .frame-browser, because the shipped rule is on the ID and
+   nothing weaker will replace it. It carried a near-black four-layer cast
+   tuned for a black floor; on porcelain that reads as soot. Same structure,
+   warmed and lightened, with two additions: a wide emerald bloom that pushes
+   the mockup off the page the way the cards' halos do, and a hairline ring so
+   the pale screenshot inside has a defined edge where it meets a pale page. */
+#heroFrame {
+  box-shadow:
+    0 0 0 1px rgba(16, 21, 18, 0.07),
+    0 2px 8px rgba(10, 13, 11, 0.06),
+    0 18px 40px -12px rgba(10, 13, 11, 0.16),
+    0 52px 96px -34px rgba(10, 13, 11, 0.30),
+    0 34px 86px -34px rgba(30, 122, 80, 0.34);
+}
+
+/* ── 5. Handing the phone layout back ────────────────────────────────────
+   EVERY RULE ABOVE IS `.hero .something`, which is one class heavier than the
+   shipped mobile rules in styles.css §4030-4070 — so it beats them INSIDE
+   their own media query, not just outside it. That is not a theory: the extra
+   padding and the larger type pushed "Villa Anilao · 3 nights" past the card's
+   width on a phone and it truncated to "Villa Anilao · 3", which is the exact
+   failure the comment on .float-booking there says to avoid.
+
+   Below 900px the cards sit ON the dashboard mockup rather than beside it, so
+   they are already separated by the thing behind them and do not need the
+   desktop treatment's weight. This block restores the shipped sizes at the
+   specificity needed to win, and quiets the halo to match.
+
+   900px is not a new number — it is the same breakpoint styles.css uses for
+   this layout change. Any other value here would apply the sizes to the wrong
+   arrangement of cards. */
+@media (max-width: 900px) {
+  .hero .float-card { padding: 0.7rem 0.8rem; font-size: 0.78rem; }
+  .hero .float-card::before { inset: 20% -4% -14%; opacity: 0.55; }
+  .hero .float-card::after { left: 20%; right: 20%; }
+  .hero .fc-row strong { font-size: 0.79rem; }
+  .hero .fc-amt { font-size: 0.86rem; }
+  .hero .fc-big { font-size: 1.1rem; }
+  .hero .fc-delta { margin-top: 0.2rem; padding: 0.15em 0.45em; font-size: 0.66rem; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 8 — #features BECOMES A CHAPTER THAT OPENS DARK AND RESOLVES LIGHT
+
+   THE BRIEF: "dark colour then slowly turns to light colours."
+
+   HOW THE DARK IS MIXED, because this is the part that usually goes wrong. The
+   obvious way is to write a gradient of literal colours — near-black, then a
+   mid green-grey, then cream. Every one of those middle stops has to be
+   invented, and invented mid-tones between a dark green and a warm cream come
+   out as mud or as a grey the brand does not contain.
+
+   So there are no middle colours here. There is ONE dark — the hero floor's
+   own near-black forest — laid over the page's porcelain and faded out by
+   ALPHA. Every tone between the two ends is then the arithmetic blend of the
+   two colours the page already uses, which is why the middle of this section
+   reads as warm shadow rather than as a third colour that wandered in.
+
+   THE TOP EDGE dissolves rather than cuts. The section above (#numbers) ends
+   on porcelain, and a hard black line across the middle of a light page reads
+   as a rendering fault. Stop 0% is fully transparent and 6% is fully dark, so
+   the chapter opens over roughly a hundred pixels.
+
+   THE BOTTOM EDGE reaches zero at 90%, which puts the last row of cards and
+   the section's padding back on plain porcelain — so #showcase below it
+   continues on the same ground with nothing to reconcile.
+
+   WHAT IT DOES FOR THE GRID, and the reason it is worth doing at all: the
+   cream cards were cream panes on a cream field, which is a hard place to make
+   anything float. Against the dark opening they are the brightest things on
+   the page, and they hand that brightness back as the field comes up to meet
+   them. The eye travels top to bottom because the contrast does.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#features {
+  position: relative;
+  isolation: isolate;   /* keeps the field's z-index 0 local to this section */
+}
+
+/* THE GRADIENT GOES ON A PSEUDO-ELEMENT, NOT ON THE SECTION, and that is not a
+   preference. `.section` is `max-width: var(--wrap); margin-inline: auto` —
+   1200px in the middle of the page — so a background painted on it stops dead
+   at the wrapper and leaves a pale strip down both sides of the screen. The
+   shipped `.section.dark` solves this with `max-width: none`, which is fine
+   for a section whose children set their own widths and wrong here, because
+   the sixteen-card grid would then stretch to the full monitor.
+
+   So: a layer pinned to the section's height, pulled out to the viewport's
+   full width, painted behind everything (z-index -1, kept local by the
+   `isolation: isolate` above). 100vw is wider than the content area whenever a
+   scrollbar is present; body already carries `overflow-x: clip`, which is what
+   makes that safe rather than a horizontal scroll — the same guard the hero's
+   outboard cards rely on. */
+#features::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* The closing seam. The section now ENDS dark against a light #showcase,
+       so the join needs to look decided rather than cut off. One soft lit line
+       across the bottom edge, brightest at centre and gone by the margins —
+       the same device the hero used to close its own dark chapter. */
+    radial-gradient(56% 3px at 50% 100%, rgba(70, 201, 138, 0.55) 0%, transparent 75%),
+    /* A little emerald light in the darkest part, so the bottom of the chapter
+       is lit rather than simply switched off. It sits low now, following the
+       dark; over the light top it would have done nothing at all. */
+    radial-gradient(70% 30% at 50% 88%, rgba(30, 122, 80, 0.20) 0%, transparent 72%),
+    /* REVERSED. It used to open dark and resolve light, and the section above
+       it (#numbers) ends on porcelain — so the page hit a hard dark edge and
+       then came back to cream a screen later, which read as dark-light-dark.
+       Running it the other way makes the join at the TOP disappear entirely
+       (light meeting light) and gives the reader something that actually
+       changes as they scroll instead of something they arrive at.
+
+       The first 10% stays fully clear because that is where the eyebrow,
+       heading and lede sit — they stay on light ground and keep their normal
+       dark type. The ramp then runs through the grid and holds full dark from
+       82% to the end, so it does not visibly stop mid-fade. */
+    linear-gradient(180deg,
+      rgba(9, 22, 15, 0)    0%,
+      rgba(9, 22, 15, 0)    10%,
+      rgba(9, 22, 15, 0.10) 22%,
+      rgba(9, 22, 15, 0.32) 36%,
+      rgba(9, 22, 15, 0.62) 52%,
+      rgba(9, 22, 15, 0.87) 68%,
+      rgba(9, 22, 15, 0.97) 82%,
+      rgba(9, 22, 15, 0.97) 100%),
+    var(--porcelain);
+}
+
+/* ── The section's own heading ───────────────────────────────────────────
+   NOTHING TO OVERRIDE ANY MORE, and that is the point of reversing the
+   gradient. The heading sits in the first 10% of the section, which is now
+   held fully clear of the dark, so --ink, --green-ink and --text-muted are all
+   doing exactly the job they were calibrated for.
+
+   This block used to force white on h2, white-at-94% on the lede and
+   --green-bright on the eyebrow, because all three were sitting on near-black.
+   Every one of those is deleted rather than left in place: a colour override
+   that is no longer needed is not harmless, it is a landmine for whoever moves
+   this gradient next. */
+
+/* ── The field's ruling, inverted ────────────────────────────────────────
+   The 96px hairlines were dark ink at 2.8%, which is correct on porcelain and
+   invisible on near-black. They flip to white at 5%.
+
+   ONE SET OF LINES, NOT TWO. The tidy answer is a white ruling masked to the
+   top and a dark ruling masked to the bottom — but an element carries one
+   mask, and this element's mask is already spent softening the field's outer
+   edge. White lines simply fade out as the ground comes up to meet them, which
+   is the correct behaviour anyway: the dark half needs the structure, and by
+   the time the field is porcelain the cards are carrying it on their own.
+
+   The pointer pool warms up at the same time. Gold at 16% was tuned to sit on
+   cream; on near-black it barely registers, and gold on a dark field is the
+   one thing the hero notes say works — small, crisp and high-alpha. */
+/* THE RULING IS GONE, the two pools stay. Same reasoning as the hero's — see
+   the .hero-grid note in Round 3 and the summary in ROUND 12. What is left is
+   the part that was doing real work: a warm pool that follows the pointer, and
+   an emerald bloom at the top of the grid. Light, not pattern. */
+#features .jobs-light {
+  background:
+    radial-gradient(360px 300px at var(--mx) var(--my), rgba(217, 178, 95, 0.20), transparent 70%),
+    radial-gradient(70% 50% at 50% 0%, rgba(70, 201, 138, 0.10), transparent 72%);
+}
+
+/* ── The cards on the dark half ──────────────────────────────────────────
+   The card surface does NOT change. A warm cream pane is right on both ends of
+   this gradient, and giving the top rows a dark skin would have thrown away
+   the contrast the gradient was built to create.
+
+   What has to change is the edge and the lift, because the shipped versions
+   were drawn for a light page only. --hairline is a pale grey that vanishes
+   against a dark ground, and the drop shadow — black at 5-20% — is
+   arithmetically nothing on near-black, so the rows sitting on the dark end
+   had no edge and no lift at all.
+
+   TWO EDGES, EACH ONE INVISIBLE WHERE IT IS NOT NEEDED. The border is forest
+   at 12%, which reads as a hairline against cream on the section's light end
+   and disappears into the dark end. The inset rim is white at 55%, which does
+   the opposite. Every card carries both and the ground decides which one you
+   see — so nothing here has to know which row it is in, and the whole thing
+   survives the gradient being reversed, which is exactly what happened to it. */
+#features .jc {
+  border-color: rgba(31, 58, 42, 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 1px 2px rgba(10, 13, 11, 0.10),
+    0 calc(8px + var(--stack) * 4px) calc(22px + var(--stack) * 8px)
+      calc(-6px - var(--stack) * 2px) rgba(4, 10, 7, calc(0.20 + var(--stack) * 0.02));
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 9 — THE EYEBROW, AND SIXTEEN CARDS ON A PHONE
+
+   Two problems, and the first one has a wrong diagnosis attached to it.
+
+   ── 1. "EVERYTHING IN ONE PLACE" is hard to read ──
+   The request was to make it a DARKER green. On this background that would
+   make it worse, not better: the chapter's top is near-black, so a darker
+   green moves the label TOWARD the ground it is sitting on. Measured, the
+   colour is not the problem at all — --green-bright on the dark floor is
+   about 9:1, which is roughly double what WCAG asks for.
+
+   What is actually wrong is the TYPE. The eyebrow is 12.9px, uppercase, with
+   0.16em of tracking. That spec was drawn for a light section, where the eye
+   has an easy figure/ground; set small, spaced wide and reversed out of
+   near-black, the same letters lose their word shapes and start reading as
+   loose characters. Legibility at small sizes on a dark ground is a size,
+   weight and spacing problem before it is ever a colour problem.
+
+   So: bigger, heavier, and the tracking pulled back — plus a brighter mint,
+   which is the opposite direction to the one requested and the reason it now
+   reads from arm's length.
+
+   ── 2. Sixteen cards is a very long list on a phone ──
+   Correct, and it was the layout's fault rather than the content's. One
+   column at 390px made the section roughly six full screens of scrolling, and
+   every card wasted its right-hand half on nothing.
+
+   THE FIX IS LENGTH, NOT MOTION. Two columns cut the section by about half
+   with nothing hidden, which matters here more than usual: the headline's
+   whole claim is that there are SIXTEEN, and a carousel that shows two at a
+   time while hiding fourteen argues against the sentence above it. A phone
+   reader scans titles and icons; they do not read sixteen descriptions. Two
+   columns is what lets them scan.
+
+   THE MOTION IS THEN ADDED ON TOP, and deliberately kept to two things —
+   the UX rule here is "animate one or two elements per view", and sixteen
+   individually choreographed cards is exactly the excess it warns about:
+     · the two columns drift against each other as the section passes, which
+       is one animated value for the whole grid (see redesign.js), and
+     · each card grows the last 6% into place as it reveals.
+   Both ride machinery that already exists. Neither adds a tween per card.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The eyebrow on the dark chapter ─────────────────────────────────────
+   Scoped to #features because everywhere else on the page the eyebrow sits on
+   cream, where the shipped spec is correct and this one would look shouty. */
+#features > .eyebrow {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  /* --green-ink, not the bright mint this rule carried while the top of the
+     section was near-black. On porcelain the mint measures about 2:1 and
+     vanishes; --green-ink is the token built for emerald on light ground.
+     The size, weight and tracking changes stay — those fixed a legibility
+     problem in the type itself and are an improvement on either ground. */
+  color: var(--green-ink);
+}
+
+/* ── Sixteen cards on a phone ────────────────────────────────────────────
+   Supersedes the single-column block above. Two columns hold down to 360px
+   because the card is text-only now — there is no photograph setting a
+   minimum width, and the title carries most of the meaning.
+
+   The nth-child selectors are re-declared rather than inherited from the
+   two-column block at 820px: that block is still in force here, but its
+   --drift values (0.8 / -0.5) were tuned for a tablet-width card. Halving
+   them keeps the actual travel proportional to a card that is now a third of
+   the size — 40px of movement on a 196px card, not 70px. */
+@media (max-width: 520px) {
+  #features .jobs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3);
+    --jc-step: 14px;
+    /* A phone gets 60% of the desktop travel, not the full amount, and the
+       reason is the ratio rather than the pixels: 116px of movement against a
+       200px card is a card leaving its own row, while against a 320px desktop
+       card it is a card breathing. 0.6 of 58 is ±35px each way, so the two
+       columns shear 140px against each other over the section — plainly
+       visible on a phone without either column outrunning its neighbour.
+
+       Headroom is re-stated because --lead drops to 2rem below 900px, so the
+       base rule's calc() is working from a smaller number here. */
+    margin-top: calc(var(--lead) + 26px);
+    padding-bottom: 46px;
+  }
+  #features .jc:nth-child(2n + 2) { --stack: 0; --drift:  0.6; }  /* ↑ */
+  #features .jc:nth-child(2n + 3) { --stack: 1; --drift: -0.6; }  /* ↓ */
+
+  /* The card, tightened. Padding comes down one step on the ramp, not to an
+     arbitrary number, and the type follows it. --fs-sm would leave about 20
+     characters to a line in a 138px column, which is short enough to start
+     hyphen-shaped; 0.8rem gets it back to a readable rhythm. */
+  #features .jc { padding: var(--s-4); }
+  #features .jc-num { top: var(--s-4); right: var(--s-4); }
+  #features .jc-icon {
+    width: 34px;
+    height: 34px;
+    margin-bottom: var(--s-3);
+    border-radius: 10px;
+  }
+  #features .jc-icon svg { width: 19px; height: 19px; }
+  /* NO padding-right here, and that is the difference between "Booking
+     Calendar" holding one line and breaking into two. The desktop card
+     reserves 2.2rem so a long title cannot run under the number — but at this
+     size the number sits level with the ICON, a whole row above the heading,
+     so the reservation buys nothing and costs a fifth of the measure. */
+  #features .jc h3 {
+    font-size: 0.95rem;
+    padding-right: 0;
+    margin-bottom: 0.4rem;
+  }
+  #features .jc p { font-size: 0.8rem; line-height: 1.5; }
+
+  /* Two more characters a line, taken from the section's own gutter rather
+     than from the card. `.section` sets clamp(1.2rem, 4vw, 3rem) for a single
+     column of prose; a two-up grid of small cards can sit closer to the edge,
+     and every pixel here goes straight into the measure. */
+  #features { padding-inline: 1rem; }
+
+  /* The entrance. It rides the .reveal observer that scroll.js already runs —
+     no new listener, no new tween, no per-card JavaScript.
+
+     ON THE `scale` PROPERTY, which is the whole reason this is free. The card
+     is already using `transform` for the reveal's slide-up and `translate`
+     for the scroll drift. `scale` is a third independent property that the
+     browser composes with both, so a fourth behaviour lands on the same
+     element without anything having to be coordinated.
+
+     6%, and no more. Anything larger stops reading as "settling into place"
+     and starts reading as a pop-up, which is the wrong note for a page whose
+     motion budget is deliberately small. */
+  #features .jc.reveal { scale: 0.94; transition: scale 0.5s var(--ease); }
+  #features .jc.reveal.is-in { scale: 1; }
+}
+
+/* styles.css's reduced-motion block neutralises .reveal's opacity, transform
+   and filter — it predates this rule and knows nothing about `scale`, so the
+   cards would still grow. Added here rather than there because everything in
+   this file has to be deletable in one piece. */
+@media (prefers-reduced-motion: reduce) {
+  #features .jc.reveal,
+  #features .jc.reveal.is-in { scale: none; transition: none; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 10 — BODY COPY ON THE DARK CARD
+
+   "The spreadsheet" card sets its paragraph at rgba(236, 237, 234, 0.78), and
+   the comment beside it in styles.css explains the choice: it clears 4.5:1 and
+   still sits clearly below the white heading. Both of those are true.
+
+   It is still the wrong call HERE, for the same reason the features lede was:
+   passing a contrast check is a floor, not a target. Three lines of 78% grey
+   is the entire content of that card, it is the middle card of three and the
+   only dark one, and it is carrying the sentence the whole product exists to
+   answer. Ranking it below its own heading by dimming it costs more than the
+   hierarchy is worth — the heading is already bigger and bolder, which is
+   where that separation should come from on a dark surface.
+
+   94%, not 100%: pure white on near-black at body size buzzes slightly at the
+   edges of the letters. Six percent off is invisible as a colour and takes
+   that away.
+   ══════════════════════════════════════════════════════════════════════════ */
+.problem .card-dark p { color: rgba(255, 255, 255, 0.94); }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 11 — "THE PROBLEM" CARDS STACK ON A PHONE
+
+   DESKTOP IS UNTOUCHED. Everything below is inside one 900px media query, and
+   900px is not a new number — it is the breakpoint styles.css already uses to
+   collapse this row from three columns to one. Above it the three cards sit
+   side by side and there is nothing to stack; below it they were a plain
+   vertical list, which is what this replaces.
+
+   NO JAVASCRIPT. The whole effect is `position: sticky` with a different top
+   offset per card: each card pins under the nav, the next one scrolls up and
+   covers it, and the offsets are stepped by 14px so the cards already pinned
+   keep a visible sliver of their top edge. Three sliders, one deck.
+
+   WHY IT WORKS HERE AND NOT ON THE SIXTEEN. A sticky stack shows one card at a
+   time, which is exactly wrong for a section whose headline claims sixteen and
+   exactly right for three: these three are a short argument read in order —
+   the inbox, the spreadsheet, your memory — and covering each one as the next
+   arrives is the argument being made rather than a list being scrolled.
+
+   TWO THINGS HAD TO BE UNDONE FIRST, and both would have failed quietly:
+
+     · `.cards` is a CSS grid. A sticky item can only travel inside its own
+       containing block, and a grid item's block is its grid AREA — which is
+       exactly as tall as the card. So every card would have "stuck" with zero
+       distance to travel and nothing would have appeared broken; it simply
+       would not have moved. display:block gives all three the same tall
+       parent, which is what they need to slide within.
+
+     · styles.css runs `card-bob` on these three, a shallow 7px float. A
+       pinned card that is also bobbing reads as a rendering fault rather than
+       as motion. It has to be `animation: none` and not paused — the note at
+       styles.css:2209 explains why: a paused animation still applies its
+       computed transform and never hands the property back to the cascade.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .problem .cards {
+    display: block;
+    /* The hold. Without trailing room the last card is still moving when the
+       section ends, so the finished deck — the whole point of the effect — is
+       never actually on screen. 15vh gives it about a second of stillness at a
+       normal scroll speed. */
+    padding-bottom: 15vh;
+  }
+
+  .problem .cards > .card {
+    position: sticky;
+    animation: none;          /* see the card-bob note above */
+    margin-bottom: var(--s-4);
+  }
+
+  /* `calc(90px + var(--beta-h))` is not a guess — it is the exact expression
+     styles.css already uses for `scroll-padding-top`, i.e. the site's own
+     definition of "clear of the fixed nav". Reusing it means the deck pins at
+     the same line an anchor jump lands on, and --beta-h collapses to 0 by
+     itself when someone dismisses the beta bar. */
+  .problem .cards > .card:nth-child(1) { top: calc(90px + var(--beta-h)); }
+  .problem .cards > .card:nth-child(2) { top: calc(90px + var(--beta-h) + 14px); }
+  .problem .cards > .card:nth-child(3) { top: calc(90px + var(--beta-h) + 28px); }
+
+  /* The leading edge. A card in this deck arrives from BELOW and covers the
+     one above it, so the edge that needs separating is its TOP one — and every
+     shadow on this page casts downward, which is the one direction that cannot
+     help here. An upward cast is added to both card skins.
+
+     Split by skin because the two need different values and because
+     `.problem .card-dark` is a weaker selector than this one: folding them
+     into a single rule would silently overwrite the dark card's tuned shadow
+     with the light card's. */
+  .problem .cards > .card:not(.card-dark) {
+    box-shadow:
+      0 -8px 22px -10px rgba(10, 13, 11, 0.20),
+      0 2px 4px rgba(10, 13, 11, 0.04),
+      0 16px 36px -14px rgba(10, 13, 11, 0.18);
+  }
+  .problem .cards > .card.card-dark {
+    box-shadow:
+      0 -8px 24px -10px rgba(8, 23, 18, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 18px 44px -22px rgba(8, 23, 18, 0.55);
+  }
+}
+
+/* Reduced motion: sticky is not an animation — it is layout, and it does not
+   move anything the reader did not move themselves by scrolling. It stays on.
+   What comes off is the transition, so a card that re-enters cannot ease. */
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .problem .cards > .card { transition: none; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 12 — EVERY BACKGROUND GRID COMES OFF THE PAGE
+
+   Six repeating patterns were running behind the content. Two were rulings
+   added in this preview lane and are switched off where they were declared
+   (see .hero-grid in Round 3 and #features .jobs-light in Round 8). The other
+   four are shipped dot grids in styles.css, and they are turned off here.
+
+   WHY ALL OF THEM AND NOT JUST THE HERO. A background pattern is a signature,
+   and it is the wrong one for this product. A ruled or dotted field is what
+   developer tools use — it reads "engineering" the moment the page paints,
+   which is precisely what the light hero was rebuilt to stop saying. The buyer
+   is a resort owner. The reference set we work against is Linear for
+   discipline and Wander and Mews for warmth; the warmth half of that does not
+   put graph paper behind its photography, and on a cream canvas a cold lattice
+   is exactly what a 1px grid becomes.
+
+   WHAT IS NOT REMOVED, because these are light rather than pattern, and light
+   is what stops a large flat area reading as a slab:
+     · the breathing bloom on each section (.problem, .counters, .pricing)
+     · the drifting colour clouds in .ambient's <span> children
+     · the grain in .tex, the hero field's three pools, the features gradient
+     · the pointer pool that follows the cursor across the feature grid
+
+   EACH RULE TARGETS A PSEUDO-ELEMENT THAT EXISTS ONLY TO DRAW ITS PATTERN, so
+   display:none removes the whole layer rather than blanking one property and
+   leaving an empty box positioned over the section. Checked one at a time:
+   none of these four carries anything else. .ambient's own <span> clouds are
+   siblings of ::before and are untouched by this.
+
+   ON MERGE: delete the four ::after/::before blocks in styles.css outright
+   (roughly lines 2150, 2299, 2888, 3477) rather than carrying this override
+   into it. A rule whose only job is to cancel another rule is debt.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.problem::after,   /* dot grid behind "You already have a system"          */
+.counters::after,  /* dot grid behind the sample-month numbers             */
+.pricing::after,   /* dot grid behind the plans                            */
+.ambient::before   /* dot texture behind the sticky product tour           */
+{ display: none; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 13 — THE PRODUCT TOUR'S MOCKUP WAS PINNING UNDER THE NAV
+
+   A real bug, not a taste call, and it is on the live site too.
+
+   MEASURED, at four widths, with the tour scrolled into view:
+
+     width   nav bottom edge   mockup pins at   hidden behind the nav
+     390px        102px             68px               34px
+     560px        102px             68px               34px
+     760px        108px             76px               32px
+     899px        108px             76px               32px
+
+   So on every phone and tablet the top of the dashboard — the browser frame's
+   title bar, and the top row of whatever screen is showing — sits underneath
+   the fixed navigation for the entire time the mockup is pinned. It is not
+   intermittent and it is not a scroll artefact; it is where the element comes
+   to rest.
+
+   WHY THE OLD NUMBERS WERE WRONG. 76px and 68px are close enough to the nav's
+   own height to look like they were measured from it — but the nav is not at
+   the top of the viewport. The beta bar sits above it and pushes it down by
+   --beta-h (42px), which styles.css itself accounts for at line 4743
+   (`.nav { top: var(--beta-h) }`). The sticky offsets never got the same
+   treatment, so they are short by almost exactly the height of that bar.
+
+   THE FIX IS THE SAME SHAPE AS THE RULE THAT CAUSED IT. `var(--beta-h) + 78px`
+   moves with the bar instead of ignoring it: 120px while the bar is up, 78px
+   the moment a reader dismisses it. 78px clears the taller (tablet) nav by
+   12px and the phone nav by 18px, so there is daylight under the bar at every
+   width in both states — which is what the old fixed pixel value could not do,
+   because no single number can be correct in both.
+
+   ONE VALUE FOR BOTH BREAKPOINTS. styles.css sets this twice, 76px at 900px
+   and 68px at 600px, and the second one exists only because the nav is 6px
+   shorter on a phone. Deriving from --beta-h and clearing the WORST case
+   removes the reason for the second declaration entirely, so both collapse to
+   this rule.
+
+   ON MERGE: this is a live bug. Fix it in styles.css at lines 3969 and 4327 —
+   do not carry the override across. */
+@media (max-width: 900px) {
+  .scrolly-stage { top: calc(var(--beta-h) + 78px); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 14 — THE THREE "PROBLEM" CARDS
+
+   They were not badly made; they were made before the rest of this redesign
+   and never brought into line with it. Four things separated them from the
+   sixteen feature cards built in Round 6, and every one of them is the kind of
+   difference a reader feels as "cheaper" without being able to name it.
+
+   1. THE SURFACE WAS PURE WHITE. `.glass` sets #FFFFFF; the feature cards sit
+      on #FFFCF6, porcelain with a trace of the brand cream. Two card colours
+      on one page is the single loudest "this was not designed as a system"
+      signal there is — and pure white on a warm page always reads as the one
+      element that forgot to be warm.
+
+   2. THE TOP EDGE WAS A BAR. 3px of full-strength --green running the whole
+      width and hard-cutting to transparent at the right end. At that weight it
+      was the loudest thing on the card and it read as a progress bar. It is
+      now 2px, faded at BOTH ends so it reads as light catching an edge, and it
+      is finally GILDED — green at the left, warming through gold before it
+      goes. The comment in styles.css has called it "a gilded top edge" since
+      the day it was written; it just never had any gold in it. This is the one
+      place gold appears in the section, which is the only way this brand
+      spends it.
+
+   3. THE SHADOW WAS NEUTRAL GREY. --shadow-md is built from rgba black. Every
+      other raised object on the page was rewritten in Rounds 7 and 8 to cast
+      warm, in layers, with a contact edge — a card lit by the same lamp as the
+      hero's floating cards cannot cast a different colour of shadow.
+
+   4. NO TOP LIGHT. The feature cards carry a short white gradient down from
+      their top edge, which is what makes them read as a surface rather than a
+      rectangle. Same gradient here, same reason.
+
+   WHAT IS DELIBERATELY NOT TOUCHED: the layout, the copy, the icons, the
+   reveal animation and the hover lift. The mobile sticky stack from Round 11
+   keeps its own shadows — see the note on the min-width below, which exists
+   because the first version of this block silently destroyed them.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The light cards ─────────────────────────────────────────────────────
+   Two edges, the same trick the feature cards use: a forest hairline that
+   reads against the cream page, and a white inner rim that gives the surface
+   its own lit lip. Neither is doing the other's job. */
+.problem .cards > .card:not(.card-dark) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 34%),
+    #FFFCF6;
+  border: 1px solid rgba(31, 58, 42, 0.10);
+}
+
+/* ── The shadows, and why they are behind a min-width ────────────────────
+   THE FIRST VERSION OF THIS BLOCK BROKE THE MOBILE STACK, silently, and the
+   mechanism is worth writing down because it will happen again to whoever
+   edits next. Round 11 gives the stacked cards an UPWARD cast — the only
+   direction that matters when a card slides up over another one — using the
+   selector `.problem .cards > .card:not(.card-dark)`. This block used the
+   exact same selector. Identical specificity, so the later rule wins, and it
+   wins INSIDE Round 11's media query too: a media query adds no weight at all.
+   The phone quietly lost its up-cast and nothing looked obviously wrong.
+
+   Raising the specificity here would only invert the bug. The honest fix is
+   that these two really are different skins for two different layouts — a card
+   in a row casts down, a card in a deck casts up — so this one takes the range
+   Round 11 does not: 901px and above, the exact complement of its max-width.
+   Neither rule can now reach the other's widths. */
+@media (min-width: 901px) {
+  .problem .cards > .card:not(.card-dark) {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+      0 1px 2px rgba(10, 13, 11, 0.04),
+      0 10px 24px -10px rgba(10, 13, 11, 0.10),
+      0 28px 56px -28px rgba(10, 13, 11, 0.16);
+  }
+  .problem .cards > .card:not(.card-dark):hover {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+      0 2px 4px rgba(10, 13, 11, 0.05),
+      0 18px 36px -12px rgba(10, 13, 11, 0.14),
+      0 40px 76px -34px rgba(10, 13, 11, 0.20);
+  }
+}
+
+/* ── The gilded edge ─────────────────────────────────────────────────────
+   Height halved and both ends faded. The `transform: scaleX(0) -> 1` reveal in
+   styles.css is untouched and still draws it in from the left as the card
+   arrives — this only changes what gets drawn. */
+.problem .card::before {
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--green) 16%,
+    #C79A3B 68%,
+    transparent 100%);
+}
+/* On near-black the same two colours go nearly invisible: --green reads as the
+   card and --gold turns to mud. Both step up to their dark-ground siblings. */
+.problem .card-dark::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--green-bright) 16%,
+    var(--accent-light) 68%,
+    transparent 100%);
+}
+
+/* ── The dark card ───────────────────────────────────────────────────────
+   Its own gradient and border are already right — this only warms the cast to
+   match the light cards' new one and adds the same contact edge, so all three
+   sit at the same height above the page. Behind the same min-width, and for
+   the same reason: Round 11 owns the deck's shadows below 901px. */
+@media (min-width: 901px) {
+  .problem .cards > .card.card-dark {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      0 1px 2px rgba(8, 23, 18, 0.20),
+      0 16px 36px -16px rgba(8, 23, 18, 0.45),
+      0 40px 84px -38px rgba(8, 23, 18, 0.50);
+  }
+}
+
+/* ── The headings ────────────────────────────────────────────────────────
+   700 with -0.01em was the site's global h3. The feature cards were set at 600
+   with -0.014em in Round 6 because a grotesk at display-adjacent sizes wants
+   weight taken OUT and tracking pulled IN — the same correction the h1 and h2
+   got in Round 4. These three were the last headings still on the old spec. */
+.problem .card h3 {
+  font-weight: 600;
+  letter-spacing: -0.014em;
+}
+
+/* The icon tile drops 46px -> 44px and picks up the feature tile's inner
+   highlight. Not a resize for its own sake: at 46px against the feature
+   grid's 42px the two tiles read as two different components rather than one
+   at two scales, and the highlight is what makes a tinted square look like
+   it is set INTO the card rather than printed on it. */
+.problem .card-icon {
+  width: 44px;
+  height: 44px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(30, 122, 80, 0.20);
+}
+.problem .card-dark .card-icon {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}

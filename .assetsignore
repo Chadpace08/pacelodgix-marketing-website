@@ -29,6 +29,14 @@ Marketing Image.png
 # here is public by default — keep working docs listed.
 *.md
 
-# Redesign preview — not public.
+# Redesign preview page — not public.
+#
+# preview.css and preview.js are NO LONGER LISTED HERE, and that is deliberate
+# rather than an oversight. They were renamed to redesign.css / redesign.js and
+# promoted: index.html now loads both, so they MUST be served or the live site
+# ships with no redesign styles and no feature-grid motion. Do not re-add them.
+#
+# preview.html stays blocked. It is the side-by-side comparison page, it is
+# noindex, and it now renders the same design as index.html — publishing it
+# would put a duplicate of the homepage on a second URL.
 preview.html
-preview.css

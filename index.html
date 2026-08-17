@@ -7,10 +7,15 @@
   <meta name="description" content="Pace Lodgix is a modern property management system for vacation rentals, Airbnb hosts and resorts. Manage bookings, calendar sync, guests, payments and financial reports in one platform. Start free.">
   <meta name="keywords" content="vacation rental software, property management system, PMS, Airbnb management software, short-term rental software, channel manager, booking management, direct booking website, guest management, reservation management">
   <link rel="canonical" href="https://pacelodgix.com/">
-  <!-- Matches the top stop of the hero field. The hero is a dark chapter now,
-       so a cream value here caps it with a pale band of browser chrome on a
-       phone — the page appears to start below a mismatched strip. -->
-  <meta name="theme-color" content="#061009">
+  <!-- Matches the TOP STOP of the hero field exactly, so the phone's browser
+       chrome continues the page instead of capping it with a mismatched strip.
+
+       CHANGED WITH THE REDESIGN, and it has to move whenever the hero's top
+       colour moves. It was #061009 for the dark hero. Round 3 in redesign.css
+       took the hero back to light, and that field now starts at #FDFBF4 —
+       see the .hero-field linear-gradient's first stop. Leaving the old dark
+       value here would have put a near-black bar above a cream page. -->
+  <meta name="theme-color" content="#FDFBF4">
   <meta name="robots" content="index, follow, max-image-preview:large">
 
   <!-- Open Graph -->
@@ -64,10 +69,27 @@
        Only preload what is genuinely above the fold. A fourth preload starts
        competing with the first paint rather than helping it, and the
        latin-ext cuts are not needed for English or Filipino at all. -->
-  <link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- THE TWO FRAUNCES PRELOADS WERE REMOVED WITH THE REDESIGN, and this is a
+       real saving rather than tidying. Round 4 in redesign.css repoints
+       --font-display from Fraunces to Inter, and --font-display was the only
+       thing that referenced Fraunces — so the face is now rendered nowhere on
+       the page. A preload is an ORDER, not a hint: the browser fetches the
+       file at highest priority whether or not anything uses it, so these two
+       were pulling two woff2 files into the critical path to paint nothing,
+       and competing with the Inter file that does paint.
+
+       The @font-face blocks for Fraunces stay in styles.css untouched. They
+       cost nothing while unused — a face is only downloaded when something
+       renders it — so deleting the one line in redesign.css that repoints
+       --font-display brings the serif back whole, and these two preloads can
+       come back with it. -->
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <!-- THE REDESIGN, rounds 3–14. Loads AFTER styles.css and overrides it —
+       the light hero, the sixteen-card feature mosaic, the type, and the
+       removal of the background grids. Delete this one line and the previous
+       design returns intact; nothing in styles.css was edited. -->
+  <link rel="stylesheet" href="redesign.css">
 
   <!-- Restores a previous dismissal of the beta bar BEFORE first paint. Inline
        and in <head> on purpose: loading this from nav.js would paint the bar,
@@ -412,29 +434,33 @@
       <!-- No hard <br>. text-wrap: balance (set on h1 globally) splits this into
            even lines and adapts as it narrows.
 
-           LENGTH NOTE — this headline and the h1 clamp in styles.css move
-           together, so change them in the same pass. The line has been three
-           lengths so far: ~55 characters at clamp(2.75rem, 5.6vw, 4.6rem),
-           then ~104 at clamp(2.1rem, 4.2vw, 3.4rem) — stepped down because at
-           the larger ramp it set in five lines and pushed the dashboard shot
-           clean off the fold — and now ~81, back up to
-           clamp(2.3rem, 4.6vw, 3.7rem). The constraint is the fold, not taste:
-           everything above the mockup has to fit AND leave enough viewport for
-           the mockup to read as a screenshot rather than a sliver.
+           SHORTENED from ~104 characters to ~52 — and the SEO is intact, which
+           is the only reason it was allowed to shrink. The old headline carried
+           every primary keyword itself and paid for it in length: three lines
+           of serif at a reduced clamp, which is why .hero-copy h1 in styles.css
+           had to be stepped down to clamp(2.1rem, 4.2vw, 3.4rem). redesign.css
+           now raises that clamp back up, because a short headline can be big.
 
-           The wording carries the primary keywords on purpose ("vacation
-           rental", "property management", "Airbnb hosts", "property
-           managers"); see "Marketing SEO Prompt.txt".
-
-           The green italic used to sit on "without the spreadsheets" and moved
-           to the second sentence when that phrase was cut. It is the only
-           accent in the headline — if the whole line should be plain white,
-           drop the <em> and the sentence reads the same. -->
-      Vacation rental property management. <em class="hero-green">Built for Airbnb hosts and property managers.</em>
+           WHERE THE KEYWORDS WENT — none were dropped, they moved one element
+           down. "Vacation rental management" stays in the h1. "Airbnb hosts"
+           and "property managers" now open the lede, which sits directly under
+           the h1 and inside the same above-the-fold block; a crawler reads both.
+           See "Marketing SEO Prompt.txt". If you re-lengthen this headline,
+           lower the clamp override in redesign.css to match. -->
+      Vacation rental property management.
+      <!-- Second sentence, still inside the h1 so the heading text is exactly
+           as supplied. It is set smaller and muted rather than at display size:
+           two sentences both at 4.5rem is a wall, and the size drop is what
+           turns a long heading into a headline with a qualifier under it. -->
+      <span class="hero-h1-sub">Built for Airbnb hosts and property managers.</span>
     </h1>
+    <!-- The lede used to open "Built for Airbnb hosts and property managers."
+         That sentence is now the second half of the h1 directly above, so it
+         has been cut from here — repeating it verbatim two elements apart reads
+         as a mistake and dilutes the keyword rather than doubling it. -->
     <p class="lede reveal" data-anim="up" data-delay="1">
-      Run bookings, guests, payments, calendars and reports from one place — built for the way
-      you actually run your rentals.
+      Run bookings, guests, payments, calendars and reports from one place — the way you
+      actually run your rentals.
     </p>
     <div class="hero-actions reveal" data-anim="up" data-delay="2">
       <!-- NOTE: self-serve signup does not provision a tenant yet (CLAUDE.md gotcha 25).
@@ -567,7 +593,7 @@
   </div>
 
   <p class="eyebrow center reveal" data-anim="fade">Why hosts switch to a PMS</p>
-  <h2 class="reveal" data-anim="up">You already have a system.<br>It's just held together by hand.</h2>
+  <h2 class="reveal" data-anim="up">You already have a system. <br>It's just held together by hand.</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
     Most owners start with spreadsheets and chat threads. It works — until the second property.
     Then come the double bookings, the missed payments and the guest details no one can find.
@@ -637,102 +663,203 @@
 <!-- ══════════════════════════ FEATURES GRID ══════════════════════════ -->
 <section class="section features" id="features">
   <p class="eyebrow center reveal" data-anim="fade">Everything in one place</p>
-  <h2 class="reveal" data-anim="up">Sixteen jobs.<br>One property management platform.</h2>
+  <h2 class="reveal" data-anim="up">Sixteen jobs. <br>One property management platform.</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
     Bookings, channel sync, guest management, invoicing and financial reports — your whole
     short-term rental operation, without a single spreadsheet.
   </p>
 
-  <!-- Sixteen features, grouped into five themed cards that pin and pile up
-       as you scroll (pure-CSS position:sticky stack — see styles.css). Each
-       card's fade-in and check-draw ride the shared .reveal observer. -->
-  <div class="stack">
-    <article class="stack-card stack-dark" style="--i:0; --c1:#0B1F15; --c2:#46C98A">
-      <div class="stack-inner">
-        <svg class="stack-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div class="stack-body reveal" data-anim="up">
-          <span class="stack-num">01</span>
-          <span class="stack-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
-          <h3>Booking &amp; reservation management</h3>
-          <p class="stack-lead">Every unit and every stay on one calendar — so the same dates are never sold twice.</p>
-          <ul class="stack-tags">
-            <li>Property management</li>
-            <li>Multi-property</li>
-            <li>Booking calendar</li>
-            <li>Reservation management</li>
-          </ul>
-        </div>
-      </div>
+  <!-- ══ THE FEATURE MOSAIC — floating cards (styles in redesign.css) ═══════
+       Replaces the sixteen-photo grid. Same sixteen jobs, same order, same
+       copy — the photographs are gone and each card now carries a drawn icon
+       in the same line language as "the problem" cards above.
+
+       WHY THE PHOTOS WENT. Sixteen stock hospitality photographs is sixteen
+       different photographers, sixteen white balances and sixteen crops, held
+       together only by a wash. It reads as a gallery, and a gallery of resorts
+       is what a resort brochure looks like — not what software looks like.
+       None of the sixteen photographs showed the job the card was naming, so
+       the largest element on every card was carrying no information at all.
+       Every reference we work against (Linear, Vercel, Stripe, Mews) draws its
+       feature grid, it does not photograph it. The product screenshots still
+       do their work in the sticky showcase directly below this section, where
+       they are large enough to actually read.
+
+       WHAT REPLACES THEM — depth instead of imagery. The grid sits on its own
+       quiet field and the four columns are stepped down in a diagonal, so the
+       cards read as loose panes floating above the page rather than as tiles
+       filling a table. On scroll the columns drift apart and back together at
+       different rates (redesign.js), which is what turns a static diagonal into
+       something that feels like layers. All sixteen stay visible the whole
+       time — nothing is stacked out of sight, and nothing has to be scrolled
+       through one at a time.
+
+       --stack is the card's column: its resting step down the diagonal.
+       --drift is how hard that column reacts to scroll, and it is deliberately
+       mixed in sign so neighbouring columns separate rather than travelling as
+       one block. Both are set per column in redesign.css, not here, so the
+       breakpoints can re-assign them when four columns become three, two or
+       one. With JavaScript off, --shift stays 0px and the grid simply sits
+       still in its diagonal — the layout never depends on the motion.
+
+       NO LINKS AND NO HOVER LIFT, unchanged from the photo version and for the
+       same reason: there are no per-feature pages to send anyone to, and a card
+       that rises under the cursor and then does nothing is a small lie told
+       sixteen times. The only pointer response is the soft light behind the
+       grid, which belongs to the field, not to any one card. -->
+  <div class="jobs-grid" id="jobsGrid">
+    <div class="jobs-light" aria-hidden="true"></div>
+
+    <article class="jc reveal" data-anim="up">
+      <span class="jc-num" aria-hidden="true">01</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><rect x="6.3" y="12.4" width="7" height="2.6" rx="1.3"/><rect x="10.8" y="16.5" width="6.9" height="2.6" rx="1.3"/></svg>
+      </span>
+      <h3>Booking Calendar</h3>
+      <p>Every unit and every stay on one calendar. The same dates can never be sold twice.</p>
     </article>
 
-    <article class="stack-card stack-cream" style="--i:1; --c1:#1F3A2A; --c2:#C79A3B">
-      <div class="stack-inner">
-        <svg class="stack-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div class="stack-body reveal" data-anim="up">
-          <span class="stack-num">02</span>
-          <span class="stack-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 16.5v-9h3.2a2.6 2.6 0 0 1 0 5.2H9.5"/><path d="M8 10.2h6"/><path d="M8 12.8h6"/></svg></span>
-          <h3>Payments &amp; invoicing</h3>
-          <p class="stack-lead">Invoices and payment tracking run themselves, so your month-end total adds up on its own — every peso tied to the booking behind it.</p>
-          <ul class="stack-tags">
-            <li>Income dashboard</li>
-            <li>Expense tracking</li>
-            <li>Payment tracking</li>
-            <li>Invoices</li>
-          </ul>
-        </div>
-      </div>
+    <article class="jc reveal" data-anim="up" data-delay="1">
+      <span class="jc-num" aria-hidden="true">02</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M2.8 20.5V9.8l6-4.3 6 4.3v10.7"/><path d="M14.8 20.5v-8.2h6.4v8.2"/><path d="M1.8 20.5h20.4"/><path d="M7 13h3.6M7 16.6h3.6"/></svg>
+      </span>
+      <h3>Multi-Property</h3>
+      <p>Run one villa or fifteen. Each property keeps its own rates, photos and house rules.</p>
     </article>
 
-    <article class="stack-card stack-dark" style="--i:2; --c1:#0B1F15; --c2:#46C98A">
-      <div class="stack-inner">
-        <svg class="stack-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div class="stack-body reveal" data-anim="up">
-          <span class="stack-num">03</span>
-          <span class="stack-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v16h16"/><path d="M8.5 20v-6"/><path d="M13 20V9"/><path d="M17.5 20v-4"/></svg></span>
-          <h3>Financial reports &amp; analytics</h3>
-          <p class="stack-lead">See how the business is doing without building a spreadsheet — and export the numbers to Excel for your accountant.</p>
-          <ul class="stack-tags">
-            <li>Reports</li>
-            <li>Analytics</li>
-            <li>Owner dashboard</li>
-          </ul>
-        </div>
-      </div>
+    <article class="jc reveal" data-anim="up" data-delay="2">
+      <span class="jc-num" aria-hidden="true">03</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17.2" rx="2.5"/><path d="M9 4V3.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V4"/><path d="M8.6 12.2 10.5 14l4.4-4.4"/><path d="M8.6 17.6h6.8"/></svg>
+      </span>
+      <h3>Reservations</h3>
+      <p>From first enquiry to check-out, every booking has one place to live and one status you can trust.</p>
     </article>
 
-    <article class="stack-card stack-cream" style="--i:3; --c1:#1F3A2A; --c2:#C79A3B">
-      <div class="stack-inner">
-        <svg class="stack-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div class="stack-body reveal" data-anim="up">
-          <span class="stack-num">04</span>
-          <span class="stack-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>
-          <h3>Channel manager &amp; automation</h3>
-          <p class="stack-lead">Guest emails and channel sync happen on their own — in your words, with your branding.</p>
-          <ul class="stack-tags">
-            <li>Automated guest emails</li>
-            <li>Two-way calendar sync</li>
-            <li>Direct booking website</li>
-            <li>Marketing center <em>Soon</em></li>
-          </ul>
-        </div>
-      </div>
+    <article class="jc reveal" data-anim="up" data-delay="3">
+      <span class="jc-num" aria-hidden="true">04</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="2.4" y="4.6" width="19.2" height="14.8" rx="2.6"/><circle cx="8.8" cy="11" r="2.4"/><path d="M5.2 16.6c.6-1.8 2-2.7 3.6-2.7s3 .9 3.6 2.7"/><path d="M15.6 10.2h3.6M15.6 13.6h3.6"/></svg>
+      </span>
+      <h3>Guest Profiles</h3>
+      <p>Who stayed, when, what they paid and what they asked for. It is all still there the next time they book.</p>
     </article>
 
-    <article class="stack-card stack-dark" style="--i:4; --c1:#0B1F15; --c2:#46C98A">
-      <div class="stack-inner">
-        <svg class="stack-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div class="stack-body reveal" data-anim="up">
-          <span class="stack-num">05</span>
-          <span class="stack-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-          <h3>Guest &amp; team management</h3>
-          <p class="stack-lead">Every guest record in one place, and your whole team on any device — each with the right level of access.</p>
-          <ul class="stack-tags">
-            <li>Guest management</li>
-            <li>Role-based access</li>
-            <li>Mobile friendly</li>
-          </ul>
-        </div>
-      </div>
+    <article class="jc reveal" data-anim="up">
+      <span class="jc-num" aria-hidden="true">05</span>
+      <span class="jc-icon" aria-hidden="true">
+        <!-- A refresh loop, NOT another calendar. Drawn as a calendar with
+             arrows inside it, this sat next to card 01 looking like the same
+             icon twice at 22px — the two-way loop is the idea that actually
+             separates "sync" from "calendar". -->
+        <svg viewBox="0 0 24 24"><path d="M20.7 10.6A8.7 8.7 0 0 0 5.8 5.8L2.6 8.8"/><path d="M2.6 3.6v5.2h5.2"/><path d="M3.3 13.4a8.7 8.7 0 0 0 14.9 4.8l3.2-3"/><path d="M21.4 20.4v-5.2h-5.2"/></svg>
+      </span>
+      <h3>Calendar Sync</h3>
+      <p>Your calendars stay in step across the sites you list on. Block a date once and it blocks everywhere.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="1">
+      <span class="jc-num" aria-hidden="true">06</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8.2"/><path d="M2.9 11h16.2"/><path d="M11 2.8a13.4 13.4 0 0 1 0 16.4 13.4 13.4 0 0 1 0-16.4"/><path d="m14.6 13.6 6.9 2.6-3 1.3-1.3 3z"/></svg>
+      </span>
+      <h3>Direct Bookings</h3>
+      <p>Take bookings on your own website and keep the commission you would have handed to a channel.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="2">
+      <span class="jc-num" aria-hidden="true">07</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="2.6"/><path d="m3.4 6.6 7.4 5.5a2 2 0 0 0 2.4 0l7.4-5.5"/></svg>
+      </span>
+      <h3>Guest Emails</h3>
+      <p>Confirmations, reminders and thank-yous send themselves — in your words, with your branding.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="3">
+      <span class="jc-num" aria-hidden="true">08</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M6 2.8h8.6L19 7.2v14l-2.2-1.4-2.2 1.4-2.2-1.4-2.2 1.4L8 19.8 6 21.2z"/><path d="M14.2 2.8v4.4H19"/><path d="M9.4 11.4h6.2M9.4 14.8h4"/></svg>
+      </span>
+      <h3>Invoicing</h3>
+      <p>Invoices build themselves from the booking, so the numbers always match what was actually agreed.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up">
+      <span class="jc-num" aria-hidden="true">09</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="2.6"/><path d="M2.4 9.4h19.2"/><path d="M5.8 15.2h3.4"/><path d="m13.6 15.4 1.8 1.8 3.4-3.6"/></svg>
+      </span>
+      <h3>Payment Tracking</h3>
+      <p>Deposit paid, balance due, fully settled. You can see where every booking stands at a glance.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="1">
+      <span class="jc-num" aria-hidden="true">10</span>
+      <span class="jc-icon" aria-hidden="true">
+        <!-- A wallet with a card slot cut into its right edge. The earlier
+             version was a rounded rectangle with a dot in it, which is what
+             card 09's credit card also looks like at 22px. The slot is the
+             detail that makes it a wallet at any size. -->
+        <svg viewBox="0 0 24 24"><path d="M2.8 8.2A2.6 2.6 0 0 1 5.4 5.6h11.8a1 1 0 0 1 1 1v1.6"/><rect x="2.8" y="8.2" width="18.4" height="11.4" rx="2.6"/><path d="M21.2 12.3h-3.5a1.85 1.85 0 0 0 0 3.7h3.5"/></svg>
+      </span>
+      <h3>Expenses</h3>
+      <p>Log what you spend against the property that spent it. No shoebox of receipts come December.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="2">
+      <span class="jc-num" aria-hidden="true">11</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M2.8 20.4h18.4"/><path d="m5 16.4 4.6-5.2 3.6 3.1 6-7"/><path d="M19.2 4.6h-4.2M19.2 4.6v4.2"/><path d="M5 20.4v-2.6M9.6 20.4v-4.8M14.2 20.4v-3.4M18.8 20.4v-6.6"/></svg>
+      </span>
+      <h3>Income Dashboard</h3>
+      <p>Today's money, this month's money, and where it came from — without opening a spreadsheet.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="3">
+      <span class="jc-num" aria-hidden="true">12</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="2.8"/><path d="M8 16.4v-3.6M12 16.4v-7.2M16 16.4v-5.2"/></svg>
+      </span>
+      <h3>Financial Reports</h3>
+      <p>Pull a clean report for any period, then export it to Excel for your accountant.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up">
+      <span class="jc-num" aria-hidden="true">13</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 3.6V12h8.4"/><circle cx="12" cy="12" r="3.1"/></svg>
+      </span>
+      <h3>Occupancy Analytics</h3>
+      <p>See which properties are earning and which nights sit empty, so you know what to fix first.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="1">
+      <span class="jc-num" aria-hidden="true">14</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="7.8" r="3.1"/><path d="M3.4 19.6c.8-3.4 3-5.2 5.6-5.2s4.8 1.8 5.6 5.2"/><circle cx="17.6" cy="9.2" r="2.3"/><path d="M16.2 14.6c2.2.3 3.8 2 4.4 4.4"/></svg>
+      </span>
+      <h3>Team &amp; Access</h3>
+      <p>Add your housekeeper, your front desk and your co-owner — each one seeing only what they should.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="2">
+      <span class="jc-num" aria-hidden="true">15</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="6.4" y="2.4" width="11.2" height="19.2" rx="2.8"/><path d="M10.4 5.4h3.2"/><path d="M10.8 18.4h2.4"/><path d="M9.4 9.6h5.2M9.4 12.6h5.2M9.4 15.2h3"/></svg>
+      </span>
+      <h3>On Your Phone</h3>
+      <p>Check tonight's arrivals from wherever you are. The whole thing works on a phone.</p>
+    </article>
+
+    <article class="jc reveal" data-anim="up" data-delay="3">
+      <span class="jc-num" aria-hidden="true">16</span>
+      <span class="jc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M3.4 10.1v3.8a1.6 1.6 0 0 0 1.6 1.6h2.6l7.2 4.3V4.2L7.6 8.5H5a1.6 1.6 0 0 0-1.6 1.6z"/><path d="M18.4 9a4.2 4.2 0 0 1 0 6"/><path d="M7.6 15.5v3.2a1.6 1.6 0 0 0 1.6 1.6h.5a1.5 1.5 0 0 0 1.45-1.9l-.6-2.2"/></svg>
+      </span>
+      <h3>Marketing Center <span class="jc-soon">Soon</span></h3>
+      <p>Tools to fill your quiet weeks instead of discounting them. In build now.</p>
     </article>
   </div>
 </section>
@@ -817,7 +944,7 @@
      nothing else in the app calls a model). Named honestly on purpose. -->
 <section class="section dark automation" id="automation">
   <p class="eyebrow center reveal" data-anim="fade">Automation</p>
-  <h2 class="reveal" data-anim="up">One booking. Seven things<br>you no longer do.</h2>
+  <h2 class="reveal" data-anim="up">One booking. Seven things <br>you no longer do.</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
     Guest emails, start to finish. A booking lands and the whole chain runs itself —
     every message on time, in your words, with your branding.
@@ -951,7 +1078,7 @@
 <!-- ═══════════════════════════ PRICING ═══════════════════════════ -->
 <section class="section pricing" id="pricing">
   <p class="eyebrow center reveal" data-anim="fade">Pricing</p>
-  <h2 class="reveal" data-anim="up">Vacation rental software,<br>priced for the size you are</h2>
+  <h2 class="reveal" data-anim="up">Vacation rental software, <br>priced for the size you are</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">Every plan includes the full property management system. No feature paywalls — you pay for the number of properties you run.</p>
 
   <!-- Tiers are property-count only. Every functional feature ships in every
@@ -1245,5 +1372,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" crossorigin="anonymous"></script>
 <script src="parallax.js"></script>
+
+<!-- LAST ON PURPOSE: it needs GSAP + ScrollTrigger already parsed, and it must
+     not run before parallax.js has registered the plugin. Drives the feature
+     grid's column drift and the light behind it. Both are enhancements — with
+     this file removed, or with the GSAP CDN unreachable, the grid renders
+     complete and still. -->
+<script src="redesign.js"></script>
 </body>
 </html>
