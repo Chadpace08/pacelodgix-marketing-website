@@ -372,35 +372,14 @@ h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); }
 h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
 
 /* ── Big numerals, after the font swap ───────────────────────────────────
-   A REGRESSION FROM THE LINE ABOVE, and worth writing down because it is the
-   trap in any display-face swap: the two faces are not the same width.
-
-   Fraunces is a high-contrast display serif with narrow lining figures.
-   Inter at weight 600 is a grotesk with wide, even ones. "₱184,250" is eight
-   glyphs; at the shipped clamp of 3.8rem it measured roughly 290px against a
-   ~269px column in .counter-grid, so it overflowed into "82%" next door and
-   the hairline divider between the two columns disappeared behind it.
-
-   Fixed at the type, not the grid — widening the column would only move the
-   problem to the next long figure. The clamp comes down a step and the
-   tracking goes negative, which large numerals want anyway: set solid, a row
-   of grotesk digits reads loose. It still lands as the biggest thing in the
-   section.
-
-   nowrap is the guard. Without it a figure that does outgrow its column wraps
-   mid-number — "₱184," over "250" — which is worse than either overflow or a
-   smaller size, and it fails silently at widths nobody tests. */
-.counter strong {
-  font-size: clamp(2rem, 3.7vw, 3.15rem);
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-}
-/* Grid children default to min-width:auto, which lets content push a column
-   wider than its 1fr share instead of being contained by it. */
-.counter { min-width: 0; }
-
-/* Same face, same risk: the pricing figure is 3.4rem and fixed, in a narrower
-   card than the counters sit in. Tightened for the same reason. */
+   A REGRESSION TRAP in any display-face swap: the two faces are not the same
+   width. Fraunces is a high-contrast serif with narrow lining figures; Inter
+   at weight 600 is a grotesk with wide, even ones — so a fixed-size figure that
+   fit in Fraunces can overflow its box in Inter and wrap mid-number. The
+   pricing amount is the one such figure left on the page (this note originally
+   also covered the KPI counters, which have since been removed). The clamp
+   comes down a step and the tracking goes negative — which large numerals want
+   anyway — and nowrap guards against a figure wrapping "₱1," over "999". */
 .pc-amt { font-size: 3.1rem; letter-spacing: -0.03em; white-space: nowrap; }
 
 /* ── Buttons: pill -> rectangle ──────────────────────────────────────────
@@ -1211,7 +1190,6 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
    ══════════════════════════════════════════════════════════════════════════ */
 
 .problem::after,   /* dot grid behind "You already have a system"          */
-.counters::after,  /* dot grid behind the sample-month numbers             */
 .pricing::after,   /* dot grid behind the plans                            */
 .ambient::before   /* dot texture behind the sticky product tour           */
 { display: none; }
