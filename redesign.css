@@ -29,196 +29,192 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* ══════════════════════════════════════════════════════════════════════════
-   ROUND 6 — "SIXTEEN JOBS" AS A FLOATING CARD MOSAIC
+   ROUND 6 — "SIXTEEN JOBS" AS A FLOATING CARD MOSAIC   [SUPERSEDED BY ROUND 15]
    Scope: #features only. Nothing else on the page is touched.
 
-   REPLACES ROUND 2, which put a photograph on top of every card. Sixteen
-   stock hospitality photographs are sixteen photographers, sixteen white
-   balances and sixteen crops; a wash held them together but never made them
-   one set, and none of them showed the job its card was naming. The biggest
-   element on every card was carrying no information. Drawn icons carry the
-   meaning in a fraction of the weight, and the page loses sixteen image
-   requests on the way.
+   HISTORY, kept because the field and the icon language carry straight over.
+   Round 2 put a stock photograph on every card — sixteen photographers,
+   sixteen crops, none showing the job the card named. Round 6 replaced them
+   with drawn icons on sixteen floating cards laid out in a drifting diagonal
+   (--stack / --drift / --shift). Round 15 keeps the drawn icons and the warm
+   light-to-dark field but drops the sixteen-card diagonal: the cards are now
+   grouped into four product-area panes, and the scroll drift is gone. If you
+   are looking for --stack/--drift/--shift, they were deleted with the diagonal
+   — the live feature CSS is the ROUND 15 block immediately below.
 
-   THE REFERENCE stays the one we agreed. Linear supplies the discipline —
-   one hairline, one radius, one spacing ramp, motion you barely notice.
-   Wander and Mews supply the warmth — cream rather than white, a soft light
-   in the field rather than a flat slab. What makes it read premium here is
-   not decoration, it is depth: a quiet field, cards that sit ABOVE it as
-   loose panes, and columns that drift at different rates so the layers are
-   felt rather than announced.
-
-   THE TWO VARIABLES THE WHOLE THING TURNS ON
-     --stack  the column's resting step down the diagonal (0 → 3).
-     --drift  how hard that column answers the scroll, mixed in sign so
-              neighbouring columns separate instead of moving as one slab.
-   Both are assigned per column, per breakpoint, at the bottom of this block —
-   never in the HTML, because the column a card lands in changes with width.
-
-   --shift is the single number redesign.js animates on the grid. It inherits
-   to every card, each of which multiplies it by its own --drift. One animated
-   property drives sixteen elements. It defaults to 0px, so with JavaScript or
-   GSAP unavailable the grid is complete, still, and correctly laid out.
-
-   WHY `translate:` AND NOT `transform:` — .jc keeps its .reveal class, and
-   styles.css animates .reveal on `transform`. These are two separate CSS
-   properties that compose in the browser, so the entrance and the parallax
-   run on the same element without fighting. Same trick the hero cards use
-   (see the layering note at the top of parallax.js).
+   THE REFERENCE is unchanged. Linear supplies the discipline — one hairline,
+   one radius, one spacing ramp, motion you barely notice. Wander and Mews
+   supply the warmth — cream rather than white, a soft light in the field
+   rather than a flat slab. Premium here is depth, not decoration: panes that
+   sit ABOVE a quiet field.
    ══════════════════════════════════════════════════════════════════════════ */
 
-#features .jobs-grid {
-  --jc-surface: #FFFCF6;    /* the card: porcelain with a trace of brand cream */
-  --jc-step: 22px;          /* one step of the diagonal */
-  --shift: 0px;             /* driven by redesign.js; 0 is a complete layout */
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 15 — THE FEATURE BENTO  (was: the sixteen-card floating mosaic)
+
+   The mosaic worked but it made sixteen equal claims: no group, no order, every
+   card competing with every other one. The fix is grouping, not decoration.
+   The same sixteen jobs now sit in FOUR product-area panes — Bookings, Guests &
+   Properties, Money, Insight & Control — over the SAME light→dark field the
+   mosaic used. The full reasoning lives beside the markup in index.html
+   (#jobsGrid). This block styles four things: the field, the panes, each pane's
+   head, and the job rows inside it — plus the responsive collapse.
+
+   WHAT WENT, and it is a deletion not a move:
+     · the diagonal (--stack) and the scroll drift (--drift/--shift/--jc-step).
+       There are no columns of sixteen to stagger any more, and the scrubbed
+       tween that drove --shift was the one thing here that could cost a frame
+       mid-scroll. redesign.js loses that tween in the same change; the pointer
+       light stays. Motion is now entrance-only (the .reveal observer) plus a
+       CSS hover — neither reads the scroll position.
+
+   HIERARCHY BY SIZE, not by weight of box: area name > job title > line of copy.
+   DEPTH is the four panes lifting off the field. AIR is the pane padding.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#features .bento {
+  --jc-surface: #FFFCF6;    /* the pane: porcelain with a trace of brand cream */
 
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--s-6) var(--s-5);
-  /* Cards size to their own copy instead of stretching to the tallest card in
-     the row. Grid's default is `stretch`, which gave a two-line card the same
-     height as a four-line one and left a hand's width of empty cream under it
-     — the thing that makes a grid look padded rather than composed. Loose
-     bottoms are correct here: these are meant to read as separate panes. */
-  align-items: start;
-
-  /* ── Headroom, both ends. Sized off redesign.js's TRAVEL (58px). ──────────
-     `translate` is NOT layout: a drifting card moves without the page making
-     room for it, so both ends of the travel have to be paid for here or the
-     cards collide with the lede above and the section below.
-
-     TOP. At the start of the scroll the down-drifting columns are at -58px,
-     i.e. 58px HIGHER than they sit at rest. Column 2 is the exposed one: it
-     is only one step (22px) down the diagonal, so it ends up 36px above the
-     grid's own top edge. --lead alone leaves 20px of daylight, which is a
-     margin nobody should trust to a font metric — hence the extra 26px.
-     Measured across the whole scroll, the tightest the gap ever gets is 24px.
-
-     BOTTOM. At the end of the scroll the same columns are 58px LOWER. 70px
-     covers that with room for the shadow underneath.
-
-     BOTH NUMBERS MOVE IF TRAVEL DOES. Raising TRAVEL in redesign.js without
-     raising these is what makes cards run into the lede — and it fails at the
-     two moments a reader is least likely to be looking, so it ships. */
-  margin-top: calc(var(--lead) + 26px);
-  padding-bottom: 70px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-5);
+  /* The panes are static now, so the old TRAVEL-sized headroom is gone. The
+     only vertical motion left is the .reveal rise (30px, opacity 0 → 1), which
+     is transient and paid for by the panes' own box — no collision headroom
+     needed. --lead keeps the grid clear of the lede above it. */
+  margin-top: var(--lead);
+  padding-bottom: var(--s-7);
 }
 
-/* ── The field ────────────────────────────────────────────────────────────
-   The cards need something to float above, or "floating" is just a word. Two
-   layers, both very quiet: a hairline ruling at 96px — the same grid the hero
-   uses, so the two sections are visibly the same drawing — and a warm pool
-   that follows the pointer across the grid. --mx/--my are written by
-   redesign.js and default to the centre, so with no pointer and no JS this is
-   a static gold bloom rather than a missing effect.
-
-   Sits at z-index 0 with the cards at 1: it is the surface, not an overlay,
-   and it never covers type. */
+/* ── The field ──────────────────────────────────────────────────────────────
+   The panes need something to float above. Two quiet layers: a hairline ruling
+   at 104px — the same drawing the hero uses — and a warm pool that follows the
+   pointer (--mx/--my, written by redesign.js; defaults to centre, so with no
+   JS and no pointer it is a static gold bloom rather than a missing effect).
+   z-index 0 with the panes at 1: it is the surface, never an overlay on type. */
 #features .jobs-light {
   --mx: 50%;
-  --my: 30%;
+  --my: 28%;
   position: absolute;
-  inset: calc(-1 * var(--s-7)) calc(-1 * var(--s-6));
+  inset: calc(-1 * var(--s-6)) calc(-1 * var(--s-6));
   z-index: 0;
   pointer-events: none;
   border-radius: var(--r-lg);
   background:
-    radial-gradient(360px 300px at var(--mx) var(--my), rgba(217, 178, 95, 0.16), transparent 70%),
-    radial-gradient(70% 50% at 50% 0%, rgba(30, 122, 80, 0.055), transparent 72%),
-    repeating-linear-gradient(90deg, rgba(16, 21, 18, 0.028) 0 1px, transparent 1px 96px),
-    repeating-linear-gradient(0deg,  rgba(16, 21, 18, 0.028) 0 1px, transparent 1px 96px);
-  -webkit-mask-image: radial-gradient(75% 70% at 50% 45%, #000 55%, transparent 100%);
-          mask-image: radial-gradient(75% 70% at 50% 45%, #000 55%, transparent 100%);
+    radial-gradient(380px 320px at var(--mx) var(--my), rgba(217, 178, 95, 0.15), transparent 70%),
+    radial-gradient(70% 46% at 50% 0%, rgba(30, 122, 80, 0.05), transparent 72%),
+    repeating-linear-gradient(90deg, rgba(16, 21, 18, 0.026) 0 1px, transparent 1px 104px),
+    repeating-linear-gradient(0deg,  rgba(16, 21, 18, 0.026) 0 1px, transparent 1px 104px);
+  -webkit-mask-image: radial-gradient(78% 72% at 50% 42%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(78% 72% at 50% 42%, #000 55%, transparent 100%);
 }
 
-/* ── The card ─────────────────────────────────────────────────────────────
-   A flex column so the copy can grow without the icon or the number moving,
-   and so every card in a row keeps the same top edge relative to its own
-   step. margin-top is the resting diagonal; translate is the scroll drift.
-   They are deliberately different properties: one is layout and is permanent,
-   the other is motion and is disposable.
-
-   The shadow scales with --stack as well. A pane that sits lower in the
-   diagonal reads as nearer, and a nearer thing casts a longer shadow — that
-   consistency is most of what separates depth from a stagger. */
-#features .jc {
-  --stack: 0;
-  --drift: 0;
-
+/* ── The pane ───────────────────────────────────────────────────────────────
+   A flex column: the head, then the four-job grid. The surface carries the
+   same short top-light gradient as the old cards — the way a real pane catches
+   the light source the field puts at 50% 0%. The dark-half edges (a white inset
+   rim for the near-black lower rows) are added later, in the dark-chapter block
+   — the ground there decides which edge you see. */
+#features .job-group {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  margin-top: calc(var(--stack) * var(--jc-step));
-  translate: 0 calc(var(--drift) * var(--shift));
-  padding: var(--s-5) var(--s-5) calc(var(--s-5) + 2px);
-  text-align: left;   /* overrides .features{text-align:center} — see below */
-  /* The top light: a short white gradient along the card's upper edge, the way
-     a real pane catches the light source the field puts at 50% 0%. Written
-     into the card's own background rather than an overlay pseudo-element on
-     purpose — an inset:0 overlay paints above the heading and the icon tile
-     and quietly washes both out. */
+  gap: var(--s-5);
+  padding: var(--s-6);
+  /* Overrides .features{text-align:center} (styles.css:2421), which is right
+     for the section header and wrong inside a pane — centred body copy kills
+     the left edge that makes a list read as a list. */
+  text-align: left;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 30%),
     var(--jc-surface);
   border: 1px solid var(--hairline);
   border-radius: var(--r-lg);
   box-shadow:
     0 1px 2px rgba(10, 13, 11, 0.04),
-    0 calc(6px + var(--stack) * 4px) calc(18px + var(--stack) * 8px)
-      calc(-6px - var(--stack) * 2px) rgba(10, 13, 11, calc(0.05 + var(--stack) * 0.012));
+    0 18px 40px -18px rgba(10, 13, 11, 0.14);
+  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
 }
-/* text-align is an override, not a preference: styles.css:2421 sets
-   `.features { text-align: center }` for the old sticky stack, and centred
-   copy inside a card kills the left edge that makes a grid read as a grid.
-   ON MERGE: narrow that rule to the section's header block instead. */
 
-/* NO HOVER STATE, on purpose — carried over from the photo version. The cards
-   used to lift, back when each one was a link. They are not links any more,
-   and a card that rises under the cursor and then does nothing when clicked is
-   a small lie the whole grid tells sixteen times. Motion is a promise of
-   behaviour; with nothing to click, the honest state is stillness. The only
-   pointer response in this section belongs to the field behind the cards. */
-
-/* ── The number ──────────────────────────────────────────────────────────
-   01 … 16. It does the counting the headline claims, which is the one job the
-   photographs never did, and it gives every card a fixed anchor in the top
-   right so sixteen cards of unequal copy still read as one system. Tabular
-   figures so 11 and 16 are the same width. aria-hidden in the markup — a
-   screen reader gets the sixteen headings, which is the same information
-   without the ornament. */
-#features .jc-num {
+/* ── The pane head ──────────────────────────────────────────────────────────
+   The area name is the primary read on the whole section. The number counts
+   the four areas (aria-hidden — a screen reader gets the four <h3> names). A
+   hairline rules it off from the job list below. */
+#features .jg-head {
+  position: relative;
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--hairline);
+}
+#features .jg-num {
   position: absolute;
-  top: var(--s-5);
-  right: var(--s-5);
-  font-size: var(--fs-label-sm);
-  font-weight: 600;
+  top: 1px;
+  right: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
-  color: var(--ink-3);
+  letter-spacing: 0.14em;
+  color: var(--green-ink);
   opacity: 0.55;
 }
+#features .jg-name {
+  font-family: var(--font);
+  font-size: clamp(1.35rem, 1.15rem + 0.7vw, 1.68rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 var(--s-2);
+  padding-right: 2rem;   /* keeps the name clear of the number */
+}
+#features .jg-desc {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--text-light);
+  margin: 0;
+  max-width: 44ch;
+}
 
-/* ── The icon tile ───────────────────────────────────────────────────────
-   Same construction as .problem .card-icon in styles.css — forest tint,
-   inset hairline, green-ink stroke — deliberately, so the page keeps ONE icon
-   language from the problem cards down to here. Slightly smaller (42 vs 46)
-   because these sit sixteen to a screen rather than three. */
+/* ── The job rows ───────────────────────────────────────────────────────────
+   Two across inside a pane. No box around each one — the pane is the box. Icon
+   left, title and one line of copy right. The row itself carries the only
+   hover in the section (see below). */
+#features .jg-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-5) var(--s-4);
+}
+#features .jc {
+  display: flex;
+  gap: var(--s-3);
+  align-items: flex-start;
+  padding: var(--s-2);
+  margin: calc(-1 * var(--s-2));   /* the hover tint bleeds out, edges stay aligned */
+  border-radius: var(--r-md);
+  transition: background-color 0.3s var(--ease);
+}
+
+/* ── The icon tile ──────────────────────────────────────────────────────────
+   Same construction as .problem .card-icon in styles.css — forest tint, inset
+   hairline, green-ink stroke — so the page keeps ONE icon language from the
+   problem cards down to here. */
 #features .jc-icon {
+  flex: none;
   display: inline-grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  margin-bottom: var(--s-4);
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
   background: linear-gradient(145deg, rgba(30, 122, 80, 0.13), rgba(30, 122, 80, 0.04));
   box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.20);
   color: var(--green-ink);
+  transition: transform 0.3s var(--ease), background-color 0.3s var(--ease),
+              box-shadow 0.3s var(--ease);
 }
 #features .jc-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 21px;
+  height: 21px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.7;
@@ -226,19 +222,20 @@
   stroke-linejoin: round;
 }
 
-#features .jc h3 {
-  font-family: var(--font);   /* Inter: the display serif starts at ~1.4rem */
-  font-size: clamp(1.06rem, 0.99rem + 0.3vw, 1.2rem);
+#features .jc-text { min-width: 0; }   /* lets long copy wrap instead of pushing the row */
+#features .jc-text h4 {
+  font-family: var(--font);
+  font-size: 0.98rem;
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.012em;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   color: var(--ink);
-  margin: 0 0 var(--s-3);
-  padding-right: 2.2rem;      /* keeps a long title clear of the number */
+  margin: 0 0 2px;
+  transition: color 0.3s var(--ease);
 }
-#features .jc p {
+#features .jc-text p {
   font-size: var(--fs-sm);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--text-light);
   margin: 0;
 }
@@ -246,9 +243,9 @@
 /* "Soon" — the one place gold appears in this grid, so it has to earn it. */
 #features .jc-soon {
   display: inline-block;
-  vertical-align: 3px;
+  vertical-align: 1px;
   margin-left: 0.4em;
-  padding: 0.15em 0.5em;
+  padding: 0.12em 0.5em;
   border-radius: var(--r-full);
   background: rgba(217, 178, 95, 0.16);
   color: var(--gold-ink);
@@ -258,88 +255,48 @@
   text-transform: uppercase;
 }
 
-/* ── The diagonal and the drift, per column ──────────────────────────────
-   Assigned by :nth-child, which means they have to be re-declared at every
-   breakpoint: at four columns card 5 is column 1, at three columns it is
-   column 2. Getting this wrong does not break the layout, it just makes the
-   diagonal look random — which is exactly the failure that is hard to see.
-
-   --drift is signed, and the signs STRICTLY ALTERNATE: column 1 travels up,
-   column 2 down, column 3 up, column 4 down. All four the same sign would
-   move sixteen cards as one slab, which is not parallax, it is a lurch.
-
-   THE MAGNITUDES WERE 1 / .55 / .8 / .45 AND ARE NOW NEARLY EQUAL. The old
-   spread was there to stop four columns reading as a pattern — but it had the
-   side effect that only column 1 really moved, and the alternation the whole
-   idea rests on was not legible. Near-equal magnitudes make "up, down, up,
-   down" obvious at a glance. They are not exactly equal (1 / .95 / .9 / 1)
-   because four identical values make the grid breathe in perfect time, which
-   reads as a mechanism rather than as depth. */
-#features .jc:nth-child(4n + 2) { --stack: 0;   --drift:  1;    }  /* col 1 ↑ */
-#features .jc:nth-child(4n + 3) { --stack: 1;   --drift: -0.95; }  /* col 2 ↓ */
-#features .jc:nth-child(4n + 4) { --stack: 2;   --drift:  0.9;  }  /* col 3 ↑ */
-#features .jc:nth-child(4n + 5) { --stack: 3;   --drift: -1;    }  /* col 4 ↓ */
-/* +2 … +5, not +1 … +4: .jobs-light is the grid's first child. It is inside
-   the grid so it can be positioned against it, and it is display:none to the
-   grid's flow only in the sense that it is absolutely positioned — but
-   :nth-child still counts it. Off-by-one here shifts the whole diagonal. */
-
-/* ── Responsive ──────────────────────────────────────────────────────────
-   4 → 3 → 2 → 1. The cards are text-led now rather than photo-led, so two
-   columns hold down to a small phone and one column is only needed at the
-   very bottom, where a 2-up card is too narrow for a title on one line.
-   The diagonal shallows as the columns reduce — three steps of 22px across a
-   1200px grid is a slope; the same three steps across 700px is a staircase. */
-/* Three and two columns keep the same strict up/down/up alternation. Each
-   breakpoint re-states its own headroom for the same reason the base rule
-   does — the travel does not shrink with the screen, so the padding cannot
-   either. */
-@media (max-width: 1080px) {
-  #features .jobs-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    --jc-step: 20px;
-    padding-bottom: 70px;
+/* ── The micro-interaction ──────────────────────────────────────────────────
+   Hover warms the job's icon and its title — a small, honest signal that these
+   are the live parts of the page, NOT a lift that would pretend the row is a
+   link (it is not; there are no per-feature pages). Guarded by (hover: hover)
+   so a touch device never gets a stuck hover state, and it is transform + colour
+   only, so it composites and never reads layout. The pane's own hover is the
+   quiet shadow lift in the dark-chapter block. */
+@media (hover: hover) {
+  #features .jc:hover { background-color: rgba(30, 122, 80, 0.055); }
+  #features .jc:hover .jc-icon {
+    transform: translateY(-1px) scale(1.06);
+    background: linear-gradient(145deg, rgba(30, 122, 80, 0.20), rgba(30, 122, 80, 0.07));
+    box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.32);
   }
-  #features .jc:nth-child(3n + 2) { --stack: 0; --drift:  1;    }  /* ↑ */
-  #features .jc:nth-child(3n + 3) { --stack: 1; --drift: -0.95; }  /* ↓ */
-  #features .jc:nth-child(3n + 4) { --stack: 2; --drift:  0.9;  }  /* ↑ */
-}
-@media (max-width: 820px) {
-  #features .jobs-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--s-4);
-    --jc-step: 18px;
-    padding-bottom: 70px;
-  }
-  #features .jc:nth-child(2n + 2) { --stack: 0; --drift:  0.9; }  /* ↑ */
-  #features .jc:nth-child(2n + 3) { --stack: 1; --drift: -0.9; }  /* ↓ */
-  #features .jobs-light { inset: calc(-1 * var(--s-5)) calc(-1 * var(--s-4)); }
-}
-@media (max-width: 520px) {
-  /* One column: the diagonal has nothing to be diagonal against, and drift on
-     a single column is just the page scrolling at the wrong speed. Both off.
-
-     `:nth-child(n)` matches every child and does nothing else. It is here for
-     SPECIFICITY, not selection: the four-, three- and two-column rules above
-     are all `.jc:nth-child(...)`, and a plain `#features .jc` is one
-     pseudo-class weaker, so it would lose to them and the diagonal would
-     survive into the single column. Matching their weight and coming later in
-     the file is what wins it. */
-  #features .jobs-grid {
-    grid-template-columns: 1fr;
-    gap: var(--s-4);
-    padding-bottom: var(--s-6);
-  }
-  #features .jc:nth-child(n) { --stack: 0; --drift: 0; }
-  #features .jc-icon { width: 38px; height: 38px; margin-bottom: var(--s-3); }
-  #features .jc-icon svg { width: 20px; height: 20px; }
+  #features .jc:hover .jc-text h4 { color: var(--green-ink); }
 }
 
-/* Reduced motion: redesign.js returns before it writes either --shift or the
-   pointer light, so this is belt and braces — it guarantees the diagonal is
-   the only thing left even if a stale value is sitting on the element. */
+/* ── Responsive ─────────────────────────────────────────────────────────────
+   4 panes in 2×2 → 1 column of panes, jobs still 2-up (tablet) → jobs 1-up
+   (phone). The grouping earns its keep most on the phone: instead of sixteen
+   undifferentiated cards to thumb past, the reader gets four labelled groups,
+   each a short list — four waypoints where there used to be none. */
+@media (max-width: 900px) {
+  #features .bento { grid-template-columns: 1fr; gap: var(--s-5); }
+}
+@media (max-width: 560px) {
+  #features { padding-inline: 1rem; }
+  #features .bento { margin-top: var(--lead); gap: var(--s-4); }
+  #features .job-group { padding: var(--s-5); gap: var(--s-4); }
+  #features .jg-items { grid-template-columns: 1fr; gap: var(--s-4); }
+  #features .jg-name { font-size: 1.32rem; }
+}
+
+/* Reduced motion: the .reveal entrance is already neutralised globally in
+   styles.css. This kills the hover transitions too, so a user who asked for no
+   motion gets an instant colour change rather than a slide. */
 @media (prefers-reduced-motion: reduce) {
-  #features .jc { translate: none; }
+  #features .job-group,
+  #features .jc,
+  #features .jc-icon,
+  #features .jc-text h4 { transition: none; }
+  #features .jc:hover .jc-icon { transform: none; }
 }
 
 
@@ -1053,200 +1010,54 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
    that is no longer needed is not harmless, it is a landmine for whoever moves
    this gradient next. */
 
-/* ── The field's ruling, inverted ────────────────────────────────────────
-   The 96px hairlines were dark ink at 2.8%, which is correct on porcelain and
-   invisible on near-black. They flip to white at 5%.
+/* ── The panes on the dark half of the field ───────────────────────────────
+   The field runs light at the top to near-black at the bottom, so the lower
+   two panes sit on a dark ground. The pale --hairline border vanishes there and
+   a black drop shadow is arithmetically nothing on near-black. Two edges solve
+   it: a forest border that reads on the light end, and a white inset rim that
+   reads on the dark end. Every pane carries both and the ground decides which
+   one you see — so no pane has to know which row it is in, and it survives the
+   gradient being reversed, which is what happened to it in Round 12.
 
-   ONE SET OF LINES, NOT TWO. The tidy answer is a white ruling masked to the
-   top and a dark ruling masked to the bottom — but an element carries one
-   mask, and this element's mask is already spent softening the field's outer
-   edge. White lines simply fade out as the ground comes up to meet them, which
-   is the correct behaviour anyway: the dark half needs the structure, and by
-   the time the field is porcelain the cards are carrying it on their own.
-
-   The pointer pool warms up at the same time. Gold at 16% was tuned to sit on
-   cream; on near-black it barely registers, and gold on a dark field is the
-   one thing the hero notes say works — small, crisp and high-alpha. */
-/* THE RULING IS GONE, the two pools stay. Same reasoning as the hero's — see
-   the .hero-grid note in Round 3 and the summary in ROUND 12. What is left is
-   the part that was doing real work: a warm pool that follows the pointer, and
-   an emerald bloom at the top of the grid. Light, not pattern. */
+   The pane surface does NOT change to dark. A warm cream pane is right on both
+   ends of the gradient, and that contrast is the whole point of the field. */
 #features .jobs-light {
   background:
-    radial-gradient(360px 300px at var(--mx) var(--my), rgba(217, 178, 95, 0.20), transparent 70%),
-    radial-gradient(70% 50% at 50% 0%, rgba(70, 201, 138, 0.10), transparent 72%);
+    radial-gradient(380px 320px at var(--mx) var(--my), rgba(217, 178, 95, 0.20), transparent 70%),
+    radial-gradient(70% 46% at 50% 0%, rgba(70, 201, 138, 0.10), transparent 72%);
 }
-
-/* ── The cards on the dark half ──────────────────────────────────────────
-   The card surface does NOT change. A warm cream pane is right on both ends of
-   this gradient, and giving the top rows a dark skin would have thrown away
-   the contrast the gradient was built to create.
-
-   What has to change is the edge and the lift, because the shipped versions
-   were drawn for a light page only. --hairline is a pale grey that vanishes
-   against a dark ground, and the drop shadow — black at 5-20% — is
-   arithmetically nothing on near-black, so the rows sitting on the dark end
-   had no edge and no lift at all.
-
-   TWO EDGES, EACH ONE INVISIBLE WHERE IT IS NOT NEEDED. The border is forest
-   at 12%, which reads as a hairline against cream on the section's light end
-   and disappears into the dark end. The inset rim is white at 55%, which does
-   the opposite. Every card carries both and the ground decides which one you
-   see — so nothing here has to know which row it is in, and the whole thing
-   survives the gradient being reversed, which is exactly what happened to it. */
-#features .jc {
+#features .job-group {
   border-color: rgba(31, 58, 42, 0.12);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.55),
     0 1px 2px rgba(10, 13, 11, 0.10),
-    0 calc(8px + var(--stack) * 4px) calc(22px + var(--stack) * 8px)
-      calc(-6px - var(--stack) * 2px) rgba(4, 10, 7, calc(0.20 + var(--stack) * 0.02));
+    0 20px 46px -18px rgba(4, 10, 7, 0.34);
+}
+/* The pane's own hover: a quiet lift of the shadow and a touch more edge — no
+   transform, because a pane is not a button. Tuned for the dark ground so the
+   bottom panes actually show the lift; on the light end it reads as a soft
+   deepening, which is correct. */
+@media (hover: hover) {
+  #features .job-group:hover {
+    border-color: rgba(31, 58, 42, 0.18);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.62),
+      0 1px 2px rgba(10, 13, 11, 0.12),
+      0 30px 62px -20px rgba(4, 10, 7, 0.44);
+  }
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
-   ROUND 9 — THE EYEBROW, AND SIXTEEN CARDS ON A PHONE
-
-   Two problems, and the first one has a wrong diagnosis attached to it.
-
-   ── 1. "EVERYTHING IN ONE PLACE" is hard to read ──
-   The request was to make it a DARKER green. On this background that would
-   make it worse, not better: the chapter's top is near-black, so a darker
-   green moves the label TOWARD the ground it is sitting on. Measured, the
-   colour is not the problem at all — --green-bright on the dark floor is
-   about 9:1, which is roughly double what WCAG asks for.
-
-   What is actually wrong is the TYPE. The eyebrow is 12.9px, uppercase, with
-   0.16em of tracking. That spec was drawn for a light section, where the eye
-   has an easy figure/ground; set small, spaced wide and reversed out of
-   near-black, the same letters lose their word shapes and start reading as
-   loose characters. Legibility at small sizes on a dark ground is a size,
-   weight and spacing problem before it is ever a colour problem.
-
-   So: bigger, heavier, and the tracking pulled back — plus a brighter mint,
-   which is the opposite direction to the one requested and the reason it now
-   reads from arm's length.
-
-   ── 2. Sixteen cards is a very long list on a phone ──
-   Correct, and it was the layout's fault rather than the content's. One
-   column at 390px made the section roughly six full screens of scrolling, and
-   every card wasted its right-hand half on nothing.
-
-   THE FIX IS LENGTH, NOT MOTION. Two columns cut the section by about half
-   with nothing hidden, which matters here more than usual: the headline's
-   whole claim is that there are SIXTEEN, and a carousel that shows two at a
-   time while hiding fourteen argues against the sentence above it. A phone
-   reader scans titles and icons; they do not read sixteen descriptions. Two
-   columns is what lets them scan.
-
-   THE MOTION IS THEN ADDED ON TOP, and deliberately kept to two things —
-   the UX rule here is "animate one or two elements per view", and sixteen
-   individually choreographed cards is exactly the excess it warns about:
-     · the two columns drift against each other as the section passes, which
-       is one animated value for the whole grid (see redesign.js), and
-     · each card grows the last 6% into place as it reveals.
-   Both ride machinery that already exists. Neither adds a tween per card.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* ── The eyebrow on the dark chapter ─────────────────────────────────────
-   Scoped to #features because everywhere else on the page the eyebrow sits on
-   cream, where the shipped spec is correct and this one would look shouty. */
+/* ── The eyebrow on this chapter ────────────────────────────────────────────
+   Scoped to #features because everywhere else the eyebrow sits on cream, where
+   the shipped spec is correct and this heavier one would look shouty. The
+   heading and eyebrow sit in the section's top band, which the gradient holds
+   clear of the dark, so --green-ink (the token built for emerald on light
+   ground) is the right colour here. */
 #features > .eyebrow {
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  /* --green-ink, not the bright mint this rule carried while the top of the
-     section was near-black. On porcelain the mint measures about 2:1 and
-     vanishes; --green-ink is the token built for emerald on light ground.
-     The size, weight and tracking changes stay — those fixed a legibility
-     problem in the type itself and are an improvement on either ground. */
   color: var(--green-ink);
-}
-
-/* ── Sixteen cards on a phone ────────────────────────────────────────────
-   Supersedes the single-column block above. Two columns hold down to 360px
-   because the card is text-only now — there is no photograph setting a
-   minimum width, and the title carries most of the meaning.
-
-   The nth-child selectors are re-declared rather than inherited from the
-   two-column block at 820px: that block is still in force here, but its
-   --drift values (0.8 / -0.5) were tuned for a tablet-width card. Halving
-   them keeps the actual travel proportional to a card that is now a third of
-   the size — 40px of movement on a 196px card, not 70px. */
-@media (max-width: 520px) {
-  #features .jobs-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--s-3);
-    --jc-step: 14px;
-    /* A phone gets 60% of the desktop travel, not the full amount, and the
-       reason is the ratio rather than the pixels: 116px of movement against a
-       200px card is a card leaving its own row, while against a 320px desktop
-       card it is a card breathing. 0.6 of 58 is ±35px each way, so the two
-       columns shear 140px against each other over the section — plainly
-       visible on a phone without either column outrunning its neighbour.
-
-       Headroom is re-stated because --lead drops to 2rem below 900px, so the
-       base rule's calc() is working from a smaller number here. */
-    margin-top: calc(var(--lead) + 26px);
-    padding-bottom: 46px;
-  }
-  #features .jc:nth-child(2n + 2) { --stack: 0; --drift:  0.6; }  /* ↑ */
-  #features .jc:nth-child(2n + 3) { --stack: 1; --drift: -0.6; }  /* ↓ */
-
-  /* The card, tightened. Padding comes down one step on the ramp, not to an
-     arbitrary number, and the type follows it. --fs-sm would leave about 20
-     characters to a line in a 138px column, which is short enough to start
-     hyphen-shaped; 0.8rem gets it back to a readable rhythm. */
-  #features .jc { padding: var(--s-4); }
-  #features .jc-num { top: var(--s-4); right: var(--s-4); }
-  #features .jc-icon {
-    width: 34px;
-    height: 34px;
-    margin-bottom: var(--s-3);
-    border-radius: 10px;
-  }
-  #features .jc-icon svg { width: 19px; height: 19px; }
-  /* NO padding-right here, and that is the difference between "Booking
-     Calendar" holding one line and breaking into two. The desktop card
-     reserves 2.2rem so a long title cannot run under the number — but at this
-     size the number sits level with the ICON, a whole row above the heading,
-     so the reservation buys nothing and costs a fifth of the measure. */
-  #features .jc h3 {
-    font-size: 0.95rem;
-    padding-right: 0;
-    margin-bottom: 0.4rem;
-  }
-  #features .jc p { font-size: 0.8rem; line-height: 1.5; }
-
-  /* Two more characters a line, taken from the section's own gutter rather
-     than from the card. `.section` sets clamp(1.2rem, 4vw, 3rem) for a single
-     column of prose; a two-up grid of small cards can sit closer to the edge,
-     and every pixel here goes straight into the measure. */
-  #features { padding-inline: 1rem; }
-
-  /* The entrance. It rides the .reveal observer that scroll.js already runs —
-     no new listener, no new tween, no per-card JavaScript.
-
-     ON THE `scale` PROPERTY, which is the whole reason this is free. The card
-     is already using `transform` for the reveal's slide-up and `translate`
-     for the scroll drift. `scale` is a third independent property that the
-     browser composes with both, so a fourth behaviour lands on the same
-     element without anything having to be coordinated.
-
-     6%, and no more. Anything larger stops reading as "settling into place"
-     and starts reading as a pop-up, which is the wrong note for a page whose
-     motion budget is deliberately small. */
-  #features .jc.reveal { scale: 0.94; transition: scale 0.5s var(--ease); }
-  #features .jc.reveal.is-in { scale: 1; }
-}
-
-/* styles.css's reduced-motion block neutralises .reveal's opacity, transform
-   and filter — it predates this rule and knows nothing about `scale`, so the
-   cards would still grow. Added here rather than there because everything in
-   this file has to be deletable in one piece. */
-@media (prefers-reduced-motion: reduce) {
-  #features .jc.reveal,
-  #features .jc.reveal.is-in { scale: none; transition: none; }
 }
 
 
@@ -1449,6 +1260,27 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
    do not carry the override across. */
 @media (max-width: 900px) {
   .scrolly-stage { top: calc(var(--beta-h) + 78px); }
+}
+
+/* ── The dashboard clearing the green chapter (DESKTOP ONLY) ────────────────
+   The showcase stage is `position: sticky` and vertically centred
+   (`top: 50%; translateY(-50%)`), so as the tour scrolls into view the browser
+   mockup RISES up the viewport. At the hand-off from #features it was rising
+   into the tail of the dark-green chapter and covering ~106px of it on the
+   right — the mockup sitting half on green, half on cream, which read as an
+   accident rather than a composition.
+
+   THE FIX IS SCROLL RUNWAY, not a shove. A margin above the tour delays the
+   mockup's rise so the green has fully scrolled off before the frame reaches
+   that height — the frame then lands on clean cream. It is runway, not a dead
+   gap: the section is sticky scrollytelling, so the reader scrolls straight
+   through it. 170px clears the measured 106px overlap with ~60px to spare.
+
+   DESKTOP ONLY, as requested. Below 900px the stage centres against a
+   different sticky offset (the rule just above) and the phone/tablet layout was
+   not touched. Scoped to the redesign file so it stays deletable in one piece. */
+@media (min-width: 901px) {
+  #showcase .scrolly-inner { margin-top: 170px; }
 }
 
 

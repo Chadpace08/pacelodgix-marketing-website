@@ -624,41 +624,12 @@
   </div>
 </section>
 
-<!-- ══════════════════════════ ANALYTICS COUNTERS ══════════════════════════ -->
-<!-- PLACEHOLDER: these are illustrative numbers from the demo tenant, not
-     aggregate customer stats. Either label them as a sample dashboard or
-     replace with real figures once you have them. -->
-<section class="section counters" id="numbers">
-  <div class="tex" aria-hidden="true">
-    <span class="tex-orb tex-orb-3"></span>
-    <span class="tex-grain"></span>
-  </div>
-
-  <p class="eyebrow center reveal" data-anim="fade">A sample month</p>
-  <h2 class="reveal" data-anim="up">The numbers, without the math</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Your dashboard keeps revenue, occupancy and average stay up to date — worked out as each
-    booking lands, not at the end of the month.
-  </p>
-  <div class="counter-grid">
-    <div class="counter reveal" data-anim="scale" data-delay="1">
-      <strong data-count="184250" data-prefix="₱">₱0</strong>
-      <span>Revenue this month</span>
-    </div>
-    <div class="counter reveal" data-anim="scale" data-delay="2">
-      <strong data-count="82" data-suffix="%">0%</strong>
-      <span>Occupancy</span>
-    </div>
-    <div class="counter reveal" data-anim="scale" data-delay="3">
-      <strong data-count="147">0</strong>
-      <span>Bookings YTD</span>
-    </div>
-    <div class="counter reveal" data-anim="scale" data-delay="4">
-      <strong data-count="3.4" data-decimals="1">0</strong>
-      <span>Average stay (nights)</span>
-    </div>
-  </div>
-</section>
+<!-- ANALYTICS COUNTERS ("The numbers, without the math") removed on request —
+     the sample-month stat band (₱184,250 / 82% / 147 / 3.4). The Problem
+     section above now runs straight into the Features chapter; both meet on
+     light ground, so the gradient seam still blends. The .counters/.counter
+     CSS in styles.css is now unused but left in place, and scroll.js's counter
+     observer simply finds nothing to animate. -->
 
 <!-- ══════════════════════════ FEATURES GRID ══════════════════════════ -->
 <section class="section features" id="features">
@@ -669,197 +640,225 @@
     short-term rental operation, without a single spreadsheet.
   </p>
 
-  <!-- ══ THE FEATURE MOSAIC — floating cards (styles in redesign.css) ═══════
-       Replaces the sixteen-photo grid. Same sixteen jobs, same order, same
-       copy — the photographs are gone and each card now carries a drawn icon
-       in the same line language as "the problem" cards above.
+  <!-- ══ THE FEATURE BENTO — sixteen jobs, grouped into four ══════════════════
+       WHAT CHANGED, AND WHY. Sixteen equal cards made sixteen equal claims, so
+       the eye had nowhere to land and no order to read them in — every card
+       competed with every other one for the same attention. These are the SAME
+       sixteen jobs, in the same words. What is new is that they now sit inside
+       FOUR named product areas — Bookings, Guests & Properties, Money, and
+       Insight & Control — so a reader takes in four ideas first and the detail
+       second. Grouping is the hierarchy the flat grid never had.
 
-       WHY THE PHOTOS WENT. Sixteen stock hospitality photographs is sixteen
-       different photographers, sixteen white balances and sixteen crops, held
-       together only by a wash. It reads as a gallery, and a gallery of resorts
-       is what a resort brochure looks like — not what software looks like.
-       None of the sixteen photographs showed the job the card was naming, so
-       the largest element on every card was carrying no information at all.
-       Every reference we work against (Linear, Vercel, Stripe, Mews) draws its
-       feature grid, it does not photograph it. The product screenshots still
-       do their work in the sticky showcase directly below this section, where
-       they are large enough to actually read.
+       THE SHAPE is an editorial bento, not a card grid: four generous panes
+       floating over the same light-to-dark field as before. Each pane carries
+       its area name large, a one-line descriptor under it, then its four jobs
+       as light icon rows — no box drawn around each job, because a box around
+       every one is exactly what made the old grid read as a table. Depth comes
+       from the four panes lifting off the field; hierarchy comes from size
+       (area name > job title > line of copy); the air comes from the padding.
 
-       WHAT REPLACES THEM — depth instead of imagery. The grid sits on its own
-       quiet field and the four columns are stepped down in a diagonal, so the
-       cards read as loose panes floating above the page rather than as tiles
-       filling a table. On scroll the columns drift apart and back together at
-       different rates (redesign.js), which is what turns a static diagonal into
-       something that feels like layers. All sixteen stay visible the whole
-       time — nothing is stacked out of sight, and nothing has to be scrolled
-       through one at a time.
-
-       --stack is the card's column: its resting step down the diagonal.
-       --drift is how hard that column reacts to scroll, and it is deliberately
-       mixed in sign so neighbouring columns separate rather than travelling as
-       one block. Both are set per column in redesign.css, not here, so the
-       breakpoints can re-assign them when four columns become three, two or
-       one. With JavaScript off, --shift stays 0px and the grid simply sits
-       still in its diagonal — the layout never depends on the motion.
-
-       NO LINKS AND NO HOVER LIFT, unchanged from the photo version and for the
-       same reason: there are no per-feature pages to send anyone to, and a card
-       that rises under the cursor and then does nothing is a small lie told
-       sixteen times. The only pointer response is the soft light behind the
-       grid, which belongs to the field, not to any one card. -->
-  <div class="jobs-grid" id="jobsGrid">
+       THE MOTION is deliberately cheap and never touches the scroll. Every pane
+       and every row rides the .reveal IntersectionObserver that scroll.js
+       already runs — one observer, opacity and transform only, fires once and
+       unhooks. There is NO scroll-scrubbed tween here any more; the old column
+       drift is gone, which is the single biggest thing that could have cost a
+       frame while scrolling. The only live pointer response is the soft light
+       in the field behind the panes (redesign.js). Hover on a job warms its
+       icon a touch — a small, honest signal, not a lift that would pretend the
+       card is a link it is not. -->
+  <div class="bento" id="jobsGrid">
     <div class="jobs-light" aria-hidden="true"></div>
 
-    <article class="jc reveal" data-anim="up">
-      <span class="jc-num" aria-hidden="true">01</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><rect x="6.3" y="12.4" width="7" height="2.6" rx="1.3"/><rect x="10.8" y="16.5" width="6.9" height="2.6" rx="1.3"/></svg>
-      </span>
-      <h3>Booking Calendar</h3>
-      <p>Every unit and every stay on one calendar. The same dates can never be sold twice.</p>
+    <!-- ── 01 · Bookings ─────────────────────────────────────────────────── -->
+    <article class="job-group reveal" data-anim="up">
+      <header class="jg-head">
+        <span class="jg-num" aria-hidden="true">01</span>
+        <h3 class="jg-name">Bookings</h3>
+        <p class="jg-desc">Take reservations, keep every calendar in step, and never sell the same night twice.</p>
+      </header>
+      <div class="jg-items">
+        <div class="jc reveal" data-anim="fade" data-delay="1">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><rect x="6.3" y="12.4" width="7" height="2.6" rx="1.3"/><rect x="10.8" y="16.5" width="6.9" height="2.6" rx="1.3"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Booking Calendar</h4>
+            <p>Every unit and every stay on one calendar. The same dates can never be sold twice.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="2">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17.2" rx="2.5"/><path d="M9 4V3.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V4"/><path d="M8.6 12.2 10.5 14l4.4-4.4"/><path d="M8.6 17.6h6.8"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Reservations</h4>
+            <p>From first enquiry to check-out, every booking has one place to live and one status you can trust.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="3">
+          <span class="jc-icon" aria-hidden="true">
+            <!-- A refresh loop, NOT another calendar: the two-way loop is the idea
+                 that separates "sync" from "calendar". -->
+            <svg viewBox="0 0 24 24"><path d="M20.7 10.6A8.7 8.7 0 0 0 5.8 5.8L2.6 8.8"/><path d="M2.6 3.6v5.2h5.2"/><path d="M3.3 13.4a8.7 8.7 0 0 0 14.9 4.8l3.2-3"/><path d="M21.4 20.4v-5.2h-5.2"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Calendar Sync</h4>
+            <p>Your calendars stay in step across the sites you list on. Block a date once and it blocks everywhere.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="4">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8.2"/><path d="M2.9 11h16.2"/><path d="M11 2.8a13.4 13.4 0 0 1 0 16.4 13.4 13.4 0 0 1 0-16.4"/><path d="m14.6 13.6 6.9 2.6-3 1.3-1.3 3z"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Direct Bookings</h4>
+            <p>Take bookings on your own website and keep the commission you would have handed to a channel.</p>
+          </div>
+        </div>
+      </div>
     </article>
 
-    <article class="jc reveal" data-anim="up" data-delay="1">
-      <span class="jc-num" aria-hidden="true">02</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M2.8 20.5V9.8l6-4.3 6 4.3v10.7"/><path d="M14.8 20.5v-8.2h6.4v8.2"/><path d="M1.8 20.5h20.4"/><path d="M7 13h3.6M7 16.6h3.6"/></svg>
-      </span>
-      <h3>Multi-Property</h3>
-      <p>Run one villa or fifteen. Each property keeps its own rates, photos and house rules.</p>
+    <!-- ── 02 · Guests & Properties ──────────────────────────────────────── -->
+    <article class="job-group reveal" data-anim="up" data-delay="1">
+      <header class="jg-head">
+        <span class="jg-num" aria-hidden="true">02</span>
+        <h3 class="jg-name">Guests &amp; Properties</h3>
+        <p class="jg-desc">One home for every property, every guest, and every message you send them.</p>
+      </header>
+      <div class="jg-items">
+        <div class="jc reveal" data-anim="fade" data-delay="1">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M2.8 20.5V9.8l6-4.3 6 4.3v10.7"/><path d="M14.8 20.5v-8.2h6.4v8.2"/><path d="M1.8 20.5h20.4"/><path d="M7 13h3.6M7 16.6h3.6"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Multi-Property</h4>
+            <p>Run one villa or fifteen. Each property keeps its own rates, photos and house rules.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="2">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="2.4" y="4.6" width="19.2" height="14.8" rx="2.6"/><circle cx="8.8" cy="11" r="2.4"/><path d="M5.2 16.6c.6-1.8 2-2.7 3.6-2.7s3 .9 3.6 2.7"/><path d="M15.6 10.2h3.6M15.6 13.6h3.6"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Guest Profiles</h4>
+            <p>Who stayed, when, what they paid and what they asked for. It is all still there the next time they book.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="3">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="2.6"/><path d="m3.4 6.6 7.4 5.5a2 2 0 0 0 2.4 0l7.4-5.5"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Guest Emails</h4>
+            <p>Confirmations, reminders and thank-yous send themselves — in your words, with your branding.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="4">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3.4 10.1v3.8a1.6 1.6 0 0 0 1.6 1.6h2.6l7.2 4.3V4.2L7.6 8.5H5a1.6 1.6 0 0 0-1.6 1.6z"/><path d="M18.4 9a4.2 4.2 0 0 1 0 6"/><path d="M7.6 15.5v3.2a1.6 1.6 0 0 0 1.6 1.6h.5a1.5 1.5 0 0 0 1.45-1.9l-.6-2.2"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Marketing Center <span class="jc-soon">Soon</span></h4>
+            <p>Tools to fill your quiet weeks instead of discounting them. In build now.</p>
+          </div>
+        </div>
+      </div>
     </article>
 
-    <article class="jc reveal" data-anim="up" data-delay="2">
-      <span class="jc-num" aria-hidden="true">03</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17.2" rx="2.5"/><path d="M9 4V3.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V4"/><path d="M8.6 12.2 10.5 14l4.4-4.4"/><path d="M8.6 17.6h6.8"/></svg>
-      </span>
-      <h3>Reservations</h3>
-      <p>From first enquiry to check-out, every booking has one place to live and one status you can trust.</p>
+    <!-- ── 03 · Money ────────────────────────────────────────────────────── -->
+    <article class="job-group reveal" data-anim="up" data-delay="2">
+      <header class="jg-head">
+        <span class="jg-num" aria-hidden="true">03</span>
+        <h3 class="jg-name">Money</h3>
+        <p class="jg-desc">Invoices, payments and expenses that add themselves up as you go.</p>
+      </header>
+      <div class="jg-items">
+        <div class="jc reveal" data-anim="fade" data-delay="1">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 2.8h8.6L19 7.2v14l-2.2-1.4-2.2 1.4-2.2-1.4-2.2 1.4L8 19.8 6 21.2z"/><path d="M14.2 2.8v4.4H19"/><path d="M9.4 11.4h6.2M9.4 14.8h4"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Invoicing</h4>
+            <p>Invoices build themselves from the booking, so the numbers always match what was actually agreed.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="2">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="2.6"/><path d="M2.4 9.4h19.2"/><path d="M5.8 15.2h3.4"/><path d="m13.6 15.4 1.8 1.8 3.4-3.6"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Payment Tracking</h4>
+            <p>Deposit paid, balance due, fully settled. You can see where every booking stands at a glance.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="3">
+          <span class="jc-icon" aria-hidden="true">
+            <!-- A wallet with a card slot cut into its right edge — the detail
+                 that makes it a wallet, not another payment card. -->
+            <svg viewBox="0 0 24 24"><path d="M2.8 8.2A2.6 2.6 0 0 1 5.4 5.6h11.8a1 1 0 0 1 1 1v1.6"/><rect x="2.8" y="8.2" width="18.4" height="11.4" rx="2.6"/><path d="M21.2 12.3h-3.5a1.85 1.85 0 0 0 0 3.7h3.5"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Expenses</h4>
+            <p>Log what you spend against the property that spent it. No shoebox of receipts come December.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="4">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M2.8 20.4h18.4"/><path d="m5 16.4 4.6-5.2 3.6 3.1 6-7"/><path d="M19.2 4.6h-4.2M19.2 4.6v4.2"/><path d="M5 20.4v-2.6M9.6 20.4v-4.8M14.2 20.4v-3.4M18.8 20.4v-6.6"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Income Dashboard</h4>
+            <p>Today's money, this month's money, and where it came from — without opening a spreadsheet.</p>
+          </div>
+        </div>
+      </div>
     </article>
 
-    <article class="jc reveal" data-anim="up" data-delay="3">
-      <span class="jc-num" aria-hidden="true">04</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="2.4" y="4.6" width="19.2" height="14.8" rx="2.6"/><circle cx="8.8" cy="11" r="2.4"/><path d="M5.2 16.6c.6-1.8 2-2.7 3.6-2.7s3 .9 3.6 2.7"/><path d="M15.6 10.2h3.6M15.6 13.6h3.6"/></svg>
-      </span>
-      <h3>Guest Profiles</h3>
-      <p>Who stayed, when, what they paid and what they asked for. It is all still there the next time they book.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up">
-      <span class="jc-num" aria-hidden="true">05</span>
-      <span class="jc-icon" aria-hidden="true">
-        <!-- A refresh loop, NOT another calendar. Drawn as a calendar with
-             arrows inside it, this sat next to card 01 looking like the same
-             icon twice at 22px — the two-way loop is the idea that actually
-             separates "sync" from "calendar". -->
-        <svg viewBox="0 0 24 24"><path d="M20.7 10.6A8.7 8.7 0 0 0 5.8 5.8L2.6 8.8"/><path d="M2.6 3.6v5.2h5.2"/><path d="M3.3 13.4a8.7 8.7 0 0 0 14.9 4.8l3.2-3"/><path d="M21.4 20.4v-5.2h-5.2"/></svg>
-      </span>
-      <h3>Calendar Sync</h3>
-      <p>Your calendars stay in step across the sites you list on. Block a date once and it blocks everywhere.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="1">
-      <span class="jc-num" aria-hidden="true">06</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8.2"/><path d="M2.9 11h16.2"/><path d="M11 2.8a13.4 13.4 0 0 1 0 16.4 13.4 13.4 0 0 1 0-16.4"/><path d="m14.6 13.6 6.9 2.6-3 1.3-1.3 3z"/></svg>
-      </span>
-      <h3>Direct Bookings</h3>
-      <p>Take bookings on your own website and keep the commission you would have handed to a channel.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="2">
-      <span class="jc-num" aria-hidden="true">07</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="2.6"/><path d="m3.4 6.6 7.4 5.5a2 2 0 0 0 2.4 0l7.4-5.5"/></svg>
-      </span>
-      <h3>Guest Emails</h3>
-      <p>Confirmations, reminders and thank-yous send themselves — in your words, with your branding.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="3">
-      <span class="jc-num" aria-hidden="true">08</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M6 2.8h8.6L19 7.2v14l-2.2-1.4-2.2 1.4-2.2-1.4-2.2 1.4L8 19.8 6 21.2z"/><path d="M14.2 2.8v4.4H19"/><path d="M9.4 11.4h6.2M9.4 14.8h4"/></svg>
-      </span>
-      <h3>Invoicing</h3>
-      <p>Invoices build themselves from the booking, so the numbers always match what was actually agreed.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up">
-      <span class="jc-num" aria-hidden="true">09</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="2.6"/><path d="M2.4 9.4h19.2"/><path d="M5.8 15.2h3.4"/><path d="m13.6 15.4 1.8 1.8 3.4-3.6"/></svg>
-      </span>
-      <h3>Payment Tracking</h3>
-      <p>Deposit paid, balance due, fully settled. You can see where every booking stands at a glance.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="1">
-      <span class="jc-num" aria-hidden="true">10</span>
-      <span class="jc-icon" aria-hidden="true">
-        <!-- A wallet with a card slot cut into its right edge. The earlier
-             version was a rounded rectangle with a dot in it, which is what
-             card 09's credit card also looks like at 22px. The slot is the
-             detail that makes it a wallet at any size. -->
-        <svg viewBox="0 0 24 24"><path d="M2.8 8.2A2.6 2.6 0 0 1 5.4 5.6h11.8a1 1 0 0 1 1 1v1.6"/><rect x="2.8" y="8.2" width="18.4" height="11.4" rx="2.6"/><path d="M21.2 12.3h-3.5a1.85 1.85 0 0 0 0 3.7h3.5"/></svg>
-      </span>
-      <h3>Expenses</h3>
-      <p>Log what you spend against the property that spent it. No shoebox of receipts come December.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="2">
-      <span class="jc-num" aria-hidden="true">11</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M2.8 20.4h18.4"/><path d="m5 16.4 4.6-5.2 3.6 3.1 6-7"/><path d="M19.2 4.6h-4.2M19.2 4.6v4.2"/><path d="M5 20.4v-2.6M9.6 20.4v-4.8M14.2 20.4v-3.4M18.8 20.4v-6.6"/></svg>
-      </span>
-      <h3>Income Dashboard</h3>
-      <p>Today's money, this month's money, and where it came from — without opening a spreadsheet.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="3">
-      <span class="jc-num" aria-hidden="true">12</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="2.8"/><path d="M8 16.4v-3.6M12 16.4v-7.2M16 16.4v-5.2"/></svg>
-      </span>
-      <h3>Financial Reports</h3>
-      <p>Pull a clean report for any period, then export it to Excel for your accountant.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up">
-      <span class="jc-num" aria-hidden="true">13</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 3.6V12h8.4"/><circle cx="12" cy="12" r="3.1"/></svg>
-      </span>
-      <h3>Occupancy Analytics</h3>
-      <p>See which properties are earning and which nights sit empty, so you know what to fix first.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="1">
-      <span class="jc-num" aria-hidden="true">14</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="7.8" r="3.1"/><path d="M3.4 19.6c.8-3.4 3-5.2 5.6-5.2s4.8 1.8 5.6 5.2"/><circle cx="17.6" cy="9.2" r="2.3"/><path d="M16.2 14.6c2.2.3 3.8 2 4.4 4.4"/></svg>
-      </span>
-      <h3>Team &amp; Access</h3>
-      <p>Add your housekeeper, your front desk and your co-owner — each one seeing only what they should.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="2">
-      <span class="jc-num" aria-hidden="true">15</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="6.4" y="2.4" width="11.2" height="19.2" rx="2.8"/><path d="M10.4 5.4h3.2"/><path d="M10.8 18.4h2.4"/><path d="M9.4 9.6h5.2M9.4 12.6h5.2M9.4 15.2h3"/></svg>
-      </span>
-      <h3>On Your Phone</h3>
-      <p>Check tonight's arrivals from wherever you are. The whole thing works on a phone.</p>
-    </article>
-
-    <article class="jc reveal" data-anim="up" data-delay="3">
-      <span class="jc-num" aria-hidden="true">16</span>
-      <span class="jc-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M3.4 10.1v3.8a1.6 1.6 0 0 0 1.6 1.6h2.6l7.2 4.3V4.2L7.6 8.5H5a1.6 1.6 0 0 0-1.6 1.6z"/><path d="M18.4 9a4.2 4.2 0 0 1 0 6"/><path d="M7.6 15.5v3.2a1.6 1.6 0 0 0 1.6 1.6h.5a1.5 1.5 0 0 0 1.45-1.9l-.6-2.2"/></svg>
-      </span>
-      <h3>Marketing Center <span class="jc-soon">Soon</span></h3>
-      <p>Tools to fill your quiet weeks instead of discounting them. In build now.</p>
+    <!-- ── 04 · Insight & Control ────────────────────────────────────────── -->
+    <article class="job-group reveal" data-anim="up" data-delay="3">
+      <header class="jg-head">
+        <span class="jg-num" aria-hidden="true">04</span>
+        <h3 class="jg-name">Insight &amp; Control</h3>
+        <p class="jg-desc">See what's earning, decide who sees what, and run the whole thing from your phone.</p>
+      </header>
+      <div class="jg-items">
+        <div class="jc reveal" data-anim="fade" data-delay="1">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="2.8"/><path d="M8 16.4v-3.6M12 16.4v-7.2M16 16.4v-5.2"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Financial Reports</h4>
+            <p>Pull a clean report for any period, then export it to Excel for your accountant.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="2">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 3.6V12h8.4"/><circle cx="12" cy="12" r="3.1"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Occupancy Analytics</h4>
+            <p>See which properties are earning and which nights sit empty, so you know what to fix first.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="3">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="7.8" r="3.1"/><path d="M3.4 19.6c.8-3.4 3-5.2 5.6-5.2s4.8 1.8 5.6 5.2"/><circle cx="17.6" cy="9.2" r="2.3"/><path d="M16.2 14.6c2.2.3 3.8 2 4.4 4.4"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>Team &amp; Access</h4>
+            <p>Add your housekeeper, your front desk and your co-owner — each one seeing only what they should.</p>
+          </div>
+        </div>
+        <div class="jc reveal" data-anim="fade" data-delay="4">
+          <span class="jc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="6.4" y="2.4" width="11.2" height="19.2" rx="2.8"/><path d="M10.4 5.4h3.2"/><path d="M10.8 18.4h2.4"/><path d="M9.4 9.6h5.2M9.4 12.6h5.2M9.4 15.2h3"/></svg>
+          </span>
+          <div class="jc-text">
+            <h4>On Your Phone</h4>
+            <p>Check tonight's arrivals from wherever you are. The whole thing works on a phone.</p>
+          </div>
+        </div>
+      </div>
     </article>
   </div>
 </section>
