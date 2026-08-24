@@ -1408,3 +1408,200 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
     inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SUBSCRIBE PATH — billing switch, card actions, payment methods
+   Added with payments.js. Lives here rather than in styles.css because
+   redesign.css loads second and wins; putting it in styles.css would let any
+   later .price-card rule in this file silently override it.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Monthly / Yearly switch ───────────────────────────────────────────────
+   A segmented control on a pill track. The pressed segment is a raised white
+   chip, which is the same "one of these is selected" language the rest of the
+   page already uses, and it reads as pressed without relying on colour alone —
+   it also gains elevation and weight, so it survives greyscale and high
+   contrast mode. */
+.billing-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin: var(--s-6) auto 0;
+  padding: 4px;
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+}
+.billing-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.62rem 1.35rem;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease),
+              box-shadow 0.25s var(--ease);
+}
+.billing-switch button:hover { color: var(--text); }
+.billing-switch button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+/* The saving badge rides inside the Yearly segment so the incentive is visible
+   BEFORE the switch is flipped — a discount you only discover after clicking
+   is a discount that did not sell anything. */
+.bs-save {
+  padding: 0.2em 0.6em;
+  border-radius: var(--r-full);
+  background: rgba(30, 122, 80, 0.12);
+  color: var(--green-ink);
+  font-size: var(--fs-label-sm);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.billing-switch button[aria-pressed="true"] .bs-save {
+  background: var(--green);
+  color: #fff;
+}
+
+/* ── Per-card saving line ──────────────────────────────────────────────────
+   min-height reserves the row on the monthly view so flipping the switch does
+   not shove the ticks and the CTA down the page. */
+.pc-save {
+  margin: -0.35rem 0 0.9rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--green-ink);
+}
+.price-card.featured .pc-save { color: var(--green-bright); }
+
+/* ── Card action block ─────────────────────────────────────────────────────
+   `.price-card .btn { margin-top: auto }` used to pin the single button to the
+   card's bottom edge. With two elements the auto-margin has to move up to the
+   wrapper, or only the button would be pushed down and the alt link would be
+   left floating above it. */
+.pc-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+.pc-actions .btn { margin-top: 0; }
+
+/* The secondary path. Deliberately a quiet text link, not a second button:
+   two buttons of equal weight in one card make the visitor choose between
+   them instead of choosing the plan. */
+.pc-alt {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--hairline-2);
+  transition: color 0.2s var(--ease), text-decoration-color 0.2s var(--ease);
+}
+.pc-alt:hover {
+  color: var(--green-ink);
+  text-decoration-color: currentColor;
+}
+.price-card.featured .pc-alt { color: var(--ink-dark-2); }
+.price-card.featured .pc-alt:hover { color: var(--green-bright); }
+
+/* While a plan has no checkout URL configured, payments.js relabels its button
+   to the trial CTA and stamps this attribute. The alt link would then read
+   "or start a 14-day free trial" directly under a button that already says
+   exactly that, so it is hidden until the two actually differ. */
+.price-card:has([data-unconfigured]) .pc-alt { display: none; }
+
+/* ── Payment methods strip ─────────────────────────────────────────────────
+   Sits between the cards and the trial note: the moment after the visitor has
+   picked a plan and before they commit is when "can I even pay with GCash?"
+   is the live question. */
+.pay-methods {
+  margin-top: var(--s-7);
+  text-align: center;
+}
+.pm-label {
+  font-size: var(--fs-label-sm);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--s-4);
+}
+.pm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+}
+.pm-list li {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+.pm-note {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5em;
+  max-width: 46ch;
+  margin: var(--s-4) auto 0;
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+  text-align: left;
+}
+.pm-lock {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  margin-top: 0.15em;
+  fill: var(--green);
+}
+
+/* Under ~420px the switch's two segments plus the saving badge overflow the
+   viewport and the track clips. Stacking the segments full-width keeps both
+   tappable rather than shrinking the text below a readable size.
+
+   The saving badge is TIGHTENED, not hidden. It is the only thing on the
+   switch that gives a reason to flip it, and mobile is where most of this
+   site's traffic decides — dropping it to save 40px would remove the sell
+   from the screen that needs it most. */
+@media (max-width: 420px) {
+  .billing-switch {
+    display: flex;
+    width: 100%;
+    max-width: 340px;
+  }
+  .billing-switch button {
+    flex: 1;
+    justify-content: center;
+    padding-inline: 0.6rem;
+    gap: 0.35em;
+  }
+  .bs-save {
+    padding: 0.15em 0.45em;
+    font-size: 0.64rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .billing-switch button { transition: none; }
+}

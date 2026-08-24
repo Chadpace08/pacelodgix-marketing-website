@@ -155,17 +155,67 @@
         "offers": [
           {
             "@type": "Offer",
-            "name": "Starter",
+            "name": "Starter — monthly",
             "price": "399",
             "priceCurrency": "PHP",
-            "description": "1-3 properties. The full platform, 2 team members, channel sync every 4 hours, email support."
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "399",
+              "priceCurrency": "PHP",
+              "billingDuration": 1,
+              "billingIncrement": 1,
+              "unitCode": "MON"
+            },
+            "description": "1-3 properties. The full platform, 2 team members, channel sync every 4 hours, email support. 14-day free trial, no card required."
           },
           {
             "@type": "Offer",
-            "name": "Growth",
+            "name": "Starter — yearly",
+            "price": "3990",
+            "priceCurrency": "PHP",
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "3990",
+              "priceCurrency": "PHP",
+              "billingDuration": 12,
+              "billingIncrement": 1,
+              "unitCode": "MON"
+            },
+            "description": "1-3 properties, billed once for twelve months — two months free versus paying monthly."
+          },
+          {
+            "@type": "Offer",
+            "name": "Growth — monthly",
             "price": "999",
             "priceCurrency": "PHP",
-            "description": "4-15 properties. The full platform, 8 team members, hourly channel sync, priority support."
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "999",
+              "priceCurrency": "PHP",
+              "billingDuration": 1,
+              "billingIncrement": 1,
+              "unitCode": "MON"
+            },
+            "description": "4-15 properties. The full platform, 8 team members, hourly channel sync, priority support. 14-day free trial, no card required."
+          },
+          {
+            "@type": "Offer",
+            "name": "Growth — yearly",
+            "price": "9990",
+            "priceCurrency": "PHP",
+            "availability": "https://schema.org/InStock",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "9990",
+              "priceCurrency": "PHP",
+              "billingDuration": 12,
+              "billingIncrement": 1,
+              "unitCode": "MON"
+            },
+            "description": "4-15 properties, billed once for twelve months — two months free versus paying monthly."
           }
         ]
       },
@@ -186,7 +236,12 @@
           {
             "@type": "Question",
             "name": "How much does Pace Lodgix vacation rental software cost?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Plans start at ₱399 per month for 1-3 properties and ₱999 per month for 4-15 properties, with custom pricing for 16 or more. Every plan includes the full platform — there are no feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free trial and no card is required." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Plans start at ₱399 per month for 1-3 properties and ₱999 per month for 4-15 properties, with custom pricing for 16 or more. Paying yearly costs ₱3,990 or ₱9,990 and saves two months. Every plan includes the full platform — there are no feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free trial and no card is required." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I pay for Pace Lodgix, and can I use GCash?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes — GCash, Maya, GrabPay, Visa, Mastercard and online bank transfer are accepted. You pick a plan, choose monthly or yearly billing, and finish on our payment provider's secure hosted checkout page. Card details are entered there and never on the Pace Lodgix website, so they never reach our servers. Subscriptions can be cancelled at any time and the first payment is refundable within 14 days." }
           },
           {
             "@type": "Question",
@@ -463,9 +518,21 @@
       actually run your rentals.
     </p>
     <div class="hero-actions reveal" data-anim="up" data-delay="2">
-      <!-- NOTE: self-serve signup does not provision a tenant yet (CLAUDE.md gotcha 25).
-           Until it does, both buttons must land on the demo request form. Repointing
-           this at /src/pages/login.html before that is fixed = a dead-end signup. -->
+      <!-- NOTE, CORRECTED 2026-08-24: this used to warn that self-serve signup
+           left the user without a tenant and that repointing this button at
+           the app would be a dead-end. THAT IS NO LONGER TRUE — migration 031
+           added trg_auth_user_provision_tenant on auth.users, and the signup
+           form passes business_name, so a self-serve signup now creates the
+           tenant, the owner role and the seeded defaults by itself. Verified
+           against the live database, not just the migration file.
+
+           Both buttons still point at the demo form, but that is now a SALES
+           choice (hands-on onboarding is the promise this page makes), not a
+           technical blocker. Repointing them at app.pacelodgix.com would work.
+           If you do, delete this comment rather than leaving it contradicting
+           the markup. pms-app/CLAUDE.md gotcha 25 already describes the
+           trigger correctly — read it first, because the provisioning gate on
+           `business_name` metadata is load-bearing for team invites. -->
       <a class="btn btn-accent btn-lg" href="#cta">Start Free Today</a>
       <a class="btn btn-glass btn-lg" href="#showcase">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
@@ -1080,17 +1147,38 @@
   <h2 class="reveal" data-anim="up">Vacation rental software, <br>priced for the size you are</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">Every plan includes the full property management system. No feature paywalls — you pay for the number of properties you run.</p>
 
+  <!-- ── Billing cycle switch ──────────────────────────────────────────────
+       Two buttons, not a checkbox: this is one either/or control and
+       aria-pressed announces the state without a label that has to change.
+       Monthly is pressed in the HTML, so the page renders a complete, correct
+       monthly view with payments.js blocked or still loading. -->
+  <div class="billing-switch reveal" data-anim="fade" data-delay="1"
+       id="billingToggle" role="group" aria-label="Billing cycle">
+    <button type="button" data-cycle="monthly" aria-pressed="true">Monthly</button>
+    <button type="button" data-cycle="yearly"  aria-pressed="false">
+      Yearly <span class="bs-save">2 months free</span>
+    </button>
+  </div>
+
   <!-- Tiers are property-count only. Every functional feature ships in every
        plan, so the lede above is literally true: the only things that vary are
        the three that cost real money to serve (team seats, channel-sync
        frequency, support level). If you add a plan here, update the Offer
        JSON-LD in <head> in the same commit — Google reads the prices from
-       there, not from these cards, and stale rich results are worse than none. -->
+       there, not from these cards, and stale rich results are worse than none.
+
+       BOTH prices live in the markup as data-monthly / data-yearly. payments.js
+       swaps the text between them; it never computes a price. That is what
+       keeps these cards, the JSON-LD Offers and the FAQ answer from drifting
+       apart — there is exactly one place each figure is written. -->
   <div class="price-grid">
     <article class="price-card glass reveal" data-anim="left" data-delay="1">
       <h3>Starter</h3>
       <p class="pc-for">For hosts finding their feet</p>
-      <div class="pc-amt"><span>₱</span>399<em>/mo</em></div>
+      <div class="pc-amt" data-monthly="399" data-yearly="3,990">
+        <span class="pc-cur">₱</span><span class="pc-figure">399</span><em class="pc-period">/mo</em>
+      </div>
+      <p class="pc-save" hidden>You save ₱798 a year</p>
       <ul class="ticks">
         <li><strong>1–3 properties</strong></li>
         <li>Everything in Pace Lodgix</li>
@@ -1098,14 +1186,20 @@
         <li>Channel sync every 4 hours</li>
         <li>Email support</li>
       </ul>
-      <a class="btn btn-ghost btn-block" href="#cta">Schedule a Demo</a>
+      <div class="pc-actions">
+        <a class="btn btn-ghost btn-block" data-plan="starter" href="#cta">Start Free Today</a>
+        <a class="pc-alt" href="#cta">or start a 14-day free trial</a>
+      </div>
     </article>
 
     <article class="price-card glass featured reveal" data-anim="up" data-delay="2">
       <span class="pc-badge">Most popular</span>
       <h3>Growth</h3>
       <p class="pc-for">A growing portfolio</p>
-      <div class="pc-amt"><span>₱</span>999<em>/mo</em></div>
+      <div class="pc-amt" data-monthly="999" data-yearly="9,990">
+        <span class="pc-cur">₱</span><span class="pc-figure">999</span><em class="pc-period">/mo</em>
+      </div>
+      <p class="pc-save" hidden>You save ₱1,998 a year</p>
       <ul class="ticks">
         <li><strong>4–15 properties</strong></li>
         <li>Everything in Pace Lodgix</li>
@@ -1113,7 +1207,10 @@
         <li>Hourly channel sync</li>
         <li>Priority support</li>
       </ul>
-      <a class="btn btn-accent btn-block" href="#cta">Start Free Today</a>
+      <div class="pc-actions">
+        <a class="btn btn-accent btn-block" data-plan="growth" href="#cta">Start Free Today</a>
+        <a class="pc-alt" href="#cta">or start a 14-day free trial</a>
+      </div>
     </article>
 
     <article class="price-card glass reveal" data-anim="right" data-delay="3">
@@ -1127,13 +1224,48 @@
         <li>Multiple businesses</li>
         <li>Onboarding, migration &amp; dedicated support</li>
       </ul>
-      <a class="btn btn-ghost btn-block" href="#cta">Talk to us</a>
+      <!-- No data-plan, and deliberately so: Enterprise is quoted per operator,
+           so it must stay a conversation rather than a self-serve checkout at a
+           price nobody has agreed to. payments.js only ever touches [data-plan]. -->
+      <div class="pc-actions">
+        <a class="btn btn-ghost btn-block" href="#cta">Talk to us</a>
+        <a class="pc-alt" href="#cta">We'll quote your portfolio</a>
+      </div>
     </article>
   </div>
 
+  <!-- ── Payment methods ───────────────────────────────────────────────────
+       Hidden until at least one checkout link is configured in payments.js —
+       promising GCash at checkout while every button still routes to the demo
+       form would be a promise the page cannot keep.
+
+       Wordmarks are set as text, not as the providers' logo files. Using the
+       real GCash/Maya/Visa artwork needs each brand's permission and their
+       clear-space rules, and a stale or stretched payment logo reads as a
+       phishing page rather than a trust signal. -->
+  <div class="pay-methods reveal" data-anim="fade" data-delay="3" id="payMethods" hidden>
+    <p class="pm-label">Pay securely with</p>
+    <ul class="pm-list">
+      <li>GCash</li>
+      <li>Maya</li>
+      <li>GrabPay</li>
+      <li>Visa</li>
+      <li>Mastercard</li>
+      <li>Online bank transfer</li>
+    </ul>
+    <p class="pm-note">
+      <svg class="pm-lock" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25V9.75H6A2.25 2.25 0 0 0 3.75 12v8.25A2.25 2.25 0 0 0 6 22.5h12a2.25 2.25 0 0 0 2.25-2.25V12A2.25 2.25 0 0 0 18 9.75h-.75V6.75A5.25 5.25 0 0 0 12 1.5Zm3 8.25H9V6.75a3 3 0 1 1 6 0v3Z"/>
+      </svg>
+      Payment is handled on our provider's secure checkout page. Card details are
+      never entered on this website and never reach our servers.
+    </p>
+  </div>
+
   <p class="price-note reveal" data-anim="fade" data-delay="3">
-    Save two months when you pay yearly — <strong>₱3,990</strong> or <strong>₱9,990</strong> a year.
-    Every plan starts with a 14-day free trial. No card required.
+    Prefer to try first? Every plan starts with a <strong>14-day free trial</strong> —
+    no card required. Cancel a subscription any time; the first payment is refundable
+    within 14 days. See <a href="terms.html#plans">Terms</a>.
   </p>
 </section>
 
@@ -1169,6 +1301,13 @@
         4–15, with custom pricing for 16 or more. Every plan includes the full platform — there are no
         feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free
         trial and no card is required.</p></div>
+    </details>
+    <details>
+      <summary>How do I pay, and can I use GCash?</summary>
+      <div class="faq-body"><p>Yes — GCash, Maya, GrabPay, Visa, Mastercard and online bank transfer.
+        Pick a plan, choose monthly or yearly, and you're taken to our payment provider's secure checkout
+        page to finish. Card details are entered there, never on this website, so they never reach our
+        servers. You can cancel any time, and your first payment is refundable within 14 days.</p></div>
     </details>
     <details>
       <summary>Do I have to stop using Airbnb or Booking.com?</summary>
@@ -1362,6 +1501,12 @@
 
 <script src="nav.js"></script>
 <script src="scroll.js"></script>
+
+<!-- Pricing toggle + Subscribe links. Plain and early on purpose: it touches
+     text and hrefs only, needs no GSAP, and must not sit behind the CDN below —
+     a visitor ready to pay should not wait on an animation library. The four
+     checkout URLs are configured at the top of this file. -->
+<script src="payments.js"></script>
 
 <!-- GSAP enhancement layer. Loaded last and progressively: if either CDN file
      fails to load, parallax.js sees no window.gsap, bails, and scroll.js has

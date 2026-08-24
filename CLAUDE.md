@@ -32,6 +32,21 @@ Deleting the `redesign.css` `<link>` and the `redesign.js` `<script>` returns th
 
 `preview.html` is the old review lane. It is noindex, blocked in `.assetsignore`, and now renders the same design as `index.html` — safe to delete once the redesign is settled.
 
+## Payments — `payments.js`
+
+The Pricing section has a **Monthly / Yearly switch** and **Subscribe** buttons. Setup steps for Chad are in [PAYMENT-SETUP.md](PAYMENT-SETUP.md) (blocked from serving by the `*.md` rule in `.assetsignore`).
+
+**Currently switched OFF.** `PAYMENT_LINKS` at the top of `payments.js` holds four empty strings. While a slot is empty, that plan's button falls back to `#cta`, relabels itself "Start Free Today", and the GCash/Maya strip stays hidden — so the site is safe to deploy unconfigured and never shows a dead button. Filling the four URLs in is the entire activation step; no other file changes.
+
+Invariants:
+- **No card fields on this site, ever.** Every Subscribe button is a plain `<a href>` to the provider's hosted checkout. That is what keeps the site out of PCI scope. Do not add a card form, and never put a secret key in this bundle — the checkout URL is the only payment value that belongs here.
+- **Both prices live in the HTML** as `data-monthly` / `data-yearly` on `.pc-amt`. `payments.js` swaps text between them and never computes a price. Change a price and you must change it in **three** places in the same commit: the card's data attributes, the `Offer` JSON-LD in `<head>` (four Offers — monthly and yearly per plan), and the pricing FAQ answer (both the `<details>` and its JSON-LD twin).
+- **Enterprise has no `data-plan`** and must not get one — it is quoted per operator.
+- **Signup already provisions a tenant.** `trg_auth_user_provision_tenant` on `auth.users` (mig 031) creates the business, the owner role and the seeded defaults when someone signs up with a business name — verified against the live DB. `provision_tenant_for_user()` in the SQL Editor is the *fallback* for a signup that went wrong, not the normal path. See `pms-app/CLAUDE.md` gotcha 25. What is still manual is **reconciling a payment to an account** — nothing tells the app who has paid.
+
+### `.pc-amt` uses `.pc-cur` for the peso sign — not a tag selector
+`styles.css` styled the ₱ as `.pc-amt span`, which was safe only while the peso sign was the sole span in the box. Adding `.pc-figure` (the swappable digits) silently pulled the price down to 1.55rem on every card. Both rules — the base one and the one in the mobile breakpoint — are now keyed to `.pc-cur`. **Keep them keyed to the class.** A bare tag selector inside a component captures whatever markup is added later.
+
 ## Working Agreements
 - Deploy via `npx wrangler deploy` (reads `wrangler.jsonc`). Confirm before deploying — this is the live public site.
 - `.assetsignore` controls what's publicly served — check it before adding any new file at the repo root.

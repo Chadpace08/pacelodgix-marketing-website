@@ -3469,8 +3469,16 @@ main:focus-visible { outline: 0; box-shadow: none; }
    Aligned explicitly instead: baseline, then lifted by a share of its OWN
    size so it hangs from the numeral's cap height. inline-block keeps the
    translate from being ignored on an inline box, and the line box stops
-   growing, so the three cards' amounts land on one baseline. */
-.pc-amt span {
+   growing, so the three cards' amounts land on one baseline.
+
+   TARGETED BY CLASS, NOT BY TAG. This was `.pc-amt span`, which was safe only
+   while the peso sign was the sole span in the box. The billing toggle added a
+   second one (.pc-figure, wrapping the digits so payments.js can swap them),
+   and it inherited this rule — the amount silently rendered at 1.55rem and
+   shifted up, i.e. the price was half size on every card. A tag selector
+   inside a component is a trap for exactly this reason: it captures whatever
+   is added later. Keep this keyed to .pc-cur. */
+.pc-amt .pc-cur {
   display: inline-block;
   /* 1.4rem read as a footnote next to a 3.4rem numeral — the symbol that
      tells you the currency was the least legible thing in the card. 0.45 of
@@ -4246,7 +4254,9 @@ main:focus-visible { outline: 0; box-shadow: none; }
   .pc-badge { font-size: 0.6rem; top: -11px; }
   .pc-for { font-size: 0.8rem; margin-bottom: 0.9rem; }
   .pc-amt { font-size: 2.4rem; margin-bottom: 1.1rem; }
-  .pc-amt span { font-size: 1.15rem; }
+  /* .pc-cur, not `span` — same trap as the base rule above: a bare tag
+     selector here would shrink .pc-figure (the digits) to 1.15rem on mobile. */
+  .pc-amt .pc-cur { font-size: 1.15rem; }
   .pc-amt em { font-size: 0.8rem; }
   .price-card .ticks { margin-bottom: 1.25rem; }
   .price-card .ticks li { font-size: 0.84rem; }
