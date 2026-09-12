@@ -1,8 +1,27 @@
-# How to turn on the Subscribe buttons
+# How the payment buttons work
+
+> **Update (Sep 2026): this is now done, but not the way this file first
+> described.** PayMongo payment links are **one-time charges only**. There is no
+> "make it repeat every month" option, so the plan changed:
+>
+> - **Yearly plans are live.** Two PayMongo links are in `payments.js`
+>   (`starter.yearly`, `growth.yearly`). Each one charges once and covers 12
+>   months. The button reads **"Pay for 1 year"**. When the year is nearly up,
+>   Chad emails the customer their link again.
+> - **Monthly plans are not self-serve.** The monthly button says **"Contact
+>   us"** and goes to the contact form. Monthly billing is arranged by hand.
+> - **Real auto-renewing subscriptions** need PayMongo's separate
+>   *Subscriptions* product, which is a developer integration (cards and Maya
+>   only, GCash by arrangement). That is a future job.
+>
+> The steps below are kept for reference. Ignore anything about "four links" or
+> "set it to repeat" and "Subscribe" button wording.
+
+---
 
 **Right now the payment section is built but switched off.** Every "Subscribe"
 button still says *Start Free Today* and goes to the demo form, and the
-GCash/Maya row is hidden. That is on purpose — a button that takes money before
+GCash/Maya row is hidden. That is on purpose. A button that takes money before
 you can deliver an account is worse than no button. Nothing breaks if you deploy
 today and finish this later.
 

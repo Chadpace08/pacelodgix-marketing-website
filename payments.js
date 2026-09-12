@@ -1,45 +1,46 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   payments.js — the Subscribe path on the pricing section.
+   payments.js — the checkout path on the pricing section.
 
    WHAT THIS DOES
    Two things, and nothing else:
      1. Drives the Monthly / Yearly toggle above the plan cards.
-     2. Points each "Subscribe" button at the right hosted checkout link
-        for the plan + cycle the visitor has selected.
+     2. Points each plan button at the right destination for the plan +
+        cycle the visitor has selected.
 
    WHY IT IS A HOSTED LINK AND NOT A CARD FORM
-   Card numbers never touch this site. Every Subscribe button is an ordinary
+   Card numbers never touch this site. Every checkout button is an ordinary
    <a href> to the payment provider's own hosted checkout page, which is what
-   keeps this site out of PCI scope entirely — there is no card field here to
+   keeps this site out of PCI scope entirely. There is no card field here to
    leak, no card data in this JS, and no secret key in the bundle. The only
    thing this file holds is a public checkout URL, which is safe to publish
    (it is the same URL you would paste into a Messenger reply).
 
-   ══ CONFIGURE ME ══════════════════════════════════════════════════════════
-   Paste your four hosted-checkout URLs below. Until a slot is filled, its
-   Subscribe button silently falls back to the demo form at #cta and relabels
-   itself — so deploying this file BEFORE you have the links is safe and the
-   page never shows a dead button.
+   ══ HOW THIS IS WIRED ════════════════════════════════════════════════════
+   Only the YEARLY slots hold a checkout URL. PayMongo payment links are
+   one-time only, so a yearly link is a single charge that covers 12 months
+   and the button reads "Pay for 1 year".
 
-   Recommended provider: PayMongo (Philippine, settles to a PH bank, and its
-   checkout accepts GCash, Maya, GrabPay and cards). Any provider works —
-   this file only needs the finished URL. See PAYMENT-SETUP.md for the
-   click-by-click steps.
+   MONTHLY is intentionally not self-serve. Its slots are left empty, so the
+   monthly button routes to the contact form at #cta and reads "Contact us".
+   When PayMongo Subscriptions (real recurring billing) is integrated later,
+   fill the monthly slots and revisit the button text in apply().
+
+   See PAYMENT-SETUP.md for the dashboard steps.
    ══════════════════════════════════════════════════════════════════════════ */
 
 const PAYMENT_LINKS = {
   starter: {
-    monthly: '',   // e.g. 'https://pm.link/pacelodgix/starter-monthly'
-    yearly:  '',   // e.g. 'https://pm.link/pacelodgix/starter-yearly'
+    monthly: '',   // not self-serve — see "HOW THIS IS WIRED" above
+    yearly:  'https://pm.link/org-iivtzN68pxjrV8aSPDpwYBYN/NYAnOqk',
   },
   growth: {
     monthly: '',
-    yearly:  '',
+    yearly:  'https://pm.link/org-iivtzN68pxjrV8aSPDpwYBYN/zUMhAWk',
   },
 };
 
 /* Enterprise is deliberately absent. It is quoted per operator, so it must
-   stay a conversation — never a self-serve checkout at a guessed price. */
+   stay a conversation, never a self-serve checkout at a guessed price. */
 
 // ───────────────────────────────────────────────────────────────────────────
 
@@ -70,22 +71,22 @@ const PAYMENT_LINKS = {
       el.hidden = cycle !== 'yearly';
     });
 
-    // Point each Subscribe button at the matching checkout URL.
+    // Point each plan button at the matching destination.
     buttons.forEach((btn) => {
       const url = (PAYMENT_LINKS[btn.dataset.plan] || {})[cycle] || '';
 
       if (url) {
         btn.href = url;
-        btn.textContent = 'Subscribe';
+        btn.textContent = cycle === 'yearly' ? 'Pay for 1 year' : 'Subscribe';
         btn.removeAttribute('data-unconfigured');
         /* rel is set here rather than in the HTML because the fallback below
            is a same-page anchor, where noopener/noreferrer are meaningless. */
         btn.rel = 'noopener';
       } else {
-        /* No link configured yet. Send them down the path that definitely
-           works — the demo form — instead of a button that goes nowhere. */
+        /* No self-serve checkout for this cycle (monthly). Send them to the
+           contact form to arrange billing, not a button that goes nowhere. */
         btn.href = '#cta';
-        btn.textContent = 'Start Free Today';
+        btn.textContent = 'Contact us';
         btn.setAttribute('data-unconfigured', '');
         btn.removeAttribute('rel');
       }

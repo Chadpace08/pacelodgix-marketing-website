@@ -34,9 +34,13 @@ Deleting the `redesign.css` `<link>` and the `redesign.js` `<script>` returns th
 
 ## Payments — `payments.js`
 
-The Pricing section has a **Monthly / Yearly switch** and **Subscribe** buttons. Setup steps for Chad are in [PAYMENT-SETUP.md](PAYMENT-SETUP.md) (blocked from serving by the `*.md` rule in `.assetsignore`).
+The Pricing section has a **Monthly / Yearly switch**. Setup steps are in [PAYMENT-SETUP.md](PAYMENT-SETUP.md) (blocked from serving by the `*.md` rule in `.assetsignore`).
 
-**Currently switched OFF.** `PAYMENT_LINKS` at the top of `payments.js` holds four empty strings. While a slot is empty, that plan's button falls back to `#cta`, relabels itself "Start Free Today", and the GCash/Maya strip stays hidden — so the site is safe to deploy unconfigured and never shows a dead button. Filling the four URLs in is the entire activation step; no other file changes.
+**Live, yearly only.** PayMongo payment links are one-time charges, not subscriptions, so:
+- **Yearly** buttons carry a real PayMongo link (`PAYMENT_LINKS.*.yearly` in `payments.js`), read "Pay for 1 year", and each is a single charge covering 12 months. Renewal is a manual reminder email from Chad.
+- **Monthly** is not self-serve. `PAYMENT_LINKS.*.monthly` is left empty on purpose, so the monthly button routes to `#cta` and reads "Contact us". Do **not** fill these with one-time links.
+- The GCash/Maya strip shows on the yearly view only (keyed off `data-unconfigured`).
+- Real recurring billing needs **PayMongo Subscriptions** (API integration; cards + Maya only, GCash by arrangement). Future build, not done.
 
 Invariants:
 - **No card fields on this site, ever.** Every Subscribe button is a plain `<a href>` to the provider's hosted checkout. That is what keeps the site out of PCI scope. Do not add a card form, and never put a secret key in this bundle — the checkout URL is the only payment value that belongs here.
@@ -51,3 +55,18 @@ Invariants:
 - Deploy via `npx wrangler deploy` (reads `wrangler.jsonc`). Confirm before deploying — this is the live public site.
 - `.assetsignore` controls what's publicly served — check it before adding any new file at the repo root.
 - Anything at the repo root is public by default. Never leave loose screenshots or source artwork there.
+
+## The "Coming Soon: Marketing Center" section is WRONG — do not trust it (Sep 2026)
+`index.html` (around line 1030, `id="marketing-center"`) carries an HTML comment claiming "none of this is built" and shows a "Coming soon" chip cloud (email campaigns, coupon codes, guest promotions, seasonal discounts, customer database, landing pages). **That comment is stale and the section is inaccurate.** Checked directly against `pms-app/CLAUDE.md` (Sep 2026):
+
+| Claimed as "coming soon" | Actual status |
+|---|---|
+| Email campaigns to past guests, segmented, with merge tags | **Live** — `campaigns.html`, full send/results/click-tracking pipeline |
+| Coupon codes | **Live** — migs 041–043 |
+| Guest promotions / seasonal discounts | **Live** — `discounts` table, auto-applied |
+| Customer/guest database | **Live** — `customers.html` |
+| Landing pages / own website | **Live and more advanced than implied** — full Website Builder, 5 themes, published guest site at `stay.pacelodgix.com/<slug>` |
+| Referral campaigns | **Not built.** "Referral" today is only a manual booking-source label, no tracking/reward system exists |
+| Lead capture | **Not built**, no evidence of this anywhere in the app |
+
+**Do not rewrite this section as a "coming soon" teaser again without re-checking `pms-app/CLAUDE.md`'s Current Phase Status first.** Almost the entire marketing suite is real, live, shipped product — it needs a real feature showcase (screenshots from `campaigns.html`, `customers.html`, `stay.html`), not a placeholder chip cloud. `PaceLodgix-Full-Feature-Script.md` (one level up) already documents this correctly in its Sections 10–11 — that file was never wrong, only this website section was.
