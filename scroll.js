@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════════════════════════════════
-   Pace Lodgix — marketing scroll engine
+   Pace Lodgix, marketing scroll engine
 
-   No framework, no build step — the same constraint the app runs under.
+   No framework, no build step, the same constraint the app runs under.
 
    Two rules hold the whole file together:
 
@@ -9,11 +9,11 @@
       (getBoundingClientRect, offsetTop, scrollHeight) is measured once into a
       cache and re-measured only on resize. A layout read inside a scroll
       handler forces a synchronous reflow on every frame, and that is exactly
-      what makes a "cinematic" page stutter on a mid-range Android — which is
+      what makes a "cinematic" page stutter on a mid-range Android, which is
       most of this product's market. (Same discipline as table-scroll.js in
       the app; see CLAUDE.md gotcha 22d.)
 
-   2. THE SCROLL HANDLER ONLY WRITES COMPOSITED PROPERTIES — transform,
+   2. THE SCROLL HANDLER ONLY WRITES COMPOSITED PROPERTIES, transform,
       opacity, and custom properties that feed them. Never width, top, margin.
 
    Entrances (.reveal) are IntersectionObserver, not scroll maths, because the
@@ -103,7 +103,7 @@
     counters.forEach((el) => counterObserver.observe(el));
   }
 
-  /* ── 3. Sticky showcase — which step is active ────────────────────────
+  /* ── 3. Sticky showcase, which step is active ────────────────────────
      Also an observer, not scroll maths. The step whose middle is nearest the
      viewport centre wins; its screenshot cross-fades in. */
   const steps = document.querySelectorAll('.step');
@@ -131,7 +131,7 @@
     steps.forEach((s) => stepObserver.observe(s));
   }
 
-  /* ── 4. Automation flow — light the chain as it's read ────────────────── */
+  /* ── 4. Automation flow, light the chain as it's read ────────────────── */
   const flow = document.getElementById('flow');
   const flowNodes = document.querySelectorAll('.flow-node');
 
@@ -193,7 +193,7 @@
 
   /* The tall screenshots inside the showcase frame are far taller than the
      16:10 window they sit in. Rather than crop them, pan each one as its step
-     is read — so the whole page is visible over the life of the section. */
+     is read, so the whole page is visible over the life of the section. */
   function panShots() {
     if (!scrollyScreen) return;
     const screen = scrollyScreen;
@@ -230,7 +230,7 @@
     if (reduced) return;
 
     /* The hero photo parallax lived here. The hero is a CSS gradient field now
-       (.hero-field) — translating a vertical gradient produces no visible
+       (.hero-field), translating a vertical gradient produces no visible
        movement, so there is nothing left to parallax and the geo.heroH
        measurement went with it. The blobs carry the hero's motion in CSS. */
 
@@ -239,8 +239,8 @@
        present and motion is allowed, and re-implements the three transforms
        below on ScrollTrigger `scrub` for a smoother, scrollbar-tied feel. When
        it does, this file stands down on exactly those three so the two engines
-       never write the same property in the same frame. Everything else here —
-       the progress bar, the showcase pan, the flow spine, every observer — is
+       never write the same property in the same frame. Everything else here,
+       the progress bar, the showcase pan, the flow spine, every observer, is
        still owned by this file in both modes. If GSAP fails to load, the flag
        is never set and the original code below runs unchanged. */
     const gsapOwns = window.__parallax === true;
@@ -261,7 +261,7 @@
       const span = geo.dimH + geo.vh * 0.4;
       const t = clamp((y - start) / span, 0, 1);
       // Hold light at the top, dark at the bottom, and do the blend in the
-      // middle 60% — a straight linear ramp makes the switch feel accidental.
+      // middle 60%, a straight linear ramp makes the switch feel accidental.
       const mix = clamp((t - 0.2) / 0.6, 0, 1);
       dimStage.style.setProperty('--dim-mix', mix.toFixed(3));
     }
@@ -329,7 +329,7 @@
   requestTick();
 
   /* ── 6. Video lightbox ────────────────────────────────────────────────
-     The clips are 1.7–6.8MB. None of them is in the DOM until it's asked for —
+     The clips are 1.7-6.8MB. None of them is in the DOM until it's asked for,
      the grid shows poster images only, and the <video> src is set on click. */
   const lightbox = document.getElementById('lightbox');
   const lightboxVideo = document.getElementById('lightboxVideo');
@@ -339,7 +339,7 @@
     lightboxVideo.src = src;
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
-    lightboxVideo.play().catch(() => { /* autoplay blocked — controls are there */ });
+    lightboxVideo.play().catch(() => { /* autoplay blocked, controls are there */ });
   }
 
   function closeLightbox() {
@@ -371,7 +371,7 @@
     if (e.key === 'Escape' && lightbox && !lightbox.hidden) closeLightbox();
   });
 
-  /* ── 7. FAQ — one open at a time ──────────────────────────────────────── */
+  /* ── 7. FAQ, one open at a time ──────────────────────────────────────── */
   const faqs = document.querySelectorAll('.faq details');
   faqs.forEach((d) => {
     d.addEventListener('toggle', () => {
@@ -382,21 +382,21 @@
     });
   });
 
-  /* ── 8. Hero video — play only while it is actually on screen ──────────
+  /* ── 8. Hero video, play only while it is actually on screen ──────────
      The markup carries preload="none" and no autoplay attribute, so by
      default the browser fetches nothing and paints the poster. Playback is
      opt-in here for three reasons:
 
        • prefers-reduced-motion gets the poster and never the loop. An
          autoplay attribute cannot be conditional; this can.
-       • The ~1.1MB clip stays off the critical path — it is requested only
+       • The ~1.1MB clip stays off the critical path, it is requested only
          once the frame enters the viewport, so it never competes with the
          hero photo or the fonts for the first paint.
        • Pausing once it scrolls away stops a decorative loop from burning
          battery through the whole page. Mid-range Android is the market.
 
      play() rejects when a browser refuses autoplay even muted; that is a
-     non-event — the poster is already the right fallback, so swallow it. */
+     non-event, the poster is already the right fallback, so swallow it. */
   const heroVideo = document.getElementById('heroVideo');
   if (heroVideo && !reduced) {
     new IntersectionObserver(

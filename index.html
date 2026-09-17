@@ -12,7 +12,7 @@
 
        CHANGED WITH THE REDESIGN, and it has to move whenever the hero's top
        colour moves. It was #061009 for the dark hero. Round 3 in redesign.css
-       took the hero back to light, and that field now starts at #FDFBF4 —
+       took the hero back to light, and that field now starts at #FDFBF4,
        see the .hero-field linear-gradient's first stop. Leaving the old dark
        value here would have put a near-black bar above a cream page. -->
   <meta name="theme-color" content="#FDFBF4">
@@ -20,7 +20,7 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="Vacation Rental Property Management Software &amp; PMS | Pace Lodgix">
-  <meta property="og:description" content="A modern property management system for vacation rentals, Airbnb hosts and resorts. Bookings, two-way calendar sync, guest management, payments and financial reports — in one easy-to-use platform.">
+  <meta property="og:description" content="A modern property management system for vacation rentals, Airbnb hosts and resorts. Bookings, two-way calendar sync, guest management, payments and financial reports. All in one platform.">
   <meta property="og:image" content="https://pacelodgix.com/assets/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -33,28 +33,28 @@
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Vacation Rental Property Management Software &amp; PMS | Pace Lodgix">
-  <meta name="twitter:description" content="Manage bookings, calendar sync, guests, payments and financial reports for vacation rentals, Airbnb listings and resorts — in one modern property management platform.">
+  <meta name="twitter:description" content="Manage bookings, calendar sync, guests, payments and financial reports for vacation rentals, Airbnb listings and resorts. All in one modern property management platform.">
   <meta name="twitter:image" content="https://pacelodgix.com/assets/og-image.jpg">
 
   <!-- Favicon is the --primary silhouette, not the white render: browser tabs
        are light in both themes and the white mark vanished against them.
        apple-touch-icon is the reverse (white on --primary-dark) and is flat
-       opaque on purpose — iOS discards alpha and would matte it onto black. -->
+       opaque on purpose, iOS discards alpha and would matte it onto black. -->
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
   <link rel="icon" href="assets/logo-256.png" sizes="256x256">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <!-- Type: Fraunces for display, Inter for everything else.
        The APP uses Manrope for headings; the marketing site deliberately does
-       not. Fraunces is a variable serif with an optical-size axis (opsz 9–144):
+       not. Fraunces is a variable serif with an optical-size axis (opsz 9-144):
        set large, it takes on high contrast and flared, editorial detail that
        reads genuinely premium; set small it would still hold, but it stays
-       display-only on purpose — anything under ~1.4rem is Inter. `opsz` is
+       display-only on purpose, anything under ~1.4rem is Inter. `opsz` is
        driven automatically by font-optical-sizing (see styles.css), so a
        3.7rem H1 and a 1.15rem H3 each get the right cut with no manual
        switching.
 
        SELF-HOSTED. The two preconnects and the fonts.googleapis.com
-       stylesheet that used to sit here are gone — see the type block at the
+       stylesheet that used to sit here are gone, see the type block at the
        top of styles.css for why. Nothing on this page now touches a third
        party before it paints.
 
@@ -63,7 +63,7 @@
        are declared here rather than left to styles.css because a browser only
        discovers an @font-face src AFTER it has downloaded and parsed the
        stylesheet, which is exactly the delay that makes text flash unstyled.
-       `crossorigin` is required on font preloads even for same-origin files —
+       `crossorigin` is required on font preloads even for same-origin files,
        fonts are always fetched in CORS mode, and without it the browser
        fetches the file a second time.
        Only preload what is genuinely above the fold. A fourth preload starts
@@ -72,20 +72,20 @@
   <!-- THE TWO FRAUNCES PRELOADS WERE REMOVED WITH THE REDESIGN, and this is a
        real saving rather than tidying. Round 4 in redesign.css repoints
        --font-display from Fraunces to Inter, and --font-display was the only
-       thing that referenced Fraunces — so the face is now rendered nowhere on
+       thing that referenced Fraunces, so the face is now rendered nowhere on
        the page. A preload is an ORDER, not a hint: the browser fetches the
        file at highest priority whether or not anything uses it, so these two
        were pulling two woff2 files into the critical path to paint nothing,
        and competing with the Inter file that does paint.
 
        The @font-face blocks for Fraunces stay in styles.css untouched. They
-       cost nothing while unused — a face is only downloaded when something
-       renders it — so deleting the one line in redesign.css that repoints
+       cost nothing while unused, a face is only downloaded when something
+       renders it, so deleting the one line in redesign.css that repoints
        --font-display brings the serif back whole, and these two preloads can
        come back with it. -->
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
-  <!-- THE REDESIGN, rounds 3–14. Loads AFTER styles.css and overrides it —
+  <!-- THE REDESIGN, rounds 3-14. Loads AFTER styles.css and overrides it,
        the light hero, the sixteen-card feature mosaic, the type, and the
        removal of the background grids. Delete this one line and the previous
        design returns intact; nothing in styles.css was edited. -->
@@ -155,7 +155,7 @@
         "offers": [
           {
             "@type": "Offer",
-            "name": "Starter — monthly",
+            "name": "Starter monthly",
             "price": "399",
             "priceCurrency": "PHP",
             "availability": "https://schema.org/InStock",
@@ -171,7 +171,7 @@
           },
           {
             "@type": "Offer",
-            "name": "Starter — yearly",
+            "name": "Starter yearly",
             "price": "3990",
             "priceCurrency": "PHP",
             "availability": "https://schema.org/InStock",
@@ -187,7 +187,7 @@
           },
           {
             "@type": "Offer",
-            "name": "Growth — monthly",
+            "name": "Growth monthly",
             "price": "999",
             "priceCurrency": "PHP",
             "availability": "https://schema.org/InStock",
@@ -203,7 +203,7 @@
           },
           {
             "@type": "Offer",
-            "name": "Growth — yearly",
+            "name": "Growth yearly",
             "price": "9990",
             "priceCurrency": "PHP",
             "availability": "https://schema.org/InStock",
@@ -226,7 +226,7 @@
           {
             "@type": "Question",
             "name": "What is a property management system (PMS)?",
-            "acceptedAnswer": { "@type": "Answer", "text": "A property management system (PMS) is software that runs the day-to-day operations of a rental business from one place — reservations, the booking calendar, guest records, invoices, payments and financial reports. For vacation rentals and short-term rentals, a PMS like Pace Lodgix replaces the spreadsheets and message threads most hosts start out with, so availability and pricing stay correct across every booking platform." }
+            "acceptedAnswer": { "@type": "Answer", "text": "A property management system (PMS) is software that runs the day-to-day operations of a rental business from one place: reservations, the booking calendar, guest records, invoices, payments and financial reports. For vacation rentals and short-term rentals, a PMS like Pace Lodgix replaces the spreadsheets and message threads most hosts start out with, so availability and pricing stay correct across every booking platform." }
           },
           {
             "@type": "Question",
@@ -236,7 +236,7 @@
           {
             "@type": "Question",
             "name": "How much does Pace Lodgix vacation rental software cost?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Plans start at ₱399 per month for 1-3 properties and ₱999 per month for 4-15 properties, with custom pricing for 16 or more. Paying yearly costs ₱3,990 or ₱9,990 and saves two months. Every plan includes the full platform — there are no feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free trial and no card is required." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Plans start at ₱399 per month for 1-3 properties and ₱999 per month for 4-15 properties, with custom pricing for 16 or more. Paying yearly costs ₱3,990 or ₱9,990 and saves two months. Every plan includes the full platform, with no feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free trial and no card is required." }
           },
           {
             "@type": "Question",
@@ -246,7 +246,7 @@
           {
             "@type": "Question",
             "name": "Do I have to stop using Airbnb or Booking.com?",
-            "acceptedAnswer": { "@type": "Answer", "text": "No. Pace Lodgix works as a channel manager that sits above them. Connect each platform's calendar feed and availability syncs both ways — a booking on Airbnb blocks the dates here, and a direct booking here blocks them there." }
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Pace Lodgix works as a channel manager that sits above them. Connect each platform's calendar feed and availability syncs both ways. A booking on Airbnb blocks the dates here, and a direct booking here blocks them there." }
           },
           {
             "@type": "Question",
@@ -266,12 +266,12 @@
           {
             "@type": "Question",
             "name": "Is my data separated from other businesses?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes — enforced in the database itself, not just the app. Every row is scoped to your business and the security policy is checked on every single query." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes, enforced in the database itself, not only in the app. Every row is scoped to your business and the security policy is checked on every single query." }
           },
           {
             "@type": "Question",
             "name": "What does onboarding look like?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Hands-on. We set your properties, rates and channels up with you, so the first thing you see is your own business — not an empty screen." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Hands-on. We set your properties, rates and channels up with you, so the first thing you see is your own business, not an empty screen." }
           }
         ]
       }
@@ -287,7 +287,7 @@
 
 <!-- ═══════════════════════════ BETA NOTICE ═══════════════════════════
      Placed after the skip link so the skip link stays the first focusable
-     thing on the page — a visitor tabbing in should still be able to jump
+     thing on the page, a visitor tabbing in should still be able to jump
      past the chrome, not land on a dismiss button.
 
      Two versions of the sentence, one shown at a time by CSS. See the note
@@ -295,8 +295,8 @@
 <div class="beta-bar" id="betaBar" role="region" aria-label="Product status">
   <span class="beta-chip">Beta</span>
   <p class="beta-text">
-    <span class="beta-full">Pace Lodgix is live and in active beta — early users get direct support from the founder.</span>
-    <span class="beta-short">Live in beta — early users get founder support.</span>
+    <span class="beta-full">Pace Lodgix is live and in active beta. Early users get direct support from the founder.</span>
+    <span class="beta-short">Live in beta. Founder support included.</span>
   </p>
   <a class="beta-cta" href="#cta">Talk to us <span aria-hidden="true">&rarr;</span></a>
   <button class="beta-close" id="betaClose" type="button" aria-label="Dismiss beta notice">&times;</button>
@@ -307,12 +307,12 @@
 
 <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
 <header class="nav" id="nav">
-  <!-- Brand lockup. Each asset ships twice — white for the transparent bar
+  <!-- Brand lockup. Each asset ships twice, white for the transparent bar
        over the dark hero, --primary for the cream bar once stuck. The pair is
        cross-faded in CSS; see "Brand lockup" in styles.css. The images are
        alt="" because the link carries the accessible name, otherwise the
        wordmark would announce "Pace Lodgix" a second time. -->
-  <a class="nav-brand" href="#top" aria-label="Pace Lodgix — home">
+  <a class="nav-brand" href="#top" aria-label="Pace Lodgix, home">
     <span class="brand-swap">
       <img class="brand-mark brand-on-dark"  src="assets/logo-mark-white.png"  alt="" width="50" height="34" decoding="async">
       <img class="brand-mark brand-on-light" src="assets/logo-mark-forest.png" alt="" width="50" height="34" decoding="async">
@@ -333,7 +333,7 @@
   <a class="btn btn-accent nav-cta" href="#cta">Schedule a Demo</a>
 
   <!-- ── Mobile menu ────────────────────────────────────────────────────
-       Below 900px .nav-links is display:none, and it had no replacement —
+       Below 900px .nav-links is display:none, and it had no replacement,
        the only way back to Pricing or the FAQ from halfway down a 12,000px
        phone page was to scroll to the top and hunt. This button and the
        panel under it are that replacement.
@@ -357,7 +357,7 @@
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <!-- Sign in moves in here below 900px rather than staying in the bar —
+    <!-- Sign in moves in here below 900px rather than staying in the bar,
          the bar can hold the brand, the CTA and the burger on a 320px
          screen, but not a fourth item. -->
     <a class="nav-panel-signin" href="https://app.pacelodgix.com/">Sign in</a>
@@ -373,10 +373,10 @@
 <section class="hero">
   <!-- The hero field. This used to be a 2400x1600 resort photo under an 82%
        scrim; the scrim was doing nearly all the visual work, and the photo made
-       the page read as a resort brochure rather than software — the deleted
+       the page read as a resort brochure rather than software, the deleted
        rule had a `saturate(0.82) brightness(0.9)` on it that said exactly
        that, which was the tell it never belonged here. It's now
-       the gradient the scrim was effectively rendering anyway — same look for
+       the gradient the scrim was effectively rendering anyway, same look for
        the type, one less image on the critical path, and the product shot below
        finally wins the eye.
 
@@ -396,12 +396,12 @@
          span` rule in styles.css. x is measured from the centre of the page
          (negative = left of centre), y from the top of the hero. Because the
          lines and the boxes are both sized from one --cell variable, a
-         square lands exactly inside a cell at every screen width — never
+         square lands exactly inside a cell at every screen width, never
          straddling a line. See the alignment note on .hero-grid before
          changing either.
 
          --w is how many cells WIDE a block is (default 1). The reference this
-         is modelled on is not a wall of identical squares — a handful are
+         is modelled on is not a wall of identical squares, a handful are
          double-width bars, and that is what stops the grid reading as a
          chessboard. Roughly one in five. Two blocks must never overlap: a
          --w:2 block at x also occupies x+1, so nothing else may sit there.
@@ -413,7 +413,7 @@
          breathing and start blinking.
 
          COLOUR. Left alone, a block is white at low alpha. Two carry emerald.
-         Four are `class="sq-gold"` — brighter, ringed and given a soft halo,
+         Four are `class="sq-gold"`, brighter, ringed and given a soft halo,
          so they are the one thing on this field that genuinely catches the
          eye. Four is the budget: gold is the rare colour in this brand (see
          the --gold note in the palette) and a fifth turns the wall into
@@ -421,7 +421,7 @@
          purpose, because those are the only ones still on screen on a phone.
 
          Blocks past about four columns from centre fall off the sides of a
-         phone. Intended — they are decoration and the layer is clipped. -->
+         phone. Intended, they are decoration and the layer is clipped. -->
     <div class="hero-grid" aria-hidden="true">
       <!-- row 0 -->
       <span style="--x:-9;  --y:0; --w:2; --d:0s;   --t:5.5s"></span>
@@ -475,7 +475,7 @@
     <!-- Green only. The gold glow that used to sit in here is off: gold as a
          large soft WASH over the dark green field mixes to a murky olive
          rather than reading as warm light. Gold works on this field only as
-         small, crisp, high-alpha shapes — which is exactly what the .sq-gold
+         small, crisp, high-alpha shapes, which is exactly what the .sq-gold
          squares above are. The .blob-1 / .blob-3 gold rules still exist for
          the final CTA section, which sits on a flat dark ground. -->
     <div class="blobs">
@@ -489,14 +489,14 @@
       <!-- No hard <br>. text-wrap: balance (set on h1 globally) splits this into
            even lines and adapts as it narrows.
 
-           SHORTENED from ~104 characters to ~52 — and the SEO is intact, which
+           SHORTENED from ~104 characters to ~52, and the SEO is intact, which
            is the only reason it was allowed to shrink. The old headline carried
            every primary keyword itself and paid for it in length: three lines
            of serif at a reduced clamp, which is why .hero-copy h1 in styles.css
            had to be stepped down to clamp(2.1rem, 4.2vw, 3.4rem). redesign.css
            now raises that clamp back up, because a short headline can be big.
 
-           WHERE THE KEYWORDS WENT — none were dropped, they moved one element
+           WHERE THE KEYWORDS WENT, none were dropped, they moved one element
            down. "Vacation rental management" stays in the h1. "Airbnb hosts"
            and "property managers" now open the lede, which sits directly under
            the h1 and inside the same above-the-fold block; a crawler reads both.
@@ -511,16 +511,16 @@
     </h1>
     <!-- The lede used to open "Built for Airbnb hosts and property managers."
          That sentence is now the second half of the h1 directly above, so it
-         has been cut from here — repeating it verbatim two elements apart reads
+         has been cut from here, repeating it verbatim two elements apart reads
          as a mistake and dilutes the keyword rather than doubling it. -->
     <p class="lede reveal" data-anim="up" data-delay="1">
-      Run bookings, guests, payments, calendars and reports from one place — the way you
+      Run bookings, guests, payments, calendars and reports from one place. The way you
       actually run your rentals.
     </p>
     <div class="hero-actions reveal" data-anim="up" data-delay="2">
       <!-- NOTE, CORRECTED 2026-08-24: this used to warn that self-serve signup
            left the user without a tenant and that repointing this button at
-           the app would be a dead-end. THAT IS NO LONGER TRUE — migration 031
+           the app would be a dead-end. THAT IS NO LONGER TRUE, migration 031
            added trg_auth_user_provision_tenant on auth.users, and the signup
            form passes business_name, so a self-serve signup now creates the
            tenant, the owner role and the seeded defaults by itself. Verified
@@ -531,7 +531,7 @@
            technical blocker. Repointing them at app.pacelodgix.com would work.
            If you do, delete this comment rather than leaving it contradicting
            the markup. pms-app/CLAUDE.md gotcha 25 already describes the
-           trigger correctly — read it first, because the provisioning gate on
+           trigger correctly, read it first, because the provisioning gate on
            `business_name` metadata is load-bearing for team invites. -->
       <a class="btn btn-accent btn-lg" href="#cta">Start Free Today</a>
       <a class="btn btn-glass btn-lg" href="#showcase">
@@ -544,7 +544,7 @@
     </p>
 
     <!-- Credibility strip.
-         HONESTY CONSTRAINT — read before editing. Every line here is a claim
+         HONESTY CONSTRAINT, read before editing. Every line here is a claim
          about what the SOFTWARE does, and each one is verifiable against a
          feature that actually ships (iCal two-way sync, the per-tenant booking
          page, the onboarding promise in #faq). There are deliberately NO
@@ -553,7 +553,7 @@
          will never come back.
 
          When there ARE real customers, this is the right slot to swap in the
-         stronger version — a count, a named testimonial, or a logo row. Swap
+         stronger version, a count, a named testimonial, or a logo row. Swap
          it; don't add invented numbers alongside it. -->
     <!-- The ticks are the existing inline SVGs, not ✅ emoji: the list already
          renders a check per item, so an emoji would double it up and screen
@@ -568,7 +568,7 @@
       </li>
       <li>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-        Take direct bookings on your own website — with no platform commission
+        Take direct bookings on your own website, with no platform commission
       </li>
       <li>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
@@ -582,7 +582,7 @@
     <div class="frame frame-browser float-slow" id="heroFrame">
       <div class="frame-bar"><span></span><span></span><span></span></div>
       <!-- A real 10.8s screen recording, not a still: the clip starts in Light,
-           switches the whole app to Night Dim, holds, and switches back — so
+           switches the whole app to Night Dim, holds, and switches back, so
            the last frame matches the first and it loops with no visible cut.
            preload="none" keeps it off the critical path; the poster paints
            immediately and scroll.js starts playback once the frame is in view
@@ -652,7 +652,7 @@
   <!-- Texture + motion layer. A section can only carry two pseudo-elements and
        .problem already spends both (::before = bloom, ::after = dot grid), so
        the grain and the drifting orbs need a real element. Shared with
-       .counters — see .tex in styles.css. -->
+       .counters, see .tex in styles.css. -->
   <div class="tex" aria-hidden="true">
     <span class="tex-orb tex-orb-1"></span>
     <span class="tex-orb tex-orb-2"></span>
@@ -660,9 +660,9 @@
   </div>
 
   <p class="eyebrow center reveal" data-anim="fade">Why hosts switch to a PMS</p>
-  <h2 class="reveal" data-anim="up">You already have a system. <br>It's just held together by hand.</h2>
+  <h2 class="reveal" data-anim="up">You already have a system. <br>It is held together by hand.</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Most owners start with spreadsheets and chat threads. It works — until the second property.
+    Most owners start with spreadsheets and chat threads. It works, until the second property.
     Then come the double bookings, the missed payments and the guest details no one can find.
   </p>
   <div class="cards">
@@ -673,7 +673,7 @@
     </article>
     <!-- The middle card is the dark one. Three identical white cards in a row
          give the eye nowhere to land; inverting the centre one makes the row a
-         composition instead of a list. It is also the right card to pick —
+         composition instead of a list. It is also the right card to pick,
          "the spreadsheet" is the single thing this whole product replaces, and
          it is the phrase the headline above used to carry.
          Position-dependent: if these three cards are ever reordered, move
@@ -691,7 +691,7 @@
   </div>
 </section>
 
-<!-- ANALYTICS COUNTERS ("The numbers, without the math") removed on request —
+<!-- ANALYTICS COUNTERS ("The numbers, without the math") removed on request,
      the sample-month stat band (₱184,250 / 82% / 147 / 3.4). The Problem
      section above now runs straight into the Features chapter; both meet on
      light ground, so the gradient seam still blends. The .counters/.counter
@@ -703,35 +703,35 @@
   <p class="eyebrow center reveal" data-anim="fade">Everything in one place</p>
   <h2 class="reveal" data-anim="up">Sixteen jobs. <br>One property management platform.</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Bookings, channel sync, guest management, invoicing and financial reports — your whole
+    Bookings, channel sync, guest management, invoicing and financial reports. Your whole
     short-term rental operation, without a single spreadsheet.
   </p>
 
-  <!-- ══ THE FEATURE BENTO — sixteen jobs, grouped into four ══════════════════
+  <!-- ══ THE FEATURE BENTO, sixteen jobs, grouped into four ══════════════════
        WHAT CHANGED, AND WHY. Sixteen equal cards made sixteen equal claims, so
-       the eye had nowhere to land and no order to read them in — every card
+       the eye had nowhere to land and no order to read them in, every card
        competed with every other one for the same attention. These are the SAME
        sixteen jobs, in the same words. What is new is that they now sit inside
-       FOUR named product areas — Bookings, Guests & Properties, Money, and
-       Insight & Control — so a reader takes in four ideas first and the detail
+       FOUR named product areas, Bookings, Guests & Properties, Money, and
+       Insight & Control, so a reader takes in four ideas first and the detail
        second. Grouping is the hierarchy the flat grid never had.
 
        THE SHAPE is an editorial bento, not a card grid: four generous panes
        floating over the same light-to-dark field as before. Each pane carries
        its area name large, a one-line descriptor under it, then its four jobs
-       as light icon rows — no box drawn around each job, because a box around
+       as light icon rows, no box drawn around each job, because a box around
        every one is exactly what made the old grid read as a table. Depth comes
        from the four panes lifting off the field; hierarchy comes from size
        (area name > job title > line of copy); the air comes from the padding.
 
        THE MOTION is deliberately cheap and never touches the scroll. Every pane
        and every row rides the .reveal IntersectionObserver that scroll.js
-       already runs — one observer, opacity and transform only, fires once and
+       already runs, one observer, opacity and transform only, fires once and
        unhooks. There is NO scroll-scrubbed tween here any more; the old column
        drift is gone, which is the single biggest thing that could have cost a
        frame while scrolling. The only live pointer response is the soft light
        in the field behind the panes (redesign.js). Hover on a job warms its
-       icon a touch — a small, honest signal, not a lift that would pretend the
+       icon a touch, a small, honest signal, not a lift that would pretend the
        card is a link it is not. -->
   <div class="bento" id="jobsGrid">
     <div class="jobs-light" aria-hidden="true"></div>
@@ -817,7 +817,7 @@
           </span>
           <div class="jc-text">
             <h4>Guest Emails</h4>
-            <p>Confirmations, reminders and thank-yous send themselves — in your words, with your branding.</p>
+            <p>Confirmations, reminders and thank-yous send themselves, in your words, with your branding.</p>
           </div>
         </div>
         <div class="jc reveal" data-anim="fade" data-delay="4">
@@ -860,7 +860,7 @@
         </div>
         <div class="jc reveal" data-anim="fade" data-delay="3">
           <span class="jc-icon" aria-hidden="true">
-            <!-- A wallet with a card slot cut into its right edge — the detail
+            <!-- A wallet with a card slot cut into its right edge, the detail
                  that makes it a wallet, not another payment card. -->
             <svg viewBox="0 0 24 24"><path d="M2.8 8.2A2.6 2.6 0 0 1 5.4 5.6h11.8a1 1 0 0 1 1 1v1.6"/><rect x="2.8" y="8.2" width="18.4" height="11.4" rx="2.6"/><path d="M21.2 12.3h-3.5a1.85 1.85 0 0 0 0 3.7h3.5"/></svg>
           </span>
@@ -875,7 +875,7 @@
           </span>
           <div class="jc-text">
             <h4>Income Dashboard</h4>
-            <p>Today's money, this month's money, and where it came from — without opening a spreadsheet.</p>
+            <p>Today's money, this month's money, and where it came from. No spreadsheet needed.</p>
           </div>
         </div>
       </div>
@@ -913,7 +913,7 @@
           </span>
           <div class="jc-text">
             <h4>Team &amp; Access</h4>
-            <p>Add your housekeeper, your front desk and your co-owner — each one seeing only what they should.</p>
+            <p>Add your housekeeper, your front desk and your co-owner. Each one sees only what they should.</p>
           </div>
         </div>
         <div class="jc reveal" data-anim="fade" data-delay="4">
@@ -930,11 +930,11 @@
   </div>
 </section>
 
-<!-- ═══════════ INTERACTIVE SHOWCASE — sticky, dashboard swaps ═══════════ -->
+<!-- ═══════════ INTERACTIVE SHOWCASE, sticky, dashboard swaps ═══════════ -->
 <section class="section scrolly" id="showcase">
   <!-- Ambient field: a dot texture plus three slow-drifting colour clouds, so
        the generous empty space around the sticky mockup reads as depth rather
-       than as a blank cream slab. Purely decorative — aria-hidden, no pointer
+       than as a blank cream slab. Purely decorative, aria-hidden, no pointer
        events, and every layer is a background-image (no blur filter), so the
        drift is transform-only. -->
   <div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -942,47 +942,47 @@
   <div class="scrolly-inner">
     <div class="scrolly-steps">
       <div class="step" data-shot="dashboard">
-        <span class="step-num">01 — Dashboard</span>
+        <span class="step-num">01 · Dashboard</span>
         <h3>Your property management dashboard</h3>
-        <p>Revenue, occupancy and average nightly rate — for the month you're in right now.
+        <p>Revenue, occupancy and average nightly rate, for the month you're in right now.
            Nothing to add up yourself.</p>
       </div>
       <div class="step" data-shot="bookings">
-        <span class="step-num">02 — Reservations</span>
+        <span class="step-num">02 · Reservations</span>
         <h3>The price works itself out</h3>
         <p>Pick the unit, enter the dates. Weekday and weekend rates, the cleaning fee,
-           extra guests, the long-stay discount, platform commission — all added in
-           automatically, just the way you'd do it by hand.</p>
+           extra guests, the long-stay discount, platform commission. All added in
+           automatically, the way you would do it by hand.</p>
       </div>
       <div class="step" data-shot="calendar">
-        <span class="step-num">03 — Calendar</span>
+        <span class="step-num">03 · Calendar</span>
         <h3>Every unit, one month, at a glance</h3>
-        <p>Block a room for repairs or cleaning in two clicks — and it stops taking bookings
+        <p>Block a room for repairs or cleaning in two clicks. It stops taking bookings
            straight away, on every channel you've connected.</p>
       </div>
       <div class="step" data-shot="book">
-        <span class="step-num">04 — Booking form</span>
+        <span class="step-num">04 · Booking form</span>
         <h3>Your own direct booking website</h3>
-        <p>Send a guest your link. They pick dates, see the live price and pay a deposit —
+        <p>Send a guest your link. They pick dates, see the live price and pay a deposit,
            on your own page, with your name on it, and no platform commission taken out.</p>
       </div>
       <div class="step" data-shot="ledger">
-        <span class="step-num">05 — Income &amp; expenses</span>
-        <h3>At month end, you just read a number</h3>
-        <p>Income, expenses and every booking-related payment are recorded in one place, so you
-           get the full financial picture without reconciling anything by hand. Export it all to
-           Excel whenever you need it — for a closer look, or to hand to your accountant.</p>
+        <span class="step-num">05 · Income &amp; expenses</span>
+        <h3>At month end, you read one number</h3>
+        <p>Income, expenses and every booking-related payment land in one place, so the full
+           financial picture is there without reconciling anything by hand. Export to Excel
+           whenever you need it, for a closer look or for your accountant.</p>
       </div>
       <div class="step" data-shot="properties">
-        <span class="step-num">06 — Properties</span>
+        <span class="step-num">06 · Properties</span>
         <h3>Price the way you actually price</h3>
         <p>Flat nightly rates, or rates that step up with the guest count. Weekday, weekend,
-           holiday and special pricing — set per unit.</p>
+           holiday and special pricing, set per unit.</p>
       </div>
       <div class="step" data-shot="activity">
-        <span class="step-num">07 — Activity log</span>
+        <span class="step-num">07 · Activity log</span>
         <h3>Everything is written down</h3>
-        <p>Who did what, and when. Every change your team makes leaves a trail —
+        <p>Who did what, and when. Every change your team makes leaves a trail,
            so nothing is ever a guess.</p>
       </div>
     </div>
@@ -1005,15 +1005,15 @@
 </section>
 
 <!-- ══════════════════════ AUTOMATION WORKFLOW ══════════════════════ -->
-<!-- The spec called this "AI Automation". It is not AI — it's a deterministic
+<!-- The spec called this "AI Automation". It is not AI, it's a deterministic
      rules engine (see CLAUDE.md gotcha 13: PaceBot is a keyword matcher, and
      nothing else in the app calls a model). Named honestly on purpose. -->
 <section class="section dark automation" id="automation">
   <p class="eyebrow center reveal" data-anim="fade">Automation</p>
   <h2 class="reveal" data-anim="up">One booking. Seven things <br>you no longer do.</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Guest emails, start to finish. A booking lands and the whole chain runs itself —
-    every message on time, in your words, with your branding.
+    Guest emails, start to finish. A booking lands and the whole chain runs itself.
+    Every message on time, in your words, with your branding.
   </p>
 
   <ol class="flow" id="flow">
@@ -1049,7 +1049,7 @@
       <div class="frame frame-browser">
         <div class="frame-bar"><span></span><span></span><span></span></div>
         <div class="frame-screen">
-          <img src="assets/shots/marketing-guest-list-desktop.webp" alt="Guest list in PaceLodgix" width="1440" height="900" loading="lazy">
+          <img src="assets/shots/marketing-guest-list-desktop.webp" alt="Guest list in Pace Lodgix" width="1440" height="900" loading="lazy">
         </div>
       </div>
     </article>
@@ -1118,7 +1118,7 @@
       <p class="eyebrow reveal" data-anim="fade">On the go</p>
       <h2 class="reveal" data-anim="up">Manage your rentals<br> from your phone.</h2>
       <p class="lede reveal" data-anim="up" data-delay="1">
-        Nothing to install — the whole platform, built to work on the phone in your hand.
+        Nothing to install. The whole platform, built to work on the phone in your hand.
         Same data, same prices, same calendar.
       </p>
       <ul class="ticks reveal" data-anim="up" data-delay="2">
@@ -1157,7 +1157,7 @@
     <h2 class="reveal" data-anim="up">Because you're doing this<br> at eleven at night.</h2>
     <p class="lede center reveal" data-anim="fade" data-delay="1">
       Light, Night Dim, or match your device. Every page, chart and calendar chip
-      switches instantly — nothing to reload.
+      switches instantly. Nothing to reload.
     </p>
   </div>
   <div class="dim-stage" id="dimStage">
@@ -1168,7 +1168,7 @@
         <img class="dim-dark" src="assets/shots/dashboard-dim-desktop.webp" alt="Dashboard in Night Dim" width="1569" height="1002" loading="lazy">
       </div>
     </div>
-    <p class="dim-hint">Keep scrolling ↓</p>
+    <p class="dim-hint">Scroll to compare</p>
   </div>
 </section>
 
@@ -1180,7 +1180,7 @@
 
   <!-- Two responsive walkthroughs. Each card serves the full-length desktop
        "batch" recording on wide screens and its shorter mobile-captured
-       counterpart on phones — the lightbox picks by viewport at click time
+       counterpart on phones, the lightbox picks by viewport at click time
        (data-src vs data-src-mobile in scroll.js). Nothing loads until clicked. -->
   <div class="video-grid video-grid--duo">
     <figure class="video-card reveal" data-anim="scale">
@@ -1188,7 +1188,7 @@
               data-src="assets/video/batch-1-the-command-center.mp4"
               data-src-mobile="assets/video/mobile-booking-ledger-dashboard-walkthrough.mp4"
               style="background-image:url('assets/video/batch-1-the-command-center-poster.webp')"
-              aria-label="Play: the command center — dashboard, bookings and ledger">
+              aria-label="Play: the command center. Dashboard, bookings and ledger">
         <span class="play-icon"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
       </button>
       <figcaption>The command center</figcaption>
@@ -1199,7 +1199,7 @@
               data-src="assets/video/batch-2-a-day-of-operations.mp4"
               data-src-mobile="assets/video/mobile-automation-and-invoicing.mp4"
               style="background-image:url('assets/video/batch-2-a-day-of-operations-poster.webp')"
-              aria-label="Play: a day of operations — automation and invoicing">
+              aria-label="Play: a day of operations. Automation and invoicing">
         <span class="play-icon"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
       </button>
       <figcaption>A day of operations</figcaption>
@@ -1211,7 +1211,7 @@
 <section class="section pricing" id="pricing">
   <p class="eyebrow center reveal" data-anim="fade">Pricing</p>
   <h2 class="reveal" data-anim="up">Vacation rental software, <br>priced for the size you are</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">Every plan includes the full property management system. No feature paywalls — you pay for the number of properties you run.</p>
+  <p class="lede center reveal" data-anim="fade" data-delay="1">Every plan includes the full property management system. No feature paywalls. You pay for the number of properties you run.</p>
 
   <!-- ── Billing cycle switch ──────────────────────────────────────────────
        Two buttons, not a checkbox: this is one either/or control and
@@ -1230,13 +1230,13 @@
        plan, so the lede above is literally true: the only things that vary are
        the three that cost real money to serve (team seats, channel-sync
        frequency, support level). If you add a plan here, update the Offer
-       JSON-LD in <head> in the same commit — Google reads the prices from
+       JSON-LD in <head> in the same commit, Google reads the prices from
        there, not from these cards, and stale rich results are worse than none.
 
        BOTH prices live in the markup as data-monthly / data-yearly. payments.js
        swaps the text between them; it never computes a price. That is what
        keeps these cards, the JSON-LD Offers and the FAQ answer from drifting
-       apart — there is exactly one place each figure is written. -->
+       apart, there is exactly one place each figure is written. -->
   <div class="price-grid">
     <article class="price-card glass reveal" data-anim="left" data-delay="1">
       <h3>Starter</h3>
@@ -1246,7 +1246,7 @@
       </div>
       <p class="pc-save" hidden>You save ₱798 a year</p>
       <ul class="ticks">
-        <li><strong>1–3 properties</strong></li>
+        <li><strong>1-3 properties</strong></li>
         <li>Everything in Pace Lodgix</li>
         <li>2 team members</li>
         <li>Channel sync every 4 hours</li>
@@ -1267,7 +1267,7 @@
       </div>
       <p class="pc-save" hidden>You save ₱1,998 a year</p>
       <ul class="ticks">
-        <li><strong>4–15 properties</strong></li>
+        <li><strong>4-15 properties</strong></li>
         <li>Everything in Pace Lodgix</li>
         <li>8 team members</li>
         <li>Hourly channel sync</li>
@@ -1301,7 +1301,7 @@
   </div>
 
   <!-- ── Payment methods ───────────────────────────────────────────────────
-       Hidden until at least one checkout link is configured in payments.js —
+       Hidden until at least one checkout link is configured in payments.js,
        promising GCash at checkout while every button still routes to the demo
        form would be a promise the page cannot keep.
 
@@ -1343,14 +1343,14 @@
 
   <!-- Answer-first on purpose: each answer opens with the direct response, then
        explains. That is what AI search engines lift as a citation, and it is
-       what the FAQPage JSON-LD in <head> mirrors. Keep the two in sync — if you
+       what the FAQPage JSON-LD in <head> mirrors. Keep the two in sync, if you
        add, remove or reword a question here, do the same up there in the same
        commit. -->
   <div class="faq-list reveal" data-anim="up" data-delay="1">
     <details>
       <summary>What is a property management system (PMS)?</summary>
       <div class="faq-body"><p>A property management system is software that runs the day-to-day operations
-        of a rental business from one place — reservations, the booking calendar, guest records, invoices,
+        of a rental business from one place: reservations, the booking calendar, guest records, invoices,
         payments and financial reports. For vacation rentals and short-term rentals, a PMS like Pace Lodgix
         replaces the spreadsheets and message threads most hosts start out with, so availability and pricing
         stay correct across every booking platform.</p></div>
@@ -1360,12 +1360,12 @@
       <div class="faq-body"><p>Yes. Pace Lodgix is vacation rental software built for Airbnb hosts,
         short-term rental operators, staycations, villas, apartments and beach resorts. It works alongside
         the platforms you already list on, syncing your calendar both ways so the same dates are never sold
-        twice — and gives you a commission-free direct booking page of your own.</p></div>
+        twice, and gives you a commission-free direct booking page of your own.</p></div>
     </details>
     <details>
       <summary>How much does Pace Lodgix vacation rental software cost?</summary>
-      <div class="faq-body"><p>Plans start at ₱399 a month for 1–3 properties and ₱999 a month for
-        4–15, with custom pricing for 16 or more. Every plan includes the full platform — there are no
+      <div class="faq-body"><p>Plans start at ₱399 a month for 1-3 properties and ₱999 a month for
+        4-15, with custom pricing for 16 or more. Every plan includes the full platform, with no
         feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free
         trial and no card is required.</p></div>
     </details>
@@ -1380,12 +1380,12 @@
     <details>
       <summary>Do I have to stop using Airbnb or Booking.com?</summary>
       <div class="faq-body"><p>No. Pace Lodgix works as a channel manager that sits above them. Connect each
-        platform's calendar feed and availability syncs both ways — a booking on Airbnb blocks the dates
+        platform's calendar feed and availability syncs both ways. A booking on Airbnb blocks the dates
         here, and a direct booking here blocks them there.</p></div>
     </details>
     <details>
       <summary>Can guests book directly, without a platform commission?</summary>
-      <div class="faq-body"><p>Yes — that's the point of your booking page. Every business gets its own link.
+      <div class="faq-body"><p>Yes. That is the point of your booking page. Every business gets its own link.
         A guest picks dates, sees the live price, and submits. It arrives as <em>Pending</em> and nothing is
         confirmed until you approve it.</p></div>
     </details>
@@ -1402,13 +1402,13 @@
     </details>
     <details>
       <summary>Is my data separated from other businesses?</summary>
-      <div class="faq-body"><p>Yes — enforced in the database itself, not just the app. Every row is scoped to
+      <div class="faq-body"><p>Yes, enforced in the database itself, not only in the app. Every row is scoped to
         your business and the security policy is checked on every single query.</p></div>
     </details>
     <details>
       <summary>What does onboarding look like?</summary>
       <div class="faq-body"><p>Hands-on. We set your properties, rates and channels up with you, so the first
-        thing you see is your own business — not an empty screen.</p></div>
+        thing you see is your own business, not an empty screen.</p></div>
     </details>
   </div>
 </section>
@@ -1419,10 +1419,10 @@
     <span class="blob blob-1"></span>
     <span class="blob blob-3"></span>
   </div>
-  <h2 class="reveal" data-anim="scale">Ready to simplify your<br> vacation rental management?</h2>
+  <h2 class="reveal" data-anim="scale">Ready to run your rentals<br> from one place?</h2>
   <p class="lede center reveal" data-anim="fade" data-delay="1">
     Join the Airbnb hosts and property managers moving off spreadsheets. We onboard owners
-    one at a time, so every setup is done right — tell us about your place and we'll take it
+    one at a time, so every setup is done right. Tell us about your place and we'll take it
     from there.
   </p>
 
@@ -1433,13 +1433,13 @@
     <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
     <!-- aria-label, not a visible <label>, and deliberately so: the placeholder
          is currently these fields' only name, and a placeholder is not an
-         accessible name you can rely on — it is dropped by some AT, and it
+         accessible name you can rely on, it is dropped by some AT, and it
          disappears the moment the field has a value, so anyone reviewing what
          they typed has nothing left to tell them which box is which.
          These give each input a stable name with zero visual change and zero
          effect on submission (name/type/required are untouched).
          Standing recommendation, unchanged from the CSS note: real visible
-         labels, or a floating-label treatment, are still the better answer —
+         labels, or a floating-label treatment, are still the better answer,
          that is a layout decision for you rather than a polish pass. -->
     <input type="text" name="name" placeholder="Your name" aria-label="Your name" required autocomplete="name">
     <input type="email" name="email" placeholder="Email address" aria-label="Email address" required autocomplete="email">
@@ -1456,7 +1456,7 @@
 <footer class="footer">
   <div class="footer-top">
     <div class="footer-brand">
-      <!-- Always on --primary-dark, so the white artwork alone — no swap pair. -->
+      <!-- Always on --primary-dark, so the white artwork alone, no swap pair. -->
       <img class="brand-mark" src="assets/logo-mark-white.png" alt="" width="47" height="32" loading="lazy" decoding="async">
       <img class="brand-word" src="assets/wordmark-white.png" alt="Pace Lodgix" width="97" height="19" loading="lazy" decoding="async">
       <p class="tagline">Refined Stays. Premium Management.</p>
@@ -1477,7 +1477,7 @@
     <nav class="footer-col">
       <h4>Product</h4>
       <a href="#features">Features</a>
-      <a href="#showcase">Product tour</a>
+      <a href="#showcase">Product</a>
       <a href="#automation">Automation</a>
       <a href="#pricing">Pricing</a>
     </nav>
@@ -1491,7 +1491,7 @@
 
     <!-- Contact, as icons rather than words.
          ACCESSIBILITY: there is no visible text in these links, so the
-         aria-label IS the link's entire accessible name — a screen reader
+         aria-label IS the link's entire accessible name, a screen reader
          announces nothing else. Never remove one, and never let it drift from
          where the link actually goes. Each icon is aria-hidden so the label is
          not read twice. `title` gives sighted mouse users the same information
@@ -1552,7 +1552,7 @@
 
 <!-- ═══════════════════════ MESSENGER BUTTON ═══════════════════════
      Opens a Messenger conversation with the Page in a new tab. Not Meta's
-     embedded chat plugin — see the note above .chat-fab in styles.css for
+     embedded chat plugin, see the note above .chat-fab in styles.css for
      why (it would put Facebook's tracking SDK on every page and contradict
      privacy.html).
 
@@ -1578,7 +1578,7 @@
 
 <!-- GSAP enhancement layer. Loaded last and progressively: if either CDN file
      fails to load, parallax.js sees no window.gsap, bails, and scroll.js has
-     already animated everything the original way. No build step — same
+     already animated everything the original way. No build step, same
      constraint the rest of the site runs under. crossorigin so a CDN error is
      legible in the console rather than an opaque "Script error". -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous"></script>
@@ -1587,7 +1587,7 @@
 
 <!-- LAST ON PURPOSE: it needs GSAP + ScrollTrigger already parsed, and it must
      not run before parallax.js has registered the plugin. Drives the feature
-     grid's column drift and the light behind it. Both are enhancements — with
+     grid's column drift and the light behind it. Both are enhancements, with
      this file removed, or with the GSAP CDN unreachable, the grid renders
      complete and still. -->
 <script src="redesign.js"></script>

@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   payments.js — the checkout path on the pricing section.
+   payments.js, the checkout path on the pricing section.
 
    WHAT THIS DOES
    Two things, and nothing else:
@@ -30,7 +30,7 @@
 
 const PAYMENT_LINKS = {
   starter: {
-    monthly: '',   // not self-serve — see "HOW THIS IS WIRED" above
+    monthly: '',   // not self-serve, see "HOW THIS IS WIRED" above
     yearly:  'https://pm.link/org-iivtzN68pxjrV8aSPDpwYBYN/NYAnOqk',
   },
   growth: {
@@ -53,7 +53,7 @@ const PAYMENT_LINKS = {
 
   /* One pass over the cards. Called on load and on every toggle flip.
 
-     The price text is NOT recomputed here — both figures are already in the
+     The price text is NOT recomputed here, both figures are already in the
      HTML as data attributes, so the page renders correct prices with this
      script blocked or still loading, and a toggle flip is a text swap rather
      than a currency-formatting exercise that could drift from the JSON-LD. */

@@ -1,11 +1,11 @@
 /* ════════════════════════════════════════════════════════════════════════
-   Pace Lodgix — GSAP enhancement layer
+   Pace Lodgix, GSAP enhancement layer
 
    Loaded AFTER scroll.js. It does two things:
 
      1. Takes over the three scroll-linked transforms that feel best when they
-        are tied directly to the scrollbar with `scrub` — the hero mockup
-        un-tilt, the Night Dim crossfade, and the phone screenshot pan — and
+        are tied directly to the scrollbar with `scrub`, the hero mockup
+        un-tilt, the Night Dim crossfade, and the phone screenshot pan, and
         re-drives them through GSAP ScrollTrigger. When it does, it sets
         window.__parallax so scroll.js stands down on exactly those three (see
         the "GSAP handoff" note in scroll.js). Every other effect stays with
@@ -21,13 +21,13 @@
      • No GSAP, no problem. If the CDN fails, window.gsap is undefined, this
        file returns, the flag is never set, and scroll.js runs every effect the
        old way. The page is never left half-animated.
-     • Composited properties only — transform and opacity. Nothing here touches
+     • Composited properties only, transform and opacity. Nothing here touches
        layout. ScrollTrigger reads geometry off the main thread and caches it,
        exactly as the hand-written engine did.
 
    Note on layering: the hero cards and mockup also carry a CSS `bob` animation
    (styles.css) that animates the `translate` property. GSAP writes the separate
-   `transform` property, and the two compose in the browser — so the float keeps
+   `transform` property, and the two compose in the browser, so the float keeps
    running underneath the parallax and tilt with no conflict.
    ════════════════════════════════════════════════════════════════════════ */
 
@@ -42,14 +42,14 @@
   gsap.registerPlugin(ScrollTrigger);
 
   // Signal to scroll.js: stand down on the hero-frame tilt, the dim crossfade
-  // and the phone pan — GSAP owns them now. Set synchronously, before this
+  // and the phone pan, GSAP owns them now. Set synchronously, before this
   // file's first ScrollTrigger builds, so scroll.js sees it on frame one.
   window.__parallax = true;
 
   const $ = (sel) => document.querySelector(sel);
 
   /* ── 1. Hero mockup un-tilt (owned) ───────────────────────────────────────
-     Same pose as the CSS starting state — rotateX 17°, scale 0.94 — flattening
+     Same pose as the CSS starting state, rotateX 17°, scale 0.94, flattening
      to 0°/1 as the frame rises into view. `scrub: 0.6` adds a touch of inertia
      so it glides to the scroll position instead of snapping to it, which is the
      whole point of moving it here. transformPerspective matches the stage's
@@ -77,7 +77,7 @@
   /* ── 2. Hero background parallax (new) ─────────────────────────────────────
      The blob-glow layer drifts down a little slower than the page scrolls, so
      the field reads as sitting behind the headline rather than on it. Kept
-     small (per the parallax playbook, 10–16% keeps foreground and background
+     small (per the parallax playbook, 10-16% keeps foreground and background
      from visibly desyncing) and applied to the layer's container, never to the
      type. The blobs keep their own CSS drift underneath this. */
   const blobs = $('.hero-field .blobs');
@@ -119,7 +119,7 @@
      The tall dashboard capture scrolls up inside the phone as the section
      passes through the viewport. The travel distance depends on the rendered
      image height, so it is a function value recomputed on every refresh
-     (invalidateOnRefresh) — fonts and images can change the layout after first
+     (invalidateOnRefresh), fonts and images can change the layout after first
      paint, and ScrollTrigger refreshes on load and resize. */
   const phoneFront = $('#phoneFront');
   if (phoneFront) {
@@ -149,10 +149,10 @@
      cards are the hero's only readable proof on a phone, so they are left to
      their calm CSS float. Two effects, composed:
 
-       • scroll parallax — each card drifts up at its own rate as the hero
+       • scroll parallax, each card drifts up at its own rate as the hero
          scrolls away, the nearer (larger) cards faster, which is what sells the
          layered depth.
-       • pointer tilt — the trio leans a few degrees toward the cursor on a
+       • pointer tilt, the trio leans a few degrees toward the cursor on a
          shared perspective, like a small stack of glass panes catching a turn.
 
      quickTo gives the tilt its own eased interpolator so it lags the cursor
@@ -209,10 +209,10 @@
     };
   });
 
-  /* ── 6. "The problem" cards — mobile content reveal (new) ─────────────────
+  /* ── 6. "The problem" cards, mobile content reveal (new) ─────────────────
      Mobile only, the exact complement of the hero-card query above (901px is
      the row's 3-up→stack collapse point). On a phone these three cards lose
-     their whole hover story — the lift, the icon-tile brighten — so the row
+     their whole hover story, the lift, the icon-tile brighten, so the row
      arrives as flat prose with only the ambient bob. This gives each card a
      staggered entrance as it scrolls up: the icon tile pops in on a back-ease,
      then the heading and copy rise in behind it, so the card assembles itself
@@ -225,7 +225,7 @@
 
      Why gsap.from and no CSS hide-state: the from-values live only while this
      file runs. If the CDN fails or motion is reduced, the block never executes
-     and the children stay fully visible — the "no GSAP, no problem" rule. The
+     and the children stay fully visible, the "no GSAP, no problem" rule. The
      section is below the fold, so the from-state is set long before the row is
      scrolled into view; nothing is painted then hidden. */
   mm.add('(max-width: 900px)', () => {
@@ -274,7 +274,7 @@
 
   /* Fonts change metrics after first paint (the display face swaps in), which
      moves every trigger start/end. One refresh once the webfonts are ready
-     keeps the scrub positions honest. Guarded — document.fonts is not
+     keeps the scrub positions honest. Guarded, document.fonts is not
      universal. */
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh());

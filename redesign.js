@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════════════
-   PACE LODGIX — REDESIGN LAYER, MOTION
+   PACE LODGIX, REDESIGN LAYER, MOTION
    LIVE. Loaded last by index.html, after nav.js, scroll.js, GSAP and
    parallax.js.
 
@@ -8,16 +8,16 @@
 
    IT NOW DRIVES EXACTLY ONE THING in #features: the light behind the bento.
    A warm pool follows the pointer, written as --mx/--my onto .jobs-light. It
-   is the field's response, not any pane's — the panes are not links and the
+   is the field's response, not any pane's, the panes are not links and the
    only per-card response is the CSS hover in redesign.css.
 
-   WHAT WAS REMOVED IN ROUND 15 — the scrubbed column-drift tween. It wrote
+   WHAT WAS REMOVED IN ROUND 15, the scrubbed column-drift tween. It wrote
    --shift onto the sixteen-card diagonal every scroll frame; the diagonal is
    gone (the cards are now four grouped panes), and a scroll-scrubbed tween is
    the one kind of motion that can actually cost a frame while scrolling. The
    entrance is now handled entirely by the .reveal IntersectionObserver in
    scroll.js, which fires once and unhooks. So this file no longer needs GSAP
-   at all — the pointer light is plain requestAnimationFrame.
+   at all, the pointer light is plain requestAnimationFrame.
 
    THE SAME RULES THE REST OF THE SITE KEEPS:
      • Reduced motion wins. This file returns immediately, and the CSS default
@@ -41,14 +41,14 @@
   /* ── The pointer light ────────────────────────────────────────────────────
      Fine pointers only. On touch there is nothing to follow, and the CSS
      default already puts the pool at 50% 30%, which is where the section's own
-     light source sits — so a phone gets a deliberate static bloom rather than
+     light source sits, so a phone gets a deliberate static bloom rather than
      a missing effect.
 
      Two things keep this cheap. The listener is on the GRID, not the window,
      so it is silent for the rest of the page. And the pointer position is
      eased toward rather than tracked exactly (LERP below), which both smooths
      a jumpy trackpad and means the rAF loop only runs while the light is still
-     catching up — it stops itself when it arrives. */
+     catching up, it stops itself when it arrives. */
   const light = grid.querySelector('.jobs-light');
   if (!light || !matchMedia('(pointer: fine)').matches) return;
 

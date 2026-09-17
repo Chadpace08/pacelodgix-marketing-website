@@ -1,38 +1,38 @@
-# PaceLodgix Marketing Website — CLAUDE.md
+# PaceLodgix Marketing Website
 
 ## What This Is
-Public marketing site for PaceLodgix PMS (`pacelodgix.com`). Separate codebase from `pms-app/` — no shared code, no shared deploy.
+Public marketing site for PaceLodgix PMS (`pacelodgix.com`). Separate codebase from `pms-app/`, no shared code, no shared deploy.
 
 **Status:** live
 
-**Brand handover:** [BRAND-UPDATE-HANDOVER.md](BRAND-UPDATE-HANDOVER.md) — logo asset system, what NOT to do with the white-only master artwork. Read before touching branding/logo.
+**Brand handover:** [BRAND-UPDATE-HANDOVER.md](BRAND-UPDATE-HANDOVER.md), logo asset system, what NOT to do with the white-only master artwork. Read before touching branding/logo.
 **SEO reference:** [Marketing SEO Prompt.txt](Marketing SEO Prompt.txt)
 
-## Stack — matches root default
+## Stack (matches root default)
 | Layer | Choice |
 |---|---|
 | Frontend | Vanilla HTML + CSS + JS, no build step, no framework |
-| Hosting | Cloudflare **Worker with static assets** (`wrangler.jsonc`) — not Pages |
+| Hosting | Cloudflare **Worker with static assets** (`wrangler.jsonc`), not Pages |
 
 ## Brand
 - Colors: Deep Forest Green `#1F3A2A` · Warm Cream `#FDFAF0` · Gold `#D9B25F`
-- Logo: **white-only master artwork** — invisible on light surfaces. Always check what's behind a logo placement before using the white variant; forest-on-light and white-on-dark cuts already exist in `assets/`. Never stretch to a square box — both mark and wordmark are non-square (1.46:1 and 5.09:1); size by height, `width: auto`.
+- Logo: **white-only master artwork**, invisible on light surfaces. Always check what's behind a logo placement before using the white variant; forest-on-light and white-on-dark cuts already exist in `assets/`. Never stretch to a square box, both mark and wordmark are non-square (1.46:1 and 5.09:1); size by height, `width: auto`.
 
-## Stylesheet Order — read before editing any CSS
+## Stylesheet Order (read before editing any CSS)
 `index.html` loads **two** stylesheets, in this order:
 
-1. `styles.css` — the original design, still complete and untouched.
-2. `redesign.css` — the 2026 redesign (rounds 3–14), loaded **after** and overriding it. Light hero, 16-card feature mosaic, Inter for display type, background grids off.
+1. `styles.css`, the original design, still complete and untouched.
+2. `redesign.css`, the 2026 redesign (rounds 3-14), loaded **after** and overriding it. Light hero, 16-card feature mosaic, Inter for display type, background grids off.
 
 Because `redesign.css` loads second, it wins. Two consequences:
 - **Editing a rule in `styles.css` may do nothing** if `redesign.css` overrides it. Check there first.
-- If a block is ever folded from `redesign.css` into `styles.css`, **delete it from `redesign.css` in the same pass** — a stale duplicate silently overrides the newer value with an older one, and the two look nearly identical.
+- If a block is ever folded from `redesign.css` into `styles.css`, **delete it from `redesign.css` in the same pass**, a stale duplicate silently overrides the newer value with an older one, and the two look nearly identical.
 
 Deleting the `redesign.css` `<link>` and the `redesign.js` `<script>` returns the previous design intact. `redesign.js` drives the feature grid's scroll drift and pointer light only; both are enhancements.
 
-`preview.html` is the old review lane. It is noindex, blocked in `.assetsignore`, and now renders the same design as `index.html` — safe to delete once the redesign is settled.
+`preview.html` is the old review lane. It is noindex, blocked in `.assetsignore`, and now renders the same design as `index.html`, safe to delete once the redesign is settled.
 
-## Payments — `payments.js`
+## Payments, `payments.js`
 
 The Pricing section has a **Monthly / Yearly switch**. Setup steps are in [PAYMENT-SETUP.md](PAYMENT-SETUP.md) (blocked from serving by the `*.md` rule in `.assetsignore`).
 
@@ -43,30 +43,47 @@ The Pricing section has a **Monthly / Yearly switch**. Setup steps are in [PAYME
 - Real recurring billing needs **PayMongo Subscriptions** (API integration; cards + Maya only, GCash by arrangement). Future build, not done.
 
 Invariants:
-- **No card fields on this site, ever.** Every Subscribe button is a plain `<a href>` to the provider's hosted checkout. That is what keeps the site out of PCI scope. Do not add a card form, and never put a secret key in this bundle — the checkout URL is the only payment value that belongs here.
-- **Both prices live in the HTML** as `data-monthly` / `data-yearly` on `.pc-amt`. `payments.js` swaps text between them and never computes a price. Change a price and you must change it in **three** places in the same commit: the card's data attributes, the `Offer` JSON-LD in `<head>` (four Offers — monthly and yearly per plan), and the pricing FAQ answer (both the `<details>` and its JSON-LD twin).
-- **Enterprise has no `data-plan`** and must not get one — it is quoted per operator.
-- **Signup already provisions a tenant.** `trg_auth_user_provision_tenant` on `auth.users` (mig 031) creates the business, the owner role and the seeded defaults when someone signs up with a business name — verified against the live DB. `provision_tenant_for_user()` in the SQL Editor is the *fallback* for a signup that went wrong, not the normal path. See `pms-app/CLAUDE.md` gotcha 25. What is still manual is **reconciling a payment to an account** — nothing tells the app who has paid.
+- **No card fields on this site, ever.** Every Subscribe button is a plain `<a href>` to the provider's hosted checkout. That is what keeps the site out of PCI scope. Do not add a card form, and never put a secret key in this bundle, the checkout URL is the only payment value that belongs here.
+- **Both prices live in the HTML** as `data-monthly` / `data-yearly` on `.pc-amt`. `payments.js` swaps text between them and never computes a price. Change a price and you must change it in **three** places in the same commit: the card's data attributes, the `Offer` JSON-LD in `<head>` (four Offers, monthly and yearly per plan), and the pricing FAQ answer (both the `<details>` and its JSON-LD twin).
+- **Enterprise has no `data-plan`** and must not get one, it is quoted per operator.
+- **Signup already provisions a tenant.** `trg_auth_user_provision_tenant` on `auth.users` (mig 031) creates the business, the owner role and the seeded defaults when someone signs up with a business name, verified against the live DB. `provision_tenant_for_user()` in the SQL Editor is the *fallback* for a signup that went wrong, not the normal path. See `pms-app/CLAUDE.md` gotcha 25. What is still manual is **reconciling a payment to an account**, nothing tells the app who has paid.
 
-### `.pc-amt` uses `.pc-cur` for the peso sign — not a tag selector
-`styles.css` styled the ₱ as `.pc-amt span`, which was safe only while the peso sign was the sole span in the box. Adding `.pc-figure` (the swappable digits) silently pulled the price down to 1.55rem on every card. Both rules — the base one and the one in the mobile breakpoint — are now keyed to `.pc-cur`. **Keep them keyed to the class.** A bare tag selector inside a component captures whatever markup is added later.
+### `.pc-amt` uses `.pc-cur` for the peso sign, not a tag selector
+`styles.css` styled the ₱ as `.pc-amt span`, which was safe only while the peso sign was the sole span in the box. Adding `.pc-figure` (the swappable digits) silently pulled the price down to 1.55rem on every card. Both rules, the base one and the one in the mobile breakpoint, are now keyed to `.pc-cur`. **Keep them keyed to the class.** A bare tag selector inside a component captures whatever markup is added later.
 
 ## Working Agreements
-- Deploy via `npx wrangler deploy` (reads `wrangler.jsonc`). Confirm before deploying — this is the live public site.
-- `.assetsignore` controls what's publicly served — check it before adding any new file at the repo root.
+- Deploy via `npx wrangler deploy` (reads `wrangler.jsonc`). Confirm before deploying, this is the live public site.
+- `.assetsignore` controls what's publicly served, check it before adding any new file at the repo root.
 - Anything at the repo root is public by default. Never leave loose screenshots or source artwork there.
 
-## The "Coming Soon: Marketing Center" section is WRONG — do not trust it (Sep 2026)
+## The "Coming Soon: Marketing Center" section is WRONG, do not trust it (Sep 2026)
 `index.html` (around line 1030, `id="marketing-center"`) carries an HTML comment claiming "none of this is built" and shows a "Coming soon" chip cloud (email campaigns, coupon codes, guest promotions, seasonal discounts, customer database, landing pages). **That comment is stale and the section is inaccurate.** Checked directly against `pms-app/CLAUDE.md` (Sep 2026):
 
 | Claimed as "coming soon" | Actual status |
 |---|---|
-| Email campaigns to past guests, segmented, with merge tags | **Live** — `campaigns.html`, full send/results/click-tracking pipeline |
-| Coupon codes | **Live** — migs 041–043 |
-| Guest promotions / seasonal discounts | **Live** — `discounts` table, auto-applied |
-| Customer/guest database | **Live** — `customers.html` |
-| Landing pages / own website | **Live and more advanced than implied** — full Website Builder, 5 themes, published guest site at `stay.pacelodgix.com/<slug>` |
+| Email campaigns to past guests, segmented, with merge tags | **Live**, `campaigns.html`, full send/results/click-tracking pipeline |
+| Coupon codes | **Live**, migs 041-043 |
+| Guest promotions / seasonal discounts | **Live**, `discounts` table, auto-applied |
+| Customer/guest database | **Live**, `customers.html` |
+| Landing pages / own website | **Live and more advanced than implied**, full Website Builder, 5 themes, published guest site at `stay.pacelodgix.com/<slug>` |
 | Referral campaigns | **Not built.** "Referral" today is only a manual booking-source label, no tracking/reward system exists |
 | Lead capture | **Not built**, no evidence of this anywhere in the app |
 
-**Do not rewrite this section as a "coming soon" teaser again without re-checking `pms-app/CLAUDE.md`'s Current Phase Status first.** Almost the entire marketing suite is real, live, shipped product — it needs a real feature showcase (screenshots from `campaigns.html`, `customers.html`, `stay.html`), not a placeholder chip cloud. `PaceLodgix-Full-Feature-Script.md` (one level up) already documents this correctly in its Sections 10–11 — that file was never wrong, only this website section was.
+**Do not rewrite this section as a "coming soon" teaser again without re-checking `pms-app/CLAUDE.md`'s Current Phase Status first.** Almost the entire marketing suite is real, live, shipped product, it needs a real feature showcase (screenshots from `campaigns.html`, `customers.html`, `stay.html`), not a placeholder chip cloud. `PaceLodgix-Full-Feature-Script.md` (one level up) already documents this correctly in its Sections 10-11, that file was never wrong, only this website section was.
+
+## Copy and Language Rules
+
+Voice for this site is **Part 2** of `00-Knowledge-Base/standards/communication-standard.md`: friendly, clear, practical, specific. It is a marketing site, not an app screen, so do **not** flatten it into Part 3 label copy and do not make it corporate.
+
+Hard rules, enforced by `.claude/hooks/language-guard.js` on every write:
+
+- **No em-dash and no en-dash anywhere**, including HTML comments and JS comments. Use a full stop, comma, colon or brackets. A normal hyphen for number ranges (`1-3 properties`) is fine. The whole site was cleaned of 143 of them on 17 Sep 2026; do not reintroduce one.
+- **Banned filler:** "simply", "just", "easily", "easy-to-use", "effortlessly", "seamlessly", "conveniently", "click here".
+- **Numbered showcase labels use a middot** (`01 · Dashboard`), matching the rest of the site's separators.
+
+Terminology, one word per thing:
+
+- The product is **Pace Lodgix** (with a space) in all customer-facing copy, including `alt` text.
+- The `#showcase` section is called **Product** in the nav, the mobile panel and the footer. Change all three together or not at all.
+
+**The FAQ and its JSON-LD twin must stay in sync.** Four answers (q1, q3, q6, q7) were already paraphrased differently between the two before this pass and still are. Google expects structured data to match visible text, so align them next time either is edited.

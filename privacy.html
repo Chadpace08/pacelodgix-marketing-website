@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — Pace Lodgix</title>
-  <meta name="description" content="How Pace Lodgix collects, uses, protects and shares personal information — for property owners using our vacation rental property management software and for the guests who book through it.">
+  <title>Privacy Policy | Pace Lodgix</title>
+  <meta name="description" content="How Pace Lodgix collects, uses, protects and shares personal information, for property owners using our vacation rental property management software and for the guests who book through it.">
   <!-- No .html. The Worker's asset handler 307-redirects /privacy.html to
        /privacy, so the extensionless URL is the only one that answers 200 and
        therefore the only one that can be canonical. Pointing this at
-       /privacy.html made the canonical a redirect — Google then files the page
+       /privacy.html made the canonical a redirect, Google then files the page
        under "Page with redirect" instead of indexing it. Keep this in step
        with sitemap.xml, which lists the same extensionless URLs. -->
   <link rel="canonical" href="https://pacelodgix.com/privacy">
@@ -17,22 +17,22 @@
   <!-- Favicon is the --primary silhouette, not the white render: browser tabs
        are light in both themes and the white mark vanished against them.
        apple-touch-icon is the reverse (white on --primary-dark) and is flat
-       opaque on purpose — iOS discards alpha and would matte it onto black. -->
+       opaque on purpose, iOS discards alpha and would matte it onto black. -->
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
   <link rel="icon" href="assets/logo-256.png" sizes="256x256">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <!-- Type: Fraunces for display, Inter for everything else.
        The APP uses Manrope for headings; the marketing site deliberately does
-       not. Fraunces is a variable serif with an optical-size axis (opsz 9–144):
+       not. Fraunces is a variable serif with an optical-size axis (opsz 9-144):
        set large, it takes on high contrast and flared, editorial detail that
        reads genuinely premium; set small it would still hold, but it stays
-       display-only on purpose — anything under ~1.4rem is Inter. `opsz` is
+       display-only on purpose, anything under ~1.4rem is Inter. `opsz` is
        driven automatically by font-optical-sizing (see styles.css), so a
        3.7rem H1 and a 1.15rem H3 each get the right cut with no manual
        switching.
 
        SELF-HOSTED. The two preconnects and the fonts.googleapis.com
-       stylesheet that used to sit here are gone — see the type block at the
+       stylesheet that used to sit here are gone, see the type block at the
        top of styles.css for why. Nothing on this page now touches a third
        party before it paints.
 
@@ -41,7 +41,7 @@
        are declared here rather than left to styles.css because a browser only
        discovers an @font-face src AFTER it has downloaded and parsed the
        stylesheet, which is exactly the delay that makes text flash unstyled.
-       `crossorigin` is required on font preloads even for same-origin files —
+       `crossorigin` is required on font preloads even for same-origin files,
        fonts are always fetched in CORS mode, and without it the browser
        fetches the file a second time.
        Only preload what is genuinely above the fold. This page preloads two
@@ -51,7 +51,7 @@
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Restores a previous dismissal of the beta bar before first paint — see
+  <!-- Restores a previous dismissal of the beta bar before first paint, see
        the matching note in index.html. -->
   <script>try{if(localStorage.getItem('pl-beta-dismissed')==='1')document.documentElement.classList.add('beta-off');}catch(e){}</script>
 </head>
@@ -62,8 +62,8 @@
 <div class="beta-bar" id="betaBar" role="region" aria-label="Product status">
   <span class="beta-chip">Beta</span>
   <p class="beta-text">
-    <span class="beta-full">Pace Lodgix is live and in active beta — early users get direct support from the founder.</span>
-    <span class="beta-short">Live in beta — early users get founder support.</span>
+    <span class="beta-full">Pace Lodgix is live and in active beta. Early users get direct support from the founder.</span>
+    <span class="beta-short">Live in beta. Founder support included.</span>
   </p>
   <a class="beta-cta" href="index.html#cta">Talk to us <span aria-hidden="true">&rarr;</span></a>
   <button class="beta-close" id="betaClose" type="button" aria-label="Dismiss beta notice">&times;</button>
@@ -72,11 +72,11 @@
 <!-- Solid nav: this page has no dark hero for the transparent nav to sit over,
      and it doesn't load scroll.js, so .nav-solid pins the "stuck" look. -->
 <header class="nav nav-solid">
-  <!-- This bar is .nav-solid — cream for the whole page, never transparent —
+  <!-- This bar is .nav-solid, cream for the whole page, never transparent,
        so it takes only the --primary artwork. No white copy, no swap pair:
        the cross-fade on index.html exists for a bar that changes state, and
        this one cannot. -->
-  <a class="nav-brand" href="index.html" aria-label="Pace Lodgix — home">
+  <a class="nav-brand" href="index.html" aria-label="Pace Lodgix, home">
     <img class="brand-mark" src="assets/logo-mark-forest.png" alt="" width="50" height="34" decoding="async">
     <img class="brand-word" src="assets/wordmark-forest.png" alt="" width="102" height="20" decoding="async">
   </a>
@@ -90,7 +90,7 @@
   <a class="nav-signin" href="https://app.pacelodgix.com/">Sign in</a>
   <a class="btn btn-accent nav-cta" href="index.html#cta">Schedule a Demo</a>
 
-  <!-- Mobile menu — same control, same behaviour and the same three
+  <!-- Mobile menu, same control, same behaviour and the same three
        destinations this bar carries on desktop. See the longer note on
        index.html; the panel is inert until nav.js opens it. -->
   <button class="nav-toggle" id="navToggle" type="button"
@@ -145,8 +145,8 @@
   <h2 id="roles"><span class="legal-num">1</span>Our two roles &amp; who this covers</h2>
   <p>Pace Lodgix acts in two different capacities, and it matters which one applies to you:</p>
   <ul>
-    <li><strong>As a data controller</strong> — for information about the property owners, managers, and staff who register for and use the Service (our &ldquo;Customers&rdquo;), and for visitors to our marketing website. Here we decide how and why the data is processed, and this policy governs that processing.</li>
-    <li><strong>As a data processor</strong> — for the guest and booking information that our Customers enter into, or receive through, their own accounts (&ldquo;Customer Data&rdquo;). In this case the Customer is the data controller; we process that information only on their behalf and under their instructions. If you are a <strong>guest</strong> who booked a stay, the business you booked with is responsible for your information &mdash; please see <a href="#guests">Section 5</a>.</li>
+    <li><strong>As a data controller</strong>: for information about the property owners, managers, and staff who register for and use the Service (our &ldquo;Customers&rdquo;), and for visitors to our marketing website. Here we decide how and why the data is processed, and this policy governs that processing.</li>
+    <li><strong>As a data processor</strong>: for the guest and booking information that our Customers enter into, or receive through, their own accounts (&ldquo;Customer Data&rdquo;). In this case the Customer is the data controller; we process that information only on their behalf and under their instructions. If you are a <strong>guest</strong> who booked a stay, the business you booked with is responsible for your information &mdash; please see <a href="#guests">Section 5</a>.</li>
   </ul>
 
   <h2 id="collect"><span class="legal-num">2</span>Information we collect</h2>
@@ -289,7 +289,7 @@
 </main>
 
 <!-- .footer--minimal replaces three inline style declarations that used to
-     live on the div below — see the modifier in styles.css. -->
+     live on the div below, see the modifier in styles.css. -->
 <footer class="footer footer--minimal">
   <div class="footer-bottom">
     <p>© 2026 Pace Lodgix. All Rights Reserved.</p>

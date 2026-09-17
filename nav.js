@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════════════
-   Pace Lodgix — mobile nav menu
+   Pace Lodgix, mobile nav menu
 
    Its own file, not part of scroll.js, because all three pages need it and
    only index.html needs the scroll engine. privacy.html and terms.html have
@@ -11,7 +11,7 @@
    opens, the panel is next in DOM order so Tab walks straight into it, and
    the page behind is not locked. Five links do not warrant a focus trap.
 
-   `inert` is the closed state, not `hidden` — hidden kills the transition,
+   `inert` is the closed state, not `hidden`, hidden kills the transition,
    and display:none would too. inert takes the panel out of the tab order and
    the accessibility tree while CSS keeps it visually gone (visibility:
    hidden, which is also what stops it being read by AT if inert is ever
@@ -46,7 +46,7 @@
 
   toggle.addEventListener('click', () => setOpen(!open));
 
-  /* Any link in the panel is a destination — close behind it. On index.html
+  /* Any link in the panel is a destination, close behind it. On index.html
      that hands the jump straight to the browser's smooth scroll (the panel is
      gone before the scroll starts, so it never scrolls with the page under
      it); on the legal pages the link is a real navigation and the close is
@@ -55,7 +55,7 @@
     if (e.target.closest('a')) setOpen(false);
   });
 
-  // Escape closes and hands focus back — the panel is a disclosure the button
+  // Escape closes and hands focus back, the panel is a disclosure the button
   // owns, so the button is where focus belongs when it goes away.
   addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || !open) return;
@@ -82,7 +82,7 @@
 })();
 
 /* ════════════════════════════════════════════════════════════════════════
-   Beta notice bar — dismissal
+   Beta notice bar, dismissal
 
    A SEPARATE IIFE, deliberately. The block above returns early if any of the
    three nav elements is missing, and the beta bar must not be collateral
