@@ -402,13 +402,24 @@ section { padding-block: 64px; }
 .sync-col .ic { width: 40px; height: 40px; border-radius: 12px; background: rgba(217,178,95,.16); color: var(--gold); display: grid; place-items: center; font-weight: 800; }
 .fine { margin-top: 20px; font-size: .86rem; color: var(--on-forest-2); text-align: center; }
 
-/* Automation (dark): seven steps */
-.auto-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.auto-steps li { display: grid; grid-template-columns: 40px 1fr; gap: 2px 14px; align-items: start; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; padding: 16px; }
-.auto-steps .n { grid-row: span 2; width: 40px; height: 40px; border-radius: 12px; background: var(--gold); color: var(--forest-deep); font-weight: 800; display: grid; place-items: center; }
-.auto-steps b { color: var(--white); }
-.auto-steps span { color: var(--on-forest-2); font-size: .92rem; }
-.auto-steps li.manual .n { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); }
+/* Automation (dark): the live site's timeline, kept as it was.
+   A spine runs down the left and draws itself as the section is read
+   (--flow-fill, set in site.js); each step lights up as it comes into view. */
+.flow { list-style: none; margin: 8px auto 0; padding: 0; max-width: 820px; position: relative; }
+.flow::before, .flow::after { content: ""; position: absolute; left: 17px; top: 12px; bottom: 12px; width: 2px; }
+.flow::before { background: rgba(255,255,255,.14); }
+.flow::after { background: linear-gradient(180deg, #F0D48E, var(--gold)); transform: scaleY(var(--flow-fill, 0)); transform-origin: top; box-shadow: 0 0 14px rgba(217,178,95,.45); }
+.flow-node { position: relative; padding: 0 0 1.5rem 2.9rem; opacity: .35; transform: translateX(-10px); transition: opacity .5s var(--ease-out, ease), transform .5s var(--ease-out, ease); }
+.flow-node.is-lit { opacity: 1; transform: none; }
+.flow-node:last-child { padding-bottom: 0; }
+.fn-dot { position: absolute; left: 0; top: 0; z-index: 1; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--forest-deep); border: 2px solid rgba(255,255,255,.22); color: var(--on-forest-2); font-weight: 800; font-size: .75rem; transition: background-color .45s ease, color .45s ease, border-color .45s ease, transform .45s ease; }
+.flow-node.is-lit .fn-dot { background: var(--gold); border-color: #F0D48E; color: var(--forest-deep); transform: scale(1.08); }
+.flow-node strong { display: block; font-size: 1rem; color: var(--white); padding-top: .25rem; }
+.fn-sub { font-size: .88rem; color: var(--on-forest-2); }
+@media (prefers-reduced-motion: reduce) {
+  .flow-node { opacity: 1; transform: none; transition: none; }
+  .flow::after { transform: scaleY(1); }
+}
 
 /* Marketing Center cards */
 .mcards { display: grid; gap: 16px; }
@@ -494,7 +505,6 @@ section { padding-block: 64px; }
 @media (min-width: 640px) {
   .sync-cols { grid-template-columns: repeat(3, 1fr); }
   .mcards { grid-template-columns: 1fr 1fr; }
-  .auto-steps { grid-template-columns: 1fr 1fr; }
   .clips { grid-template-columns: 1fr 1fr; }
   .pframe { width: 260px; }
 }
@@ -516,9 +526,12 @@ section { padding-block: 64px; }
   .show-btn[aria-selected="true"] { background: var(--cream); color: var(--ink); border-color: var(--line); }
   .show-btn[aria-selected="true"] .k { color: var(--gold-ink); }
   .show-panel { padding: 32px; }
-  .auto-steps { grid-template-columns: repeat(4, 1fr); }
-  .auto-steps li { grid-template-columns: 1fr; }
-  .auto-steps .n { grid-row: auto; margin-bottom: 8px; }
+  .flow { margin-top: 16px; }
+  .flow::before, .flow::after { left: 21px; }
+  .flow-node { padding: 0 0 2.1rem 3.6rem; }
+  .fn-dot { width: 44px; height: 44px; font-size: .85rem; }
+  .flow-node strong { font-size: 1.05rem; padding-top: .35rem; }
+  .fn-sub { font-size: .95rem; }
   .mcards { grid-template-columns: repeat(4, 1fr); }
   .gosplit { grid-template-columns: 1fr 480px; gap: 64px; }
   .gocopy h2 { font-size: 2.9rem; }

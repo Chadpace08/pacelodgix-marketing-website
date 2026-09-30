@@ -82,6 +82,31 @@
     if (pimg.complete) panPhone(); else pimg.addEventListener('load', panPhone);
   }
 
+  /* Automation: the live site's timeline. Each step lights up as it comes into
+     view, and the gold spine draws itself as the section is read. */
+  var flow = $('flow');
+  if (flow) {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var nodes = flow.querySelectorAll('.flow-node');
+    if (reduced || !('IntersectionObserver' in window)) {
+      nodes.forEach(function (n) { n.classList.add('is-lit'); });
+    } else {
+      var fo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-lit'); fo.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -25% 0px', threshold: 0.4 });
+      nodes.forEach(function (n) { fo.observe(n); });
+      var fTick = false;
+      var drawSpine = function () {
+        fTick = false;
+        var r = flow.getBoundingClientRect();
+        var t = Math.min(1, Math.max(0, (window.innerHeight * 0.75 - r.top) / r.height));
+        flow.style.setProperty('--flow-fill', t.toFixed(3));
+      };
+      window.addEventListener('scroll', function () { if (!fTick) { fTick = true; requestAnimationFrame(drawSpine); } }, { passive: true });
+      drawSpine();
+    }
+  }
+
   /* Product showcase.
      Desktop: click a step in the list to show its panel.
      Phones and tablets: the section pins, and scrolling down slides the pages
