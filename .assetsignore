@@ -26,8 +26,28 @@ Pace Lodgix Wordmark v2.png
 Marketing Image.png
 
 # Internal notes. The Worker serves this whole folder, so anything dropped in
-# here is public by default — keep working docs listed.
+# here is public by default, keep working docs listed.
 *.md
+
+# Raw capture masters, added 19 Sep 2026. Both are SOURCES that get processed
+# into assets/, and both were sitting here unlisted, so both were publicly
+# downloadable from the site root the moment this folder deploys.
+#
+# "Hero video.mp4" is the 4.9MB raw screen recording. The served clip is
+# assets/video/hero-dashboard.mp4 (1.3MB), cropped, trimmed and re-encoded from
+# it. The raw file also still has the browser address bar in frame showing a
+# development URL, which is the other reason not to publish it.
+#
+# "Updated Screenshots/" is 2.4MB of raw app PNGs plus the Python script that
+# turns them into assets/shots/app/*.webp. Nothing in it is meant to be served.
+#
+# Keep both HERE as the masters to re-export from. Never ship them.
+Hero video.mp4
+Updated Screenshots/
+
+# Also unlisted before today: the 2026 logo master, same category as the two
+# brand artwork masters above.
+Pace Lodgix Mark 2026.png
 
 # Redesign preview page — not public.
 #

@@ -1,4 +1,48 @@
-# Brand update — mark + wordmark swap, September 2026
+# Brand update: v2 house mark, 25 September 2026
+
+Supersedes the 21 September section below for the MARK. Master: `pms-app/Pace Lodgix Logo v2.png`. The mark is now ONE full-colour file, `assets/logo-mark.png`, used on light and dark surfaces alike (nav, footer, privacy, terms). `favicon-32.png`, `apple-touch-icon.png` (forest background) and `logo-256.png` were regenerated from it. `logo-house-forest.svg` and `logo-house-white.svg` are deleted. The wordmark files are unchanged and still swap by surface. Deployed 25 Sep 2026.
+
+---
+
+# Brand update: house mark, 21 September 2026
+
+Written 2026-09-21. Supersedes the ribbon "P" mark section below. The
+wordmark (`wordmark-forest.png` / `wordmark-white.png`) is untouched, still
+current, and still pairs with this mark.
+
+Chad redrew the mark as a house, sourced from `pms-app/assets` (the app is
+the source of truth for this asset going forward, always copy from there,
+not from this site's own history).
+
+| File | Content | Use |
+|---|---|---|
+| `logo-house-forest.svg` | forest house outline, gold door | light surfaces |
+| `logo-house-white.svg` | cream house outline, gold door | dark surfaces |
+| `logo-256.png` | 256x256 raster, forest bg | schema.org Organization logo, large favicon |
+| `favicon-32.png` | 32x32 | browser tab |
+| `apple-touch-icon.png` | opaque, forest bg | iOS home screen |
+
+**Square (48x48 viewBox), unlike the old 1.46:1 ribbon mark.** Any hardcoded
+`width`/`height` on an `<img>` tag needs both values equal and updated (34x34
+in the nav, 32x32 in the footer). This was not a drop-in swap like the last
+one, because the aspect ratio changed.
+
+The old ribbon files (`logo-mark-forest.png`, `logo-mark-white.png`) are
+**removed** from `assets/` (21 Sep 2026) to stop the two marks being mixed up.
+`Pace Lodgix Mark 2026.png` (the ribbon master, this folder's root) is removed
+for the same reason, the house mark's own master lives in `pms-app/`.
+
+**Still outstanding:** `assets/shots/*.webp` and `assets/video/*.mp4` are
+captures of the app UI and still show whichever mark was live when each was
+recorded. Raster/video, so they need re-capturing once the app's UI reflects
+the house mark, not a file swap.
+
+---
+
+<details>
+<summary>September 2026 handover, ribbon "P" mark + wordmark swap (superseded 21 Sep 2026)</summary>
+
+# Brand update: mark + wordmark swap, September 2026
 
 Written 2026-09-13, updated same day once the wordmark changed too. Supersedes
 the July 2026 rebrand below for **both** the mark and the wordmark.
@@ -113,5 +157,7 @@ cell and cross-fading opacity — see the "Brand lockup" comment block in
 3. **Transactional email templates and PDF invoices** render on white — use
    the **forest** files. Email clients need absolute URLs, so host them
    rather than inlining relative paths.
+
+</details>
 
 </details>

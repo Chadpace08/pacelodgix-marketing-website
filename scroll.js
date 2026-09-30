@@ -396,14 +396,33 @@
          battery through the whole page. Mid-range Android is the market.
 
      play() rejects when a browser refuses autoplay even muted; that is a
-     non-event, the poster is already the right fallback, so swallow it. */
+     non-event, the poster is already the right fallback, so swallow it.
+
+     DEBOUNCED PAUSE, added 19 Sep 2026. #heroFrame, the element this video
+     sits inside, is never still: .float-slow bobs it +/-14px on an
+     unconditional CSS loop, and while it is scrolling into view parallax.js
+     (or the un-GSAP fallback just above) is also un-tilting and scaling it
+     every frame. Both change the video's own bounding box, so a single tight
+     threshold with no buffer flips isIntersecting back and forth as that box
+     wobbles near the edge, each flip pausing and restarting playback. That
+     restart, repeated every few seconds, is what reads as flicker.
+     play() on an already-playing video is a harmless no-op, so only pause
+     needed guarding: it now waits 400ms after the video is reported off
+     screen, and a re-entry inside that window cancels it, so a brief wobble
+     across the boundary no longer stops the clip. */
   const heroVideo = document.getElementById('heroVideo');
   if (heroVideo && !reduced) {
+    let pauseTimer = null;
     new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) heroVideo.play().catch(() => {});
-          else heroVideo.pause();
+          if (e.isIntersecting) {
+            clearTimeout(pauseTimer);
+            heroVideo.play().catch(() => {});
+          } else {
+            clearTimeout(pauseTimer);
+            pauseTimer = setTimeout(() => heroVideo.pause(), 400);
+          }
         });
       },
       { threshold: 0.15 },

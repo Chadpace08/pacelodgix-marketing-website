@@ -120,9 +120,14 @@
      ════════════════════════════════════════════════════════════════════════ */
 
   /* ── Neutrals — the canvas (the 95%) ──────────────────────────────────── */
-  --ink:        #101512;   /* near-black text on light — a hair of green in it */
-  --ink-2:      #3B423D;   /* secondary text */
-  --ink-3:      #6C736D;   /* muted text / captions */
+  --ink:        #101512;   /* near-black text on light, a hair of green in it */
+  --ink-2:      #262D28;   /* secondary text */
+  /* Darkened 19 Sep 2026 on Chad's read of the live page. Every muted line
+     (ledes, card copy, captions) looked pale next to the near-black headings.
+     The old value (#4B534D) already cleared AA on porcelain by the numbers.
+     This is a legibility call, not a compliance fix, and it only improves
+     the ratio further. Was #4B534D. */
+  --ink-3:      #333B36;   /* muted text / captions */
   --porcelain:  #FBFBF9;   /* light section background — never pure white */
   --surface:    #FFFFFF;   /* cards / raised panels on light */
   --surface-2:  #F3F3F0;   /* subtle inset panel */
@@ -166,9 +171,14 @@
      emerald and clears AA. */
   --on-accent:    #FFFFFF;
 
-  /* Ink roles on the graphite slabs (measured against --graphite). */
+  /* Ink roles on the graphite slabs (measured against --graphite).
+     --ink-dark-2 raised from 0.60 to 0.74 on 19 Sep 2026, same reason as
+     --ink-3 above: supporting copy on the dark sections (automation, mobile,
+     the final CTA) read as too faint against the near-black floor. 0.60
+     already cleared AA; 0.74 clears it with more room and sits well short of
+     --ink-dark-1, so the two tiers stay visibly different. */
   --ink-dark-1: rgba(236, 237, 234, 0.92);
-  --ink-dark-2: rgba(236, 237, 234, 0.60);
+  --ink-dark-2: rgba(236, 237, 234, 0.74);
 
   --border:        var(--hairline);
   --border-strong: var(--hairline-2);
@@ -753,7 +763,14 @@ main:focus-visible { outline: 0; box-shadow: none; }
    top-edge highlight, so cards read as raised glass on the near-black. */
 .dark .glass,
 .section.dark .glass {
-  background: rgba(255, 255, 255, 0.035);
+  /* Raised from 0.035 on 19 Sep 2026. At the old value the card read as
+     solid near-black rather than glass, and it is the only card on the site
+     with no colour override for its own body copy, so .card p was falling
+     through to --text-muted, a token built for a cream background, at roughly
+     2.4:1 on this floor. Fixed properly below with an inverse colour on
+     .sync .card p; the lift here is separate and just makes the panel itself
+     read as translucent, which is what "glass" is meant to look like. */
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--edge-dark);
   -webkit-backdrop-filter: blur(12px);
           backdrop-filter: blur(12px);
@@ -761,6 +778,13 @@ main:focus-visible { outline: 0; box-shadow: none; }
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 20px 44px -20px rgba(0, 0, 0, 0.6);
 }
+/* .card has no built-in inverse text colour; .card p is always --text-muted,
+   a token calibrated for cream. .sync is the only place .card sits on a dark
+   floor, so the fix is scoped here rather than changing .card globally,
+   which would also touch the light "problem" cards, on cream, where
+   --text-muted is correct. */
+.sync .card p { color: var(--ink-dark-1); }
+.sync .card-icon { color: var(--green-bright); }
 
 /* ── Animated gradient blobs ─────────────────────────────────────────── */
 .blobs {
@@ -2897,19 +2921,10 @@ main:focus-visible { outline: 0; box-shadow: none; }
   top: 50%;
   transform: translateY(-50%);
 }
-/* A warm halo bedded under the mockup, so the frame sits IN the page instead
-   of floating on flat cream. Sized past the frame on every side; it reads as
-   light spill, not as a second box. */
-.scrolly-stage::before {
-  content: "";
-  position: absolute;
-  inset: -14% -10%;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(30, 122, 80, 0.10), transparent 62%),
-    radial-gradient(ellipse at 30% 80%, rgba(16, 21, 18, 0.06), transparent 60%);
-  pointer-events: none;
-}
+/* A semi-dark edge instead of the soft halo that used to sit under the
+   mockup: Chad found the halo read as a smudge while scrolling, and wanted
+   the screenshot itself to read as a clearly bordered object. */
+.scrolly-stage .frame { border: 1px solid rgba(16, 21, 18, 0.28); }
 
 /* The seven screenshots are stacked absolutely in one frame; exactly one is
    visible at a time and scroll.js cross-fades between them. WITHOUT the
@@ -3139,7 +3154,11 @@ main:focus-visible { outline: 0; box-shadow: none; }
   height: auto;
   display: block;
 }
-.marketing-honesty {
+/* .honest-note shares this rule rather than copying it. Both are the same
+   thing: the small centred line under a section that states a limit or
+   names something still being built. One rule so the two cannot drift. */
+.marketing-honesty,
+.honest-note {
   margin-top: var(--lead);
   font-size: var(--fs-sm);
   color: var(--text-muted);
@@ -3147,6 +3166,14 @@ main:focus-visible { outline: 0; box-shadow: none; }
   max-width: 60ch;
   margin-inline: auto;
   line-height: 1.6;
+}
+.section.dark .honest-note { color: var(--ink-dark-2); }
+
+/* A tick list in a section that has no stage beside it, so it centres as a
+   block while its items stay left aligned and readable. */
+.ticks.center {
+  max-width: 54ch;
+  margin-inline: auto;
 }
 
 @media (max-width: 860px) {
@@ -3188,6 +3215,12 @@ main:focus-visible { outline: 0; box-shadow: none; }
   margin-bottom: var(--s-3);
   font-size: var(--fs-base);
 }
+/* .ticks li carries no text colour of its own, so it was inheriting body's
+   --text-light (near-black), the right default on every light section this
+   list sits in. The mobile section is the one dark exception, and it had no
+   override, so its own feature list was rendering in near-black on graphite.
+   Found 19 Sep 2026 while fixing the same fault on .sync. */
+.section.dark .ticks li { color: var(--ink-dark-1); }
 /* These checkmarks are meaningful, not decorative — they are what marks a line
    as "included", so WCAG 1.4.11 holds them to 3:1 against their background.
    Brand gold --accent is 2.35:1 on cream and ~2.5:1 on a white card, i.e. it
@@ -4314,9 +4347,16 @@ main:focus-visible { outline: 0; box-shadow: none; }
   .quote-grid footer span { font-size: 0.76rem; }
 
   /* ── Pricing ───────────────────────────────────────────────────────── */
-  .price-grid { gap: 1.1rem; margin-top: 2.25rem; }
+  /* Raised from 1.1rem on 19 Sep 2026, matching the .cards spacing pass.
+     1.1rem is enough gap for two plain cards, but the "Most popular" badge
+     sits on top of the featured card and pokes 11px above its own edge, so
+     the badge itself only had a few px of clearance from the card above.
+     The extra margin-top on .price-card.featured, not a bigger grid gap,
+     gives the badge room without also pushing Starter and Enterprise apart
+     from each other, where there is no badge to clear. */
+  .price-grid { gap: 1.4rem; margin-top: 2.25rem; }
   .price-card { padding: 1.5rem 1.25rem; border-radius: var(--r-md); }
-  .price-card.featured { padding-block: 1.9rem; }
+  .price-card.featured { padding-block: 1.9rem; margin-top: 0.75rem; }
   .pc-badge { font-size: 0.6rem; top: -11px; }
   .pc-for { font-size: 0.8rem; margin-bottom: 0.9rem; }
   .pc-amt { font-size: 2.4rem; margin-bottom: 1.1rem; }

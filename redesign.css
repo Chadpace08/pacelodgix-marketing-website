@@ -465,33 +465,123 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
    large is the whole Linear/Wander effect, and a long one set small is what
    made the old hero read as a paragraph in a serif. */
 .hero-copy h1 {
-  color: var(--ink);
+  /* Chad, 20 Sep 2026: --ink read as "very very dark" on the new longer
+     headline. --ink-2 is the next step up the same scale, still a confident
+     heading colour, just not near-black. */
+  color: var(--ink-2);
   font-size: clamp(2.25rem, 5.2vw, 4.05rem);
   line-height: 1.02;
   letter-spacing: -0.034em;
 }
 
-/* The h1's second sentence. Dropping it to 0.4em and to --ink-3 is what lets
-   both sentences live in one heading without the block going flat: the eye
-   reads a headline and a qualifier rather than two competing statements. It
-   stays inside the h1, so the heading text Google sees is the full supplied
-   wording, not just the first half. */
+/* The h1's second sentence.
+
+   ROUND 19 (20 Sep 2026). Making this EXACTLY equal to the lede was the
+   previous pass and it is what Chad was looking at when he said the hero type
+   did not look good. Two supporting paragraphs at the same size, the same
+   colour and the same weight, seven lines of them stacked under the headline,
+   give the eye nothing to rank, so the block reads as one grey slab rather
+   than as a headline with support under it.
+
+   THE REAL DEFECT WAS TRACKING, NOT SIZE. This span inherits the h1's
+   letter-spacing, which is -0.034em set for display size. On a 15.5px line
+   that is roughly -0.06em: measurably tighter than the lede directly below at
+   the identical font-size, which is why one looked smaller and denser than
+   the other even though the numbers matched. Reset to normal here.
+
+   The ladder now runs headline, then this (the positioning line, nearest the
+   headline so it carries more weight), then the lede (the feature and price
+   line, quieter). One step of size and one step of colour, no more. */
 .hero-copy h1 .hero-h1-sub {
   display: block;
-  margin-top: 0.46em;
-  font-size: 0.4em;
-  font-weight: 500;
-  line-height: 1.18;
-  letter-spacing: -0.016em;
-  color: var(--ink-3);
+  margin-top: 0.7em;
+  margin-inline: auto;
+  /* TWO LINES ON A DESKTOP, on request (Chad, 20 Sep 2026). 34ch broke this
+     113 character sentence into three short lines under a headline that runs
+     the full width, which left a visible notch in the middle of the block.
+     58ch is the measure that takes it to two even lines and still keeps it
+     narrower than the h1 above, so the hero still tapers.
+     RE-MEASURE THIS IF THE SENTENCE CHANGES LENGTH. It is a cap, not a fixed
+     width, so it goes back to three lines on a tablet by itself. */
+  max-width: 58ch;
+  font-size: 1.32rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  /* Evens the two lines instead of leaving a long one over a short one. */
+  text-wrap: balance;
+  color: var(--ink-2);
 }
+/* The lede steps down and back, so the two are a pair rather than twins. The
+   margin is the same correction the phone block makes and for the same
+   reason: styles.css puts --s-5 above the lede, which on a desktop opened a
+   60px hole between two supporting lines that belong to each other. */
+.hero-copy .lede {
+  max-width: 46ch;
+  margin-top: 1.25rem;
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+.hero-copy h1:has(+ .lede) { margin-bottom: 0.4rem; }
 /* --green-bright is calibrated for the dark floor and measures near 2:1 here.
-   --green-ink is the token that clears AA on light — the same swap the
+   --green-ink is the token that clears AA on light, the same swap the
    styles.css comment describes, run in the opposite direction. */
 .hero-copy h1 .hero-green,
 .hero-copy h1 .text-green { color: var(--green-ink); }
 
-.hero-copy .lede { color: var(--ink-2); }
+/* This unconditional h1 font-size above was silently overriding the phone
+   fix styles.css already ships at 600px (clamp(1.7rem, 7.2vw, 2.4rem)), same
+   selector, same specificity, redesign.css just loads later. On a 375px
+   phone the longer headline pinned to this rule's 2.25rem minimum and broke
+   into four ragged lines. Restating the phone clamp here, after this file's
+   own rule, is what makes it win again. */
+@media (max-width: 600px) {
+  .hero-copy h1 {
+    font-size: clamp(1.7rem, 7.2vw, 2.4rem);
+    /* 1.02 is a display leading. Held against three lines on a 375px screen
+       the descenders of one line very nearly touch the caps of the next, and
+       the headline reads as a solid block instead of three lines. 1.08 is the
+       smallest opening that separates them and still looks set, not typed. */
+    line-height: 1.08;
+  }
+  .hero-copy h1 .hero-h1-sub {
+    font-size: 1.05rem;
+    margin-top: 0.8em;
+    max-width: 30ch;
+  }
+  /* THE RHYTHM, and it is the reason the block looked unresolved. The gaps
+     ran 31px, 40px, 11px, 24px going down: near enough to each other at the
+     top that the headline, the sub and the lede read as three unrelated
+     paragraphs, then the one real break (before the buttons) was barely
+     larger than the gaps inside the text. Now 20px holds the three text
+     blocks together as one group, and 39px is the single break before the
+     call to action. Same total height, a hierarchy instead of a list. */
+  .hero-copy h1:has(+ .lede) { margin-bottom: 0.25rem; }
+  .hero-copy .lede {
+    font-size: 0.94rem;
+    margin-top: 1rem;
+    max-width: 38ch;
+  }
+  /* Centred type with a ragged last line is what made "at P399/month" hang
+     on its own under two full lines. balance evens the line lengths. Chrome,
+     Safari and Firefox all support it; anywhere else it is ignored and the
+     wrap is exactly what it is today. */
+  .hero-copy h1 .hero-h1-sub,
+  .hero-copy .lede,
+  .hero-note { text-wrap: balance; }
+  /* The buttons were 160px wide, centred, on a 375px screen: the column
+     shrink wrapped to its content because nothing gave it a width. Chad's
+     users are on phones, so the primary action takes the full measure. */
+  .hero-actions {
+    width: 100%;
+    max-width: 21rem;
+    margin-inline: auto;
+  }
+}
+
+.hero-copy h1 .hero-h1-sub { color: var(--ink-2); }
+/* One step quieter than the sub above it. Both still clear AA on cream. */
+.hero-copy .lede { color: var(--ink-3); }
 .hero-proof li   { color: var(--ink-2); }
 .hero-proof svg  { stroke: var(--green); }
 .hero-note            { color: var(--ink-3); }
@@ -582,11 +672,21 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
      amputated by body's overflow-x:clip, so it falls back to the hero's own
      padding and sits flush in the gutter instead.
 
-     Vertical values are px against the hero's own box — the copy block is a
+     Vertical values are px against the hero's own box, the copy block is a
      fixed stack of type at these widths, so a percentage would only add
-     indirection. */
+     indirection.
+
+     148px WAS TUNED FOR A TWO-LINE HEADLINE. The h1 shortened to "Run your
+     property from one place." on 20 Sep 2026 and now sets as ONE line at
+     this width range, not two, so the headline's own text now runs centred
+     and close to full measure right where this card used to sit clear of it.
+     Measured headless at 1280, 1440 and 1920px: the headline's first line and
+     this card overlapped by 24 to 140px at every one of them. 300px clears
+     the headline and the sub-line under it (which also dips into this card's
+     column below about 1350px) at every width from 1280 up, checked the same
+     way. RE-MEASURE if the headline changes length again. */
   .float-booking {
-    top: 148px;
+    top: 300px;
     left: max(clamp(1.2rem, 4vw, 3rem), calc(50% - 700px));
     right: auto;
   }
@@ -885,36 +985,13 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
 
 
 /* ══════════════════════════════════════════════════════════════════════════
-   ROUND 8 — #features BECOMES A CHAPTER THAT OPENS DARK AND RESOLVES LIGHT
+   ROUND 20 (20 Sep 2026). #features IS NOW ONE FLAT, SUBTLE GREEN FIELD.
 
-   THE BRIEF: "dark colour then slowly turns to light colours."
-
-   HOW THE DARK IS MIXED, because this is the part that usually goes wrong. The
-   obvious way is to write a gradient of literal colours — near-black, then a
-   mid green-grey, then cream. Every one of those middle stops has to be
-   invented, and invented mid-tones between a dark green and a warm cream come
-   out as mud or as a grey the brand does not contain.
-
-   So there are no middle colours here. There is ONE dark — the hero floor's
-   own near-black forest — laid over the page's porcelain and faded out by
-   ALPHA. Every tone between the two ends is then the arithmetic blend of the
-   two colours the page already uses, which is why the middle of this section
-   reads as warm shadow rather than as a third colour that wandered in.
-
-   THE TOP EDGE dissolves rather than cuts. The section above (#numbers) ends
-   on porcelain, and a hard black line across the middle of a light page reads
-   as a rendering fault. Stop 0% is fully transparent and 6% is fully dark, so
-   the chapter opens over roughly a hundred pixels.
-
-   THE BOTTOM EDGE reaches zero at 90%, which puts the last row of cards and
-   the section's padding back on plain porcelain — so #showcase below it
-   continues on the same ground with nothing to reconcile.
-
-   WHAT IT DOES FOR THE GRID, and the reason it is worth doing at all: the
-   cream cards were cream panes on a cream field, which is a hard place to make
-   anything float. Against the dark opening they are the brightest things on
-   the page, and they hand that brightness back as the field comes up to meet
-   them. The eye travels top to bottom because the contrast does.
+   Was: a gradient that opened near black and faded to porcelain by 90 percent,
+   so the "Payments & Finance" and "Growth & Reach" panes sat on a dark ground
+   while the panes above them sat on light. Chad asked for that contrast gone:
+   one quiet green tint, unchanged from the eyebrow at the top down through
+   the "In development" pane at the bottom.
    ══════════════════════════════════════════════════════════════════════════ */
 
 #features {
@@ -945,35 +1022,14 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
   z-index: -1;
   pointer-events: none;
   background:
-    /* The closing seam. The section now ENDS dark against a light #showcase,
-       so the join needs to look decided rather than cut off. One soft lit line
-       across the bottom edge, brightest at centre and gone by the margins —
-       the same device the hero used to close its own dark chapter. */
-    radial-gradient(56% 3px at 50% 100%, rgba(70, 201, 138, 0.55) 0%, transparent 75%),
-    /* A little emerald light in the darkest part, so the bottom of the chapter
-       is lit rather than simply switched off. It sits low now, following the
-       dark; over the light top it would have done nothing at all. */
-    radial-gradient(70% 30% at 50% 88%, rgba(30, 122, 80, 0.20) 0%, transparent 72%),
-    /* REVERSED. It used to open dark and resolve light, and the section above
-       it (#numbers) ends on porcelain — so the page hit a hard dark edge and
-       then came back to cream a screen later, which read as dark-light-dark.
-       Running it the other way makes the join at the TOP disappear entirely
-       (light meeting light) and gives the reader something that actually
-       changes as they scroll instead of something they arrive at.
-
-       The first 10% stays fully clear because that is where the eyebrow,
-       heading and lede sit — they stay on light ground and keep their normal
-       dark type. The ramp then runs through the grid and holds full dark from
-       82% to the end, so it does not visibly stop mid-fade. */
-    linear-gradient(180deg,
-      rgba(9, 22, 15, 0)    0%,
-      rgba(9, 22, 15, 0)    10%,
-      rgba(9, 22, 15, 0.10) 22%,
-      rgba(9, 22, 15, 0.32) 36%,
-      rgba(9, 22, 15, 0.62) 52%,
-      rgba(9, 22, 15, 0.87) 68%,
-      rgba(9, 22, 15, 0.97) 82%,
-      rgba(9, 22, 15, 0.97) 100%),
+    /* One soft glow near the top, where the eyebrow and heading sit, and one
+       near the bottom, where the "In development" pane sits, so the field
+       still has a little life to it without ever reading as dark. */
+    radial-gradient(70% 40% at 50% 0%,   rgba(30, 122, 80, 0.10), transparent 72%),
+    radial-gradient(70% 40% at 50% 100%, rgba(30, 122, 80, 0.08), transparent 72%),
+    /* The flat tint itself. Uniform top to bottom, one light subtle green over
+       porcelain, the same colour behind every pane in the grid. */
+    linear-gradient(rgba(30, 122, 80, 0.05), rgba(30, 122, 80, 0.05)),
     var(--porcelain);
 }
 
@@ -1605,3 +1661,461 @@ h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
 @media (prefers-reduced-motion: reduce) {
   .billing-switch button { transition: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 16 (19 Sep 2026) : THE FEATURE PANES CARRY THE REAL FEATURE LIST
+
+   Two changes, both scoped to #features. The pane, the field and the hierarchy
+   from Round 15 are untouched.
+
+   1. THE ICON IS NOW ARTWORK, NOT AN INLINE SVG.
+      Each drawing in assets/icons/ already carries its own soft mint blob. The
+      Round 15 tile put that blob inside a second container (forest tint, inset
+      hairline ring), and two containers around one glyph read as muddy, not
+      premium. So the tile is stripped back to a plain transparent box and the
+      artwork becomes the icon. The 44px box is still declared in CSS, with the
+      img at width/height 100%, so the row never reflows while the picture
+      loads. Sitting AFTER the Round 15 block and after the dark-chapter block,
+      this wins on source order, which is why it lives at the end of the file.
+
+   2. A FIFTH, FULL-WIDTH PANE for what is still being built. It spans both
+      columns (1 / -1) and lays its jobs out three across rather than two, so
+      two items do not stretch to fill a row built for four. It is the last row
+      of the grid, so nothing sits beside it to match height with.
+
+   The nineteen .webp files are generated from pms-app/Feature Icons/*.png,
+   trimmed to their alpha bounds, padded square, resized to 128px and encoded
+   at quality 90. The originals are around 1MB each, 16.5MB for the set, and
+   must never be linked from this page.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#features .jc-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+#features .jc-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hover: the tile's tint and ring are gone, so there is nothing left to warm.
+   A small lift on the artwork alone is the whole signal now, and it still
+   composites (transform only, never layout). The row tint and the title colour
+   are inherited from Round 15 and stay as they are. */
+@media (hover: hover) {
+  #features .jc:hover .jc-icon {
+    transform: translateY(-2px) scale(1.07);
+    background: none;
+    box-shadow: none;
+  }
+}
+
+/* ── The full-width "In development" pane ─────────────────────────────────── */
+#features .job-group.jg-wide { grid-column: 1 / -1; }
+
+/* This pane turns on its side: the head sits LEFT and the jobs sit right of it,
+   rather than the head sitting above a short row. Two jobs stacked under a
+   full-width head leave most of the pane empty, which reads as a mistake. The
+   side-by-side split fills the row and gives the section a different closing
+   shape from the four panes above it, which is the right signal for the one
+   pane whose contents are not live yet.
+
+   The head's rule turns with it: bottom border off, right border on. */
+@media (min-width: 901px) {
+  #features .job-group.jg-wide {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+  #features .jg-wide .jg-head {
+    padding-bottom: 0;
+    padding-right: var(--s-5);
+    border-bottom: 0;
+    border-right: 1px solid var(--hairline);
+  }
+  #features .jg-wide .jg-num { right: var(--s-5); }
+  #features .jg-wide .jg-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Below 900px the bento is already one column, so the pane goes back to the
+   ordinary head-on-top stack and inherits everything from Round 15. */
+@media (max-width: 560px) {
+  #features .jg-wide .jg-items { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #features .jc:hover .jc-icon { transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 16b (19 Sep 2026) : THE SHOWCASE FRAME MATCHES THE NEW CAPTURES
+
+   The seven showcase screenshots were replaced with current ones. The July set
+   was 1569x1002, near enough to the frame's 16:10 that it filled it. The new
+   set is browser-window captures, 1600x787, about 2.03:1. Left at 16:10 the
+   picture would sit short and leave a fifth of the frame showing background.
+
+   SCOPED TO #showcase, and that matters. `.frame-browser .frame-screen` in
+   styles.css is shared with the marketing-section frames (1440x900) and with
+   the light-vs-dim dashboard comparison, both of which are still 16:10 and
+   would be cropped by this.
+
+   WHY 782 AND NOT 787. The frame is set a few pixels SHORTER than the picture
+   on purpose. The img is width:100%/height:auto, so at some viewport widths a
+   browser rounds the two heights apart and a hairline of background shows
+   along the bottom edge. Making the frame slightly shorter means the picture
+   always overflows by two or three pixels and is clipped instead. Do not
+   "correct" this to 787.
+   ══════════════════════════════════════════════════════════════════════════ */
+#showcase .frame-browser .frame-screen { aspect-ratio: 1600 / 782; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 16c (19 Sep 2026) : THE HERO FRAME MATCHES THE NEW RECORDING
+
+   The hero clip was replaced and its browser chrome cropped off, which left
+   1920x944, about 2.03:1 instead of 16:9. styles.css sets
+   `.frame-browser .frame-screen-video { aspect-ratio: 16/9 }` and the <video>
+   inside it is object-fit: cover, so at 16:9 the new clip would be blown up and
+   have its left and right edges cropped, taking the app's sidebar with them.
+   That is the exact failure the note in styles.css warns about, arriving from
+   the other direction.
+
+   This is set to the clip's EXACT shape, not a few pixels short the way the
+   showcase frame is. The showcase holds an <img> at height:auto, which can
+   round short and show a gap. A <video> here is object-fit: cover, so it always
+   fills the box and the only thing an exact match can cost is a sub-pixel crop.
+
+   The hero frame is now the same shape as the showcase frame, which is not a
+   coincidence: both are browser-window captures at 1080p.
+   ══════════════════════════════════════════════════════════════════════════ */
+.hero-stage .frame-browser .frame-screen-video { aspect-ratio: 1920 / 944; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 17 (19 Sep 2026). Two new sections: #problem and #customers.
+   Both are light sections and both reuse the existing card language: a white
+   surface on the page ground, one hairline border, a soft shadow, no gradient
+   and no motion beyond the shared .reveal entry. Nothing here introduces a new
+   colour; every value below is an existing token.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The problem ─────────────────────────────────────────────────────────── */
+.problem-quote {
+  max-width: 46rem;
+  margin: 2.5rem auto 0;
+  padding: 0 0 0 1.25rem;
+  border-left: 3px solid var(--gold);
+  text-align: left;
+}
+/* ROUND 19 (20 Sep 2026). This is a real sentence from a real operator, Yen
+   Escarpe at JDN Beach Resort, and it was set as plain upright text at 18px
+   with a gold rule beside it, which reads as another paragraph of page copy
+   rather than as somebody speaking. Three changes, all texture, no new
+   colour: real curly quote marks, a step down in size so it sits under the
+   lede instead of competing with it, and italic so the voice changes.
+
+   The marks are pseudo-elements, not characters in index.html, so the quoted
+   sentence stays clean in the markup and in the DOM a screen reader walks.
+   \201C and \201D are the curly pair; straight typewriter quotes on a page
+   set in Inter look like an unclosed tag. */
+.problem-quote p {
+  font-size: clamp(0.98rem, 1.7vw, 1.2rem);
+  line-height: 1.55;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  margin: 0;
+}
+.problem-quote p::before { content: "\201C"; }
+.problem-quote p::after  { content: "\201D"; }
+.problem-quote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-style: normal;
+  color: var(--text-muted);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 62rem;
+  margin: 3rem auto 0;
+}
+.problem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  text-align: left;
+  /* ROUND 19 (20 Sep 2026). Icon left, words right, at every width. Three
+     bare headings in a row had nothing to scan by, and Chad sent a reference
+     with a tile beside each one. The tile is flex: none so a long heading
+     cannot squeeze it, and align-items is flex-start so the tile stays level
+     with the heading rather than centring against a three line paragraph. */
+  display: flex;
+  align-items: flex-start;
+  gap: 1.05rem;
+}
+.problem-body { min-width: 0; }
+
+/* The tile. A circle, not the rounded square used elsewhere on the page: the
+   square tile is this site's language for a FEATURE, and these three are
+   problems. Different shape, so the eye files them separately. The fill is
+   --green at 10%, so it is the brand green and not a new colour. */
+.problem-ico {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(30, 122, 80, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(30, 122, 80, 0.14);
+  color: var(--green-ink);
+}
+.problem-ico svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  /* 1.8, not Tabler's own 2. Their stroke is drawn for a 24px icon; held at
+     26px on a pale tile a 2px stroke reads as a heavier weight than every
+     other line icon on this page. */
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The gold pip. Drawn in CSS rather than shipped as a fourth svg per card:
+   it is one circle and one bar, and at 20px an svg would cost three more
+   requests worth of markup for nothing. The ring is the card's own surface
+   colour, which is what lifts the pip off the tile edge instead of letting
+   the two circles merge into one shape. */
+.problem-pip {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px var(--bg-card);
+}
+/* The mark inside it. White, and it is the one white on gold pairing on the
+   site: the pip is aria-hidden decoration carrying no text, so it is read as
+   a shape, not as a character anyone has to decipher. */
+.problem-pip::before,
+.problem-pip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  border-radius: 1px;
+  background: #FFFFFF;
+  transform: translateX(-50%);
+}
+.problem-pip::before {
+  top: 4.5px;
+  width: 2px;
+  height: 6px;
+}
+.problem-pip::after {
+  bottom: 4px;
+  width: 2px;
+  height: 2px;
+}
+.problem-card h3 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+  /* Was --text. Green ties the heading to its own tile and to the rule under
+     it, so each card reads as one object rather than an icon next to some
+     type. --green-ink is the cut that clears AA on cream. */
+  color: var(--green-ink);
+}
+/* The short rule under the heading is REMOVED, on request (Chad, 20 Sep
+   2026): at 26x3px next to the icon tile above it, it read as a stray
+   fragment rather than a deliberate mark. The heading's own green colour
+   and the tile beside it are what ties each card together now. */
+.problem-card p {
+  font-size: 0.97rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Customers ───────────────────────────────────────────────────────────── */
+.cust-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 64rem;
+  margin: 3rem auto 0;
+}
+.cust-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 2rem;
+  margin: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.cust-card blockquote { margin: 0; flex: 1; }
+.cust-card p {
+  font-size: 0.97rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0;
+}
+/* The line under the pull-quote, italic to read as the rest of a quotation
+   rather than a caption. */
+.cust-card p:not(.cust-lead) { font-style: italic; }
+/* The pull-quote. The rest of the testimonial sits under it at body weight, so
+   a visitor who reads only the bold line still gets the point. Every word is
+   the customer's; the emphasis is typographic, not editorial. */
+.cust-card .cust-lead {
+  font-size: clamp(1.08rem, 1.8vw, 1.25rem);
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.9rem;
+}
+.cust-card figcaption {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.cust-name {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.97rem;
+}
+.cust-role {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+/* ── Mobile. Single column for both, per the mobile-first rule. ──────────── */
+@media (max-width: 860px) {
+  .problem-grid,
+  .cust-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .problem-card,
+  .cust-card { padding: 1.5rem; }
+  .problem-quote { margin-top: 2rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ROUND 18 (19 Sep 2026). #sync cards on a phone, mobile only.
+
+   This is the same recipe ROUND 11 already built for the old three-card
+   "problem" section, retargeted at #sync's three cards ("What arrives on its
+   own" / "What you fill in" / "What it will not touch"), which is the same
+   shape of content: three short cards meant to be read in order. ROUND 11's
+   own cards were replaced by a different section in a later pass and now use
+   different class names, so that code is dormant; nothing here duplicates or
+   conflicts with it.
+
+   DESKTOP IS UNTOUCHED. Same 900px breakpoint, same reasoning: above it the
+   three cards sit side by side and there is nothing to stack.
+
+   TURNED OFF 20 Sep 2026, THEN ASKED FOR AGAIN THE SAME DAY. Chad wants the
+   cards to pile up on scroll. Both earlier attempts failed for two reasons
+   that are now fixed here rather than worked around:
+
+   1. IT NEVER ACTUALLY STUCK. .section.dark carries `overflow: hidden`
+      (styles.css), and an ancestor with overflow: hidden becomes the nearest
+      scrollport for position: sticky. That scrollport does not itself scroll,
+      so every sticky child rode the page like a static block and the effect
+      simply did not run. ROUND 19 swaps that one section to `overflow: clip`,
+      which clips identically but creates no scrollport, so sticky works. The
+      clip is still needed: .section.dark::before and ::after are drawn inside
+      the box on purpose.
+
+   2. THE CARD WAS SEE THROUGH. .card.glass is rgba(255,255,255,0.06) over a
+      12px backdrop blur. A translucent card cannot cover the card it is
+      sliding over, so the text of both showed at once and the overlap read as
+      a rendering fault, which is exactly what Chad reported. In the stack the
+      surface goes opaque and keeps the glass hairline and highlight, so it
+      still belongs to the same card family.
+
+   WHAT IT LOOKS LIKE NOW: three sheets. Each pins 14px lower than the one
+   before, so the stack keeps a visible edge of every card underneath, and the
+   arriving card casts a shadow UPWARD onto the one it covers, which is the
+   cue that says "on top of" rather than "instead of". Above 900px the three
+   cards sit side by side and none of this applies. */
+@media (max-width: 900px) {
+  /* THE ALIGNMENT BUG, and it was not only in this section.
+     styles.css declares `.reveal.is-in { transform: none }`, then 230 lines
+     later, inside its own phone block, `.reveal[data-anim="left"]`. Those two
+     selectors have identical specificity (one class plus one class, one class
+     plus one attribute), so the later one wins and the reset never lands: on
+     a phone EVERY left or right reveal on this page stayed pushed down 24px
+     after it had finished animating. In #sync that is what made the gap above
+     the third card 48px while the gap above the second was 24px, which is the
+     uneven spacing Chad photographed. Restating the reset with the attribute
+     included puts it back in front. */
+  .reveal.is-in[data-anim="left"],
+  .reveal.is-in[data-anim="right"] { transform: none; }
+
+  /* See point 1 above. Scoped to this section, not to .section.dark, because
+     no other dark slab has anything sticky inside it. */
+  .section.dark.sync { overflow: clip; }
+
+  .sync .cards {
+    display: block;
+    /* Room under the last card for the finished stack to hold still for a
+       beat before the section scrolls away. Without it the pile assembles and
+       is gone in the same gesture. 2.5rem is the most that can go here before
+       the gap to the note below reads as an empty hole. */
+    padding-bottom: 2.5rem;
+  }
+
+  .sync .cards > .card {
+    position: sticky;
+    /* --beta-h is the announcement bar, 42px or 0 once dismissed. 4.75rem
+       clears the nav under it. --i is the card's place in the stack and is
+       what fans the pinned cards out instead of burying them. */
+    top: calc(var(--beta-h) + 4.75rem + var(--i) * 0.9rem);
+    /* The travel between one card pinning and the next arriving. Too small
+       and they land on top of each other before the reader has finished the
+       first one. */
+    margin-bottom: 2.25rem;
+    /* Opaque. See point 2 above. Sampled off the section's own floor so the
+       card still reads as lifted from it, not as a foreign panel. */
+    background: #161A17;
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 -16px 30px -14px rgba(0, 0, 0, 0.85),
+      0 22px 46px -24px rgba(0, 0, 0, 0.9);
+  }
+  .sync .cards > .card:nth-child(1) { --i: 0; }
+  .sync .cards > .card:nth-child(2) { --i: 1; }
+  .sync .cards > .card:nth-child(3) { --i: 2; }
+  .sync .cards > .card:last-child { margin-bottom: 0; }
+
+  /* The lift on hover is for a pointer. On a phone it fires on tap and would
+     jump a pinned card out of the stack. */
+  .sync .cards > .card:hover { transform: none; }
+}
+
+/* A pinned card must not animate its own surface while it is being covered,
+   so nothing here is tied to scroll position beyond the sticky itself. Users
+   who ask for less motion still get the stack, because sticky is layout, not
+   animation, and it is the only thing carrying the meaning. */
+
+/* Keeps a hyphenated compound whole when the line breaks. Used on
+   "short-term" in the hero sub line; see the note beside it in index.html. */
+.nb { white-space: nowrap; }
