@@ -82,6 +82,40 @@
     if (pimg.complete) panPhone(); else pimg.addEventListener('load', panPhone);
   }
 
+  /* Features: full-width pages that stack as you scroll.
+     --stick: where each page pins. Normally just under the header; a page
+     taller than the screen pins higher, so it scrolls fully into view first.
+     --cover: 0 to 1, how far the next page has slid over this one. */
+  var groups = document.querySelectorAll('.fgroup');
+  if (groups.length) {
+    var hdr = document.querySelector('.hdr'), bar = document.querySelector('.sticky');
+    var gTick = false;
+    var pinTops = [];
+    var measure = function () {
+      var vh = window.innerHeight, h = hdr.offsetHeight;
+      var b = bar && getComputedStyle(bar).display !== 'none' ? bar.offsetHeight : 0;
+      groups.forEach(function (g, i) {
+        var top = Math.min(h, vh - b - g.offsetHeight);
+        pinTops[i] = top;
+        g.style.setProperty('--stick', top + 'px');
+      });
+    };
+    var cover = function () {
+      gTick = false;
+      var vh = window.innerHeight;
+      for (var i = 0; i < groups.length - 1; i++) {
+        var nextTop = groups[i + 1].getBoundingClientRect().top;
+        var c = Math.min(1, Math.max(0, (vh - nextTop) / (vh - pinTops[i + 1])));
+        groups[i].style.setProperty('--cover', c.toFixed(3));
+      }
+    };
+    var onG = function () { if (!gTick) { gTick = true; requestAnimationFrame(cover); } };
+    window.addEventListener('scroll', onG, { passive: true });
+    window.addEventListener('resize', function () { measure(); onG(); });
+    window.addEventListener('load', function () { measure(); onG(); });
+    measure(); cover();
+  }
+
   /* Automation: the live site's timeline. Each step lights up as it comes into
      view, and the gold spine draws itself as the section is read. */
   var flow = $('flow');
