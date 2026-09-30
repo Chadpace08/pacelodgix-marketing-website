@@ -5,22 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Property Management System Philippines | Pace Lodgix PMS</title>
   <meta name="description" content="Property management software for Philippine vacation rentals, Airbnb hosts and resorts. Calendar sync with Airbnb, Agoda and Booking.com, every guest payment in one place, and your own commission-free booking site. From &#8369;399 a month.">
-  <!-- The keywords meta is ignored by Google and Bing. Kept only because it
-       costs nothing; do not spend time maintaining it. -->
   <meta name="keywords" content="property management system Philippines, vacation rental software Philippines, Airbnb management software Philippines, resort booking system Philippines, PMS, channel manager, direct booking website">
   <link rel="canonical" href="https://pacelodgix.com/">
-  <!-- Matches the TOP STOP of the hero field exactly, so the phone's browser
-       chrome continues the page instead of capping it with a mismatched strip.
-
-       CHANGED WITH THE REDESIGN, and it has to move whenever the hero's top
-       colour moves. It was #061009 for the dark hero. Round 3 in redesign.css
-       took the hero back to light, and that field now starts at #FDFBF4,
-       see the .hero-field linear-gradient's first stop. Leaving the old dark
-       value here would have put a near-black bar above a cream page. -->
-  <meta name="theme-color" content="#FDFBF4">
+  <meta name="theme-color" content="#FDFAF0">
   <meta name="robots" content="index, follow, max-image-preview:large">
 
-  <!-- Open Graph -->
   <meta property="og:title" content="Vacation Rental Property Management Software &amp; PMS | Pace Lodgix">
   <meta property="og:description" content="A modern property management system for vacation rentals, Airbnb hosts and resorts. Bookings, two-way calendar sync, guest management, payments and financial reports. All in one platform.">
   <meta property="og:image" content="https://pacelodgix.com/assets/og-image.jpg">
@@ -32,76 +21,19 @@
   <meta property="og:site_name" content="Pace Lodgix">
   <meta property="og:locale" content="en_PH">
 
-  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Vacation Rental Property Management Software &amp; PMS | Pace Lodgix">
   <meta name="twitter:description" content="Manage bookings, calendar sync, guests, payments and financial reports for vacation rentals, Airbnb listings and resorts. All in one modern property management platform.">
   <meta name="twitter:image" content="https://pacelodgix.com/assets/og-image.jpg">
 
-  <!-- Favicon is the --primary silhouette, not the white render: browser tabs
-       are light in both themes and the white mark vanished against them.
-       apple-touch-icon is the reverse (white on --primary-dark) and is flat
-       opaque on purpose, iOS discards alpha and would matte it onto black. -->
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
   <link rel="icon" href="assets/logo-256.png" sizes="256x256">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <!-- Type: Fraunces for display, Inter for everything else.
-       The APP uses Manrope for headings; the marketing site deliberately does
-       not. Fraunces is a variable serif with an optical-size axis (opsz 9-144):
-       set large, it takes on high contrast and flared, editorial detail that
-       reads genuinely premium; set small it would still hold, but it stays
-       display-only on purpose, anything under ~1.4rem is Inter. `opsz` is
-       driven automatically by font-optical-sizing (see styles.css), so a
-       3.7rem H1 and a 1.15rem H3 each get the right cut with no manual
-       switching.
-
-       SELF-HOSTED. The two preconnects and the fonts.googleapis.com
-       stylesheet that used to sit here are gone, see the type block at the
-       top of styles.css for why. Nothing on this page now touches a third
-       party before it paints.
-
-       These three preloads are the fonts that paint above the fold: the
-       headline's roman and italic cuts, and Inter for everything else. They
-       are declared here rather than left to styles.css because a browser only
-       discovers an @font-face src AFTER it has downloaded and parsed the
-       stylesheet, which is exactly the delay that makes text flash unstyled.
-       `crossorigin` is required on font preloads even for same-origin files,
-       fonts are always fetched in CORS mode, and without it the browser
-       fetches the file a second time.
-       Only preload what is genuinely above the fold. A fourth preload starts
-       competing with the first paint rather than helping it, and the
-       latin-ext cuts are not needed for English or Filipino at all. -->
-  <!-- THE TWO FRAUNCES PRELOADS WERE REMOVED WITH THE REDESIGN, and this is a
-       real saving rather than tidying. Round 4 in redesign.css repoints
-       --font-display from Fraunces to Inter, and --font-display was the only
-       thing that referenced Fraunces, so the face is now rendered nowhere on
-       the page. A preload is an ORDER, not a hint: the browser fetches the
-       file at highest priority whether or not anything uses it, so these two
-       were pulling two woff2 files into the critical path to paint nothing,
-       and competing with the Inter file that does paint.
-
-       The @font-face blocks for Fraunces stay in styles.css untouched. They
-       cost nothing while unused, a face is only downloaded when something
-       renders it, so deleting the one line in redesign.css that repoints
-       --font-display brings the serif back whole, and these two preloads can
-       come back with it. -->
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css">
-  <!-- THE REDESIGN, rounds 3-14. Loads AFTER styles.css and overrides it,
-       the light hero, the sixteen-card feature mosaic, the type, and the
-       removal of the background grids. Delete this one line and the previous
-       design returns intact; nothing in styles.css was edited. -->
-  <link rel="stylesheet" href="redesign.css">
+  <link rel="stylesheet" href="site.css">
 
-  <!-- Restores a previous dismissal of the beta bar BEFORE first paint. Inline
-       and in <head> on purpose: loading this from nav.js would paint the bar,
-       then remove it, and every repeat visitor would see the whole page jump
-       42px. Wrapped in try/catch because localStorage throws outright in
-       Safari private mode rather than returning null. -->
   <script>try{if(localStorage.getItem('pl-beta-dismissed')==='1')document.documentElement.classList.add('beta-off');}catch(e){}</script>
 
-  <!-- Structured data. Keep the FAQ entries in sync with the #faq section below;
-       Google shows these as rich results and AI search engines quote them. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -292,1708 +224,464 @@
   </script>
 </head>
 <body>
-
-<!-- Keyboard users hit seven nav stops before the headline on every page load.
-     Visually hidden until focused; see .skip-link in styles.css. -->
-<a class="skip-link" href="#top">Skip to content</a>
-
-<!-- ═══════════════════════════ BETA NOTICE ═══════════════════════════
-     Placed after the skip link so the skip link stays the first focusable
-     thing on the page, a visitor tabbing in should still be able to jump
-     past the chrome, not land on a dismiss button.
-
-     Two versions of the sentence, one shown at a time by CSS. See the note
-     on .beta-text: this bar must never wrap to two lines. -->
-<div class="beta-bar" id="betaBar" role="region" aria-label="Product status">
-  <span class="beta-chip">Early access</span>
-  <p class="beta-text">
-    <!-- BOTH VERSIONS MUST BE A COMPLETE SENTENCE (Chad, 20 Sep 2026). The bar
-         reads as one line, chip then text, so "EARLY ACCESS  Founder support
-         included." landed as a label followed by a fragment and said nothing a
-         reader could act on. Each version now has a subject and a verb and
-         survives being read on its own. -->
-    <span class="beta-full">Early plans carry founding operator pricing, and support comes straight from the founder.</span>
-    <!-- Keep the short cut SHORT. The bar is a single flex row and this span is
-         what gets cut first. BUDGET RE-MEASURED 20 Sep 2026 at 360px, not at
-         375: 360 is the common Android width and the one that was clipping.
-         After the chip, the gap and the padding there are 189px left, which is
-         about 28 characters at this size. "Support comes from the founder."
-         was 31 and ellipsised to "the found...". This one is 24. -->
-    <span class="beta-short">You get founder support.</span>
-  </p>
-  <a class="beta-cta" href="#cta">Talk to us <span aria-hidden="true">&rarr;</span></a>
-  <button class="beta-close" id="betaClose" type="button" aria-label="Dismiss beta notice">&times;</button>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-calendar-event" viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12" /> <path d="M16 3l0 4" /> <path d="M8 3l0 4" /> <path d="M4 11l16 0" /> <path d="M8 15h2v2h-2l0 -2" /></symbol><symbol id="i-cash" viewBox="0 0 24 24"><path d="M7 15h-3a1 1 0 0 1 -1 -1v-8a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v3" /> <path d="M7 10a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -8" /> <path d="M12 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" /> <path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" /> <path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" /> <path d="M4 20h14" /></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14" /> <path d="M11 4h2" /> <path d="M12 17v.01" /></symbol><symbol id="i-file-invoice" viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4" /> <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" /> <path d="M9 7l1 0" /> <path d="M9 13l6 0" /> <path d="M13 17l2 0" /></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24"><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /> <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /> <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /> <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></symbol><symbol id="i-mail-fast" viewBox="0 0 24 24"><path d="M3 7h3" /> <path d="M3 11h2" /> <path d="M9.02 8.801l-.6 6a2 2 0 0 0 1.99 2.199h7.98a2 2 0 0 0 1.99 -1.801l.6 -6a2 2 0 0 0 -1.99 -2.199h-7.98a2 2 0 0 0 -1.99 1.801" /> <path d="M9.8 7.5l2.982 3.28a3 3 0 0 0 4.238 .202l3.28 -2.982" /></symbol><symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2m4 -14h6m-6 4h6m-2 4h2" /></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /> <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" /></symbol><symbol id="i-robot" viewBox="0 0 24 24"><path d="M6 6a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -4" /> <path d="M12 2v2" /> <path d="M9 12v9" /> <path d="M15 12v9" /> <path d="M5 16l4 -2" /> <path d="M15 14l4 2" /> <path d="M9 18h6" /> <path d="M10 8v.01" /> <path d="M14 8v.01" /></symbol><symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06" /> <path d="M15 19l2 2l4 -4" /></symbol><symbol id="i-speakerphone" viewBox="0 0 24 24"><path d="M18 8a3 3 0 0 1 0 6" /> <path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" /> <path d="M12 8l4.524 -3.77a.9 .9 0 0 1 1.476 .692v12.156a.9 .9 0 0 1 -1.476 .692l-4.524 -3.77h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h8" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /> <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" /> <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></symbol><symbol id="i-users-group" viewBox="0 0 24 24"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /> <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" /> <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /> <path d="M17 10h2a2 2 0 0 1 2 2v1" /> <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /> <path d="M3 13v-1a2 2 0 0 1 2 -2h2" /></symbol><symbol id="i-world-www" viewBox="0 0 24 24"><path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4" /> <path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4" /> <path d="M12.5 3a16.989 16.989 0 0 1 1.828 4" /> <path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4" /> <path d="M11.5 21a16.989 16.989 0 0 1 -1.826 -4" /> <path d="M12.5 21a16.989 16.989 0 0 0 1.828 -4" /> <path d="M2 10l1 4l1.5 -4l1.5 4l1 -4" /> <path d="M17 10l1 4l1.5 -4l1.5 4l1 -4" /> <path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4" /></symbol></svg>
+<div class="beta" id="beta">
+  <div class="wrap">
+    <span class="tag">Early access</span>
+    <span class="long">Early plans carry founding operator pricing, and support comes straight from the founder.</span>
+    <span class="short">You get founder support.</span>
+    <a href="#cta">Talk to us &rarr;</a>
+    <button type="button" aria-label="Close" onclick="document.documentElement.classList.add('beta-off');try{localStorage.setItem('pl-beta-dismissed','1')}catch(e){}">&times;</button>
+  </div>
 </div>
 
-<!-- Scroll progress indicator -->
-<div class="progress" id="progress" aria-hidden="true"><span></span></div>
-
-<!-- ══════════════════════════════ NAV ══════════════════════════════ -->
-<header class="nav" id="nav">
-  <!-- Brand lockup. Each asset ships twice, white for the transparent bar
-       over the dark hero, --primary for the cream bar once stuck. The pair is
-       cross-faded in CSS; see "Brand lockup" in styles.css. The images are
-       alt="" because the link carries the accessible name, otherwise the
-       wordmark would announce "Pace Lodgix" a second time. -->
-  <a class="nav-brand" href="#top" aria-label="Pace Lodgix, home">
-    <span class="brand-swap">
-      <!-- House mark, v2 artwork (25 Sep 2026), exported from pms-app/Pace Lodgix Logo v2.png.
-           One full-colour file for every surface, so there is no light or dark pair for the
-           mark any more. Only the wordmark next to it still swaps. Not square (about 1.17:1),
-           so height is set in CSS and width follows. -->
-      <img class="brand-mark" src="assets/logo-mark.png" alt="" width="40" height="34" decoding="async">
-    </span>
-    <span class="brand-swap">
-      <img class="brand-word brand-on-dark"  src="assets/wordmark-white.png"  alt="" width="102" height="20" decoding="async">
-      <img class="brand-word brand-on-light" src="assets/wordmark-forest.png" alt="" width="102" height="20" decoding="async">
-    </span>
-  </a>
-  <nav class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#showcase">Product</a>
-    <a href="#automation">Automation</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#faq">FAQ</a>
-  </nav>
-  <a class="nav-signin" href="https://app.pacelodgix.com/">Sign in</a>
-  <a class="btn btn-accent nav-cta" href="https://app.pacelodgix.com/">Start free trial</a>
-
-  <!-- ── Mobile menu ────────────────────────────────────────────────────
-       Below 900px .nav-links is display:none, and it had no replacement,
-       the only way back to Pricing or the FAQ from halfway down a 12,000px
-       phone page was to scroll to the top and hunt. This button and the
-       panel under it are that replacement.
-
-       aria-label rather than visible text: the bar is already tight at
-       320px (see the nav notes in styles.css), and the burger is drawn in
-       CSS from one span, so there is no text node to name it. -->
-  <button class="nav-toggle" id="navToggle" type="button"
-          aria-label="Menu" aria-expanded="false" aria-controls="navPanel">
-    <span class="nav-burger" aria-hidden="true"></span>
-  </button>
-
-  <!-- Ships `inert` so the closed panel is out of the tab order and the a11y
-       tree from first paint, before nav.js runs. Not `hidden`: the panel
-       animates open, and hidden/display:none cannot transition. -->
-  <div class="nav-panel" id="navPanel" inert>
-    <nav class="nav-panel-links" aria-label="Sections">
-      <a href="#features">Features</a>
+<header class="hdr">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Pace Lodgix home">
+      <img class="mark" src="assets/logo-mark.png" alt="" width="40" height="34">
+      <img class="word" src="assets/wordmark-forest.png" alt="Pace Lodgix" width="92" height="18">
+    </a>
+    <nav class="nav" aria-label="Main">
+      <div class="has-mega">
+        <button type="button" id="megaBtn" aria-expanded="false" aria-controls="mega">Features</button>
+        <div class="mega" id="mega" hidden>
+          <a href="#features"><span class="bi"><svg aria-hidden="true"><use href="#i-calendar-event"/></svg></span><b>Bookings &amp; Calendar</b><small>Take reservations, keep every calendar in step, and never sell the same night twice.</small></a>
+          <a href="#features"><span class="bi"><svg aria-hidden="true"><use href="#i-users"/></svg></span><b>Guests &amp; Properties</b><small>One home for every property, every guest, and every message you send them.</small></a>
+          <a href="#features"><span class="bi"><svg aria-hidden="true"><use href="#i-chart-bar"/></svg></span><b>Payments &amp; Finance</b><small>Invoices, payments and property performance, adding themselves up as you go.</small></a>
+          <a href="#features"><span class="bi"><svg aria-hidden="true"><use href="#i-world-www"/></svg></span><b>Growth &amp; Reach</b><small>Win bookings under your own name, bring past guests back, and run it all from your phone.</small></a>
+          <a href="#sync"><span class="bi"><svg aria-hidden="true"><use href="#i-refresh"/></svg></span><b>Calendar sync</b><small>Your calendars stay in step. Your books stay yours.</small></a>
+          <a href="#marketing-center"><span class="bi"><svg aria-hidden="true"><use href="#i-speakerphone"/></svg></span><b>Marketing Center</b><small>Your guests leave. The relationship doesn't.</small></a>
+        </div>
+      </div>
       <a href="#showcase">Product</a>
       <a href="#automation">Automation</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <!-- Sign in moves in here below 900px rather than staying in the bar,
-         the bar can hold the brand, the CTA and the burger on a 320px
-         screen, but not a fourth item. -->
-    <a class="nav-panel-signin" href="https://app.pacelodgix.com/">Sign in</a>
+    <div class="hdr-cta">
+      <a class="btn btn-ghost login" href="https://app.pacelodgix.com/">Sign in</a>
+      <a class="btn btn-primary" href="https://app.pacelodgix.com/">Start free trial</a>
+      <button class="burger" type="button" id="burger" aria-expanded="false" aria-controls="mnav" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav" hidden>
+    <div class="wrap">
+      <a href="#features"><span class="bi"><svg aria-hidden="true"><use href="#i-calendar-event"/></svg></span>Features</a>
+      <a href="#showcase"><span class="bi"><svg aria-hidden="true"><use href="#i-layout-dashboard"/></svg></span>Product</a>
+      <a href="#automation"><span class="bi"><svg aria-hidden="true"><use href="#i-mail-fast"/></svg></span>Automation</a>
+      <a href="#pricing"><span class="bi"><svg aria-hidden="true"><use href="#i-file-invoice"/></svg></span>Pricing</a>
+      <a href="#faq"><span class="bi"><svg aria-hidden="true"><use href="#i-users-group"/></svg></span>FAQ</a>
+      <a class="btn btn-ghost" href="https://app.pacelodgix.com/">Sign in</a>
+    </div>
   </div>
 </header>
 
-<!-- tabindex="-1" so the skip link can actually move focus here. Without it
-     some engines scroll to the fragment but leave focus on the link, and the
-     next Tab drops the user straight back into the nav they just skipped. -->
-<main id="top" tabindex="-1">
-
-<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-<section class="hero">
-  <!-- The hero field. This used to be a 2400x1600 resort photo under an 82%
-       scrim; the scrim was doing nearly all the visual work, and the photo made
-       the page read as a resort brochure rather than software, the deleted
-       rule had a `saturate(0.82) brightness(0.9)` on it that said exactly
-       that, which was the tell it never belonged here. It's now
-       the gradient the scrim was effectively rendering anyway, same look for
-       the type, one less image on the critical path, and the product shot below
-       finally wins the eye.
-
-       The blobs live INSIDE this element on purpose: they blend in `screen`, so
-       they need the dark field as their backdrop and the field's clipping to
-       keep them off the cream dissolve at the bottom. -->
-  <div class="hero-field" aria-hidden="true">
-    <!-- ── The animated square grid ──────────────────────────────────────
-         There is no video and no canvas here. The grid LINES are two
-         repeating CSS gradients on .hero-grid itself; each <span> below is
-         one empty box parked on one cell of that grid, fading up and back
-         down on its own loop. The whole layer is under 2KB of CSS against
-         roughly 4MB for the same thing shot as video, and it stays sharp on
-         a 5K display instead of being upscaled.
-
-         --x and --y are GRID UNITS, not pixels, read by the `.hero-grid
-         span` rule in styles.css. x is measured from the centre of the page
-         (negative = left of centre), y from the top of the hero. Because the
-         lines and the boxes are both sized from one --cell variable, a
-         square lands exactly inside a cell at every screen width, never
-         straddling a line. See the alignment note on .hero-grid before
-         changing either.
-
-         --w is how many cells WIDE a block is (default 1). The reference this
-         is modelled on is not a wall of identical squares, a handful are
-         double-width bars, and that is what stops the grid reading as a
-         chessboard. Roughly one in five. Two blocks must never overlap: a
-         --w:2 block at x also occupies x+1, so nothing else may sit there.
-
-         --d is the delay before a block first lights up, --t how long its
-         whole cycle takes. Deliberately odd numbers, because round ones make
-         the wall visibly beat in time and it starts to read as a loading
-         screen. Don't drop --t below ~3.5s; under that the blocks stop
-         breathing and start blinking.
-
-         COLOUR. Left alone, a block is white at low alpha. Two carry emerald.
-         Four are `class="sq-gold"`, brighter, ringed and given a soft halo,
-         so they are the one thing on this field that genuinely catches the
-         eye. Four is the budget: gold is the rare colour in this brand (see
-         the --gold note in the palette) and a fifth turns the wall into
-         fairy lights. Two of the four sit within four columns of centre on
-         purpose, because those are the only ones still on screen on a phone.
-
-         Blocks past about four columns from centre fall off the sides of a
-         phone. Intended, they are decoration and the layer is clipped. -->
-    <div class="hero-grid" aria-hidden="true">
-      <!-- row 0 -->
-      <span style="--x:-9;  --y:0; --w:2; --d:0s;   --t:5.5s"></span>
-      <span style="--x:-5;  --y:0;        --d:2.7s; --t:6s"></span>
-      <span style="--x:-1;  --y:0;        --d:0.7s; --t:6.5s"></span>
-      <span style="--x:3;   --y:0; --w:2; --d:4.3s; --t:5s"></span>
-      <span style="--x:7;   --y:0;        --d:1.8s; --t:4.5s"></span>
-      <!-- row 1 -->
-      <span style="--x:-10; --y:1;        --d:3.2s; --t:6s"></span>
-      <span style="--x:-7;  --y:1;        --d:5.1s; --t:4.5s"></span>
-      <span style="--x:-4;  --y:1;        --d:1.9s; --t:5s;   --sq:linear-gradient(150deg,rgba(70,201,138,0.30),rgba(70,201,138,0.08))"></span>
-      <span style="--x:1;   --y:1;        --d:6.2s; --t:5.5s"></span>
-      <span style="--x:5;   --y:1; --w:2; --d:2.4s; --t:6.5s"></span>
-      <span style="--x:8;   --y:1;        --d:4.7s; --t:5s"></span>
-      <!-- row 2 -->
-      <span style="--x:-8;  --y:2;        --d:1.3s; --t:4.5s"></span>
-      <span style="--x:-6;  --y:2;        --d:3.9s; --t:6s"></span>
-      <span style="--x:-2;  --y:2;        --d:5.6s; --t:5s"></span>
-      <span style="--x:2;   --y:2;        --d:0.4s; --t:6.5s"></span>
-      <span style="--x:6;   --y:2;        --d:3.3s; --t:5.5s"></span>
-      <!-- row 3 -->
-      <span style="--x:-9;  --y:3;        --d:4.9s; --t:5s"></span>
-      <span style="--x:-5;  --y:3; --w:2; --d:2.1s; --t:6s"></span>
-      <span style="--x:0;   --y:3;        --d:6.4s; --t:4.5s"></span>
-      <span style="--x:3;   --y:3;        --d:1.6s; --t:5.5s"></span>
-      <span class="sq-gold" style="--x:8; --y:3;    --d:2.2s; --t:5.5s"></span>
-      <!-- row 4 -->
-      <span class="sq-gold" style="--x:-10; --y:4;  --d:5.3s; --t:6s"></span>
-      <span style="--x:-7;  --y:4;        --d:0.9s; --t:5s"></span>
-      <span style="--x:-3;  --y:4;        --d:3.6s; --t:6.5s"></span>
-      <span style="--x:1;   --y:4; --w:2; --d:1.1s; --t:5s"></span>
-      <span style="--x:5;   --y:4;        --d:4.4s; --t:6s"></span>
-      <span style="--x:9;   --y:4;        --d:2.8s; --t:4.5s"></span>
-      <!-- row 5 -->
-      <span style="--x:-8;  --y:5;        --d:6.1s; --t:5.5s"></span>
-      <span style="--x:-4;  --y:5;        --d:2.3s; --t:6s"></span>
-      <span class="sq-gold" style="--x:2; --y:5;    --d:3.8s; --t:5s"></span>
-      <span style="--x:6;   --y:5; --w:2; --d:0.6s; --t:6.5s"></span>
-      <!-- row 6 -->
-      <span style="--x:-7;  --y:6;        --d:1.1s; --t:6.5s; --sq:linear-gradient(150deg,rgba(70,201,138,0.26),rgba(70,201,138,0.06))"></span>
-      <span style="--x:-2;  --y:6;        --d:4.6s; --t:5s"></span>
-      <span style="--x:3;   --y:6;        --d:3.6s; --t:5s"></span>
-      <span style="--x:7;   --y:6;        --d:5.9s; --t:6s"></span>
-      <!-- row 7 -->
-      <span style="--x:-5;  --y:7;        --d:2.9s; --t:5.5s"></span>
-      <span style="--x:0;   --y:7;        --d:2.4s; --t:6s"></span>
-      <span class="sq-gold" style="--x:4; --y:7;    --d:5.4s; --t:4.5s"></span>
-      <span style="--x:8;   --y:7;        --d:1.4s; --t:6.5s"></span>
-    </div>
-
-    <!-- Green only. The gold glow that used to sit in here is off: gold as a
-         large soft WASH over the dark green field mixes to a murky olive
-         rather than reading as warm light. Gold works on this field only as
-         small, crisp, high-alpha shapes, which is exactly what the .sq-gold
-         squares above are. The .blob-1 / .blob-3 gold rules still exist for
-         the final CTA section, which sits on a flat dark ground. -->
-    <div class="blobs">
-      <span class="hero-glow hero-glow-green"></span>
-      <span class="hero-glow hero-glow-gold"></span>
-    </div>
-  </div>
-
-  <div class="hero-copy">
-    <h1 class="reveal" data-anim="blur">
-      <!-- No hard <br>. text-wrap: balance (set on h1 globally) splits this into
-           even lines and adapts as it narrows.
-
-           HEADLINE CHANGED 20 Sep 2026, Chad: was "Every booking, calendar,
-           and peso, organized in one place." Now the shorter line below.
-           THE SEO NOTE THAT USED TO SIT HERE IS NOW STALE, not corrected in
-           place because the claim it made ("vacation rental management"
-           stays in the h1) was never literally true of the headline text
-           either version used, it referred to the topic, not a verbatim
-           phrase. The keyword coverage argument still holds: "Property
-           management system", "Philippine short-term rentals", "Airbnb
-           hosts" and "property owners" all still open the lede directly
-           under this h1, in the same above-the-fold block a crawler reads
-           together with the heading. Nothing was removed from the page, only
-           this one sentence changed. -->
-      Run your property from one place.
-      <!-- Second sentence, still inside the h1 so the heading text is exactly
-           as supplied. It is set smaller and muted rather than at display size:
-           two sentences both at 4.5rem is a wall, and the size drop is what
-           turns a long heading into a headline with a qualifier under it. -->
-      <!-- "short-term" is wrapped so it cannot break at its own hyphen. This
-           line is set with text-wrap: balance, which evens the two lines and
-           then chose "Philippine short-" / "term rentals" at every measure
-           tried, so widening the column does not move it. The span is the only
-           thing that does. Same treatment for any hyphenated word added here
-           later. -->
-      <span class="hero-h1-sub">Property management system built for Philippine <span class="nb">short-term</span> rentals, Airbnb hosts, resorts, and property owners.</span>
-    </h1>
-    <!-- The lede used to open "Built for Airbnb hosts and property managers."
-         That sentence is now the second half of the h1 directly above, so it
-         has been cut from here, repeating it verbatim two elements apart reads
-         as a mistake and dilutes the keyword rather than doubling it. -->
-    <p class="lede reveal" data-anim="up" data-delay="1">
-      Manage bookings, calendars, guests, payments, invoices, and finances in one system.
-      Plans start at &#8369;399/month
-    </p>
-    <div class="hero-actions reveal" data-anim="up" data-delay="2">
-      <!-- NOTE, CORRECTED 2026-08-24: this used to warn that self-serve signup
-           left the user without a tenant and that repointing this button at
-           the app would be a dead-end. THAT IS NO LONGER TRUE, migration 031
-           added trg_auth_user_provision_tenant on auth.users, and the signup
-           form passes business_name, so a self-serve signup now creates the
-           tenant, the owner role and the seeded defaults by itself. Verified
-           against the live database, not just the migration file.
-
-           Both buttons still point at the demo form, but that is now a SALES
-           choice (hands-on onboarding is the promise this page makes), not a
-           technical blocker. Repointing them at app.pacelodgix.com would work.
-           If you do, delete this comment rather than leaving it contradicting
-           the markup. pms-app/CLAUDE.md gotcha 25 already describes the
-           trigger correctly, read it first, because the provisioning gate on
-           `business_name` metadata is load-bearing for team invites. -->
-      <!-- CTA MODEL CHANGED 19 Sep 2026. Both buttons used to land on the demo
-           form, and the secondary one pointed at #showcase, so a button reading
-           "Schedule a Demo" scrolled to screenshots. Self-serve signup provisions
-           a tenant on its own (trg_auth_user_provision_tenant, mig 031, verified
-           against the live DB), so Starter and Growth now go straight to signup
-           and the form is kept for operators who want to talk first.
-           One label for the primary action everywhere on the page. -->
-      <a class="btn btn-accent btn-lg" href="https://app.pacelodgix.com/">Start free trial</a>
-      <a class="btn btn-glass btn-lg" href="#cta">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-        Book a demo
-      </a>
-    </div>
-    <p class="hero-note reveal" data-anim="fade" data-delay="3">
-      14 days free. No card required. We set your properties up with you.
-    </p>
-
-    <!-- Credibility strip.
-         HONESTY CONSTRAINT, read before editing. Every line here is a claim
-         about what the SOFTWARE does, and each one is verifiable against a
-         feature that actually ships (iCal two-way sync, the per-tenant booking
-         page, the onboarding promise in #faq). There are deliberately NO
-         customer counts, no "trusted by N hosts", no partner logos and no star
-         ratings, because none of those are true yet and a prospect who checks
-         will never come back.
-
-         When there ARE real customers, this is the right slot to swap in the
-         stronger version, a count, a named testimonial, or a logo row. Swap
-         it; don't add invented numbers alongside it. -->
-    <!-- Three DIFFERENT icons, not the same checkmark three times (Chad, 20
-         Sep 2026). Source: Tabler outline set, D:\CLAUDE CODE\Saas Icons\
-         tabler icons\tabler\outline. Each svg is that icon's own <path> data
-         pasted in as-is (viewBox 0 0 24 24 matches); width/height/stroke are
-         left off the svg tag on purpose, .hero-proof svg in styles.css sets
-         all of that (16px, stroke, stroke-width 2.2) for every icon here so
-         a new one dropped in later needs no extra CSS. -->
-    <ul class="hero-proof reveal" data-anim="up" data-delay="5">
-      <li>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h12" /><path d="M20 14l2 2h-3" /><path d="M20 18l2 -2" /><path d="M19 16a3 3 0 1 0 2 5.236" /></svg>
-        <!-- "Automatic", not "real-time": the pricing cards further down this
-             same page sell 4-hourly sync on Starter and hourly on Growth, so
-             "real-time" here contradicts them within one scroll. -->
-        Two-way calendar sync with Airbnb, Agoda, Booking.com and more
-      </li>
-      <li>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4" /><path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4" /><path d="M12.5 3a16.989 16.989 0 0 1 1.828 4" /><path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4" /><path d="M11.5 21a16.989 16.989 0 0 1 -1.826 -4" /><path d="M12.5 21a16.989 16.989 0 0 0 1.828 -4" /><path d="M2 10l1 4l1.5 -4l1.5 4l1 -4" /><path d="M17 10l1 4l1.5 -4l1.5 4l1 -4" /><path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4" /></svg>
-        Take direct bookings on your own website, with no platform commission
-      </li>
-      <li>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2" /><path d="M19 13.488v-1.488h2l-9 -9l-9 9h2v7a2 2 0 0 0 2 2h4.525" /><path d="M15 19l2 2l4 -4" /></svg>
-        Free onboarding, with your properties set up for you
-      </li>
-    </ul>
-  </div>
-
-  <!-- Floating dashboard mockup + the cards that orbit it -->
-  <div class="hero-stage">
-    <div class="frame frame-browser float-slow" id="heroFrame">
-      <div class="frame-bar"><span></span><span></span><span></span></div>
-      <!-- A real 14.6s screen recording, not a still: the clip starts in Light,
-           switches the whole app to Night Dim, opens Quick Actions there, and
-           switches back, so the last frame matches the first and it loops with
-           no visible cut. preload="none" keeps it off the critical path; the
-           poster paints immediately and scroll.js starts playback once the frame
-           is in view (and never under prefers-reduced-motion). See scroll.js §8.
-
-           REPLACED 19 Sep 2026, and THREE THINGS WERE DONE TO THE SOURCE FILE.
-           Read this before dropping in another recording.
-
-           1. THE BROWSER CHROME WAS CROPPED OFF. The raw capture ("Hero
-              video.mp4" at the site root) is a full browser window: tab strip,
-              address bar, and the window edge along the bottom. This frame
-              already DRAWS a browser, so leaving it in puts a browser inside a
-              browser, and the address bar showed a dev path. The top 88px and
-              the bottom 48px are cut, which leaves 1920x944 of app.
-           2. THE TAIL WAS TRIMMED, 17.6s down to 14.6s. The raw clip ends with
-              the Quick Actions menu open over a dimmed page, while it starts on
-              a clean dashboard, so the loop snapped. At 14.6s the frame is back
-              to the opening state (0.16% of pixels differ), which is the join
-              you can no longer see. Quick Actions is still in the clip, in the
-              Night Dim stretch. Any future recording needs the same check: the
-              last frame has to match the first.
-           3. THE SHAPE CHANGED WITH IT. 1920x944 is about 2.03:1, not 16:9, so
-              the frame's aspect-ratio moves to match in redesign.css
-              (ROUND 16c). The audio track was also dropped; the video is muted
-              and looping, so it was dead weight.
-
-           The exact ffmpeg command is in assets/video/README-hero-video.md. -->
-      <div class="frame-screen frame-screen-video">
-        <video id="heroVideo"
-               poster="assets/video/hero-dashboard-poster.webp"
-               width="1920" height="944"
-               muted loop playsinline disablepictureinpicture
-               preload="none"
-               aria-label="The Pace Lodgix dashboard switching from Light to Night Dim appearance and back">
-          <source src="assets/video/hero-dashboard.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-
-    <!-- Floating booking card -->
-    <aside class="float-card float-booking float-a" aria-hidden="true">
-      <div class="fc-row">
-        <span class="fc-avatar">MR</span>
-        <div>
-          <strong>Maria Reyes</strong>
-          <span class="fc-sub">Villa Anilao · 3 nights</span>
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1>Run your property from one place.<span class="sub">Property management system built for Philippine <span class="nb">short-term</span> rentals.</span></h1>
+        <p class="lede price-line">Manage bookings, calendars, guests, payments, invoices, and finances in one system. Plans start at <b>&#8369;399/month</b></p>
+        <ul class="hlist">
+          <li>Two-way calendar sync with Airbnb, Agoda, Booking.com and more</li>
+          <li>Take direct bookings on your own website, with no platform commission</li>
+          <li>Free onboarding, with your properties set up for you</li>
+        </ul>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="https://app.pacelodgix.com/">Start free trial</a>
+          <a class="btn btn-ghost" href="#cta">Book a demo</a>
         </div>
+        <p class="assure-line">14 days free. No card required. We set your properties up with you.</p>
       </div>
-      <div class="fc-foot">
-        <span class="pill pill-confirmed">Confirmed</span>
-        <strong class="fc-amt">₱12,400</strong>
-      </div>
-    </aside>
 
-    <!-- Floating mini calendar -->
-    <aside class="float-card float-cal float-b" aria-hidden="true">
-      <div class="fc-cal-head">March</div>
-      <div class="fc-cal-grid">
-        <i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i>
-        <i></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="dot"></i><i></i>
-        <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
-      </div>
-      <div class="fc-cal-foot">4 units · 82% booked</div>
-    </aside>
-
-    <!-- Floating stat -->
-    <aside class="float-card float-stat float-c" aria-hidden="true">
-      <span class="fc-label">This month</span>
-      <strong class="fc-big">₱184,250</strong>
-      <span class="fc-delta">▲ 18% vs. last</span>
-    </aside>
-  </div>
-
-  <!-- Target customers -->
-  <div class="hero-audience reveal" data-anim="up" data-delay="6">
-    <span>Built for</span>
-    <ul>
-      <li>Airbnb hosts</li>
-      <li>Vacation rentals</li>
-      <li>Short-term rentals</li>
-      <li>Apartments &amp; villas</li>
-      <li>Staycations</li>
-      <li>Beach resorts</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ══════════════════════ THE PROBLEM, REMOVED ══════════════════════
-     Deleted on request (19 Sep 2026): the "You already have a system"
-     chapter and its three cards (the booking inbox, the spreadsheet, your
-     own memory). The hero now runs straight into the Features chapter.
-     Both sit on light ground, so the seam still blends with nothing to
-     adjust.
-
-     LEFT IN PLACE ON PURPOSE, all inert now, none of it costs a request:
-       · styles.css   .problem / .cards / .card / .card-icon / .tex rules
-       · parallax.js  block 6, the mobile card reveal. It opens with
-                      `if (!cards.length) return;` so it finds nothing and
-                      exits. No edit needed there.
-     If this chapter is never coming back, that CSS is the next thing to
-     sweep, in its own pass, not mixed into a content change.
-
-     The old markup is recoverable from preview.html, which still carries
-     the same section.
-     ══════════════════════════════════════════════════════════════════ -->
-
-<!-- ANALYTICS COUNTERS ("The numbers, without the math") removed on request,
-     the sample-month stat band (₱184,250 / 82% / 147 / 3.4). The hero now runs
-     straight into the Features chapter; both meet on light ground, so the
-     gradient seam still blends. The .counters/.counter CSS in styles.css is now
-     unused but left in place, and scroll.js's counter observer finds nothing
-     to animate. -->
-
-<!-- ══════════════════════════ THE PROBLEM ══════════════════════════
-     Added 19 Sep 2026. The page went from the hero straight into features,
-     so a visitor was shown the answer before being shown the question.
-     Kept factual on purpose. The owners reading this already know the work is
-     manual; the section names it plainly rather than dramatising it.
-     The opening quote is Yen Escarpe's, from the testimonial in #customers,
-     and it is her own wording. If that quote is ever edited, edit both. -->
-<section class="section problem" id="problem">
-  <p class="eyebrow center reveal" data-anim="fade">The old way</p>
-  <h2 class="reveal" data-anim="up">Your bookings are everywhere.<br> Your operation shouldn't be.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Managing a rental business across booking platforms, spreadsheets, messages, and payment
-    records creates work that should be easier to manage.
-  </p>
-  <blockquote class="problem-quote reveal" data-anim="up" data-delay="2">
-    <p>Before Pace Lodgix, we had to manage our resort calendar separately from Airbnb,
-       Facebook, and our booking website.</p>
-    <cite>Yen Escarpe, Owner, JDN Beach Resort</cite>
-  </blockquote>
-  <!-- ICON TILES, added 20 Sep 2026 to Chad's reference.
-       Source: Tabler outline set, D:\CLAUDE CODE\Saas Icons\tabler icons\
-       tabler\outline (calendar-month, credit-card, chart-bar). Each svg is
-       that icon's own <path> data pasted in as-is; viewBox 0 0 24 24 matches.
-       No width, height or stroke on the svg tag: .problem-ico svg in
-       redesign.css sets all of it, so a replacement icon dropped in here
-       needs no new CSS.
-
-       Tabler ships a `<path stroke="none" d="M0 0h24v24H0z" fill="none" />`
-       as the first path in every file. It is a transparent bounding box for
-       their build tool and is dropped here, the same as in .hero-proof.
-
-       THE GOLD PIP IS DECORATION, not a status. It is aria-hidden and carries
-       no text of its own, because a screen reader announcing "exclamation
-       mark" three times before three headings is noise. This whole section is
-       the problem being named; the pip is what makes that legible at a
-       glance to someone scanning. -->
-  <div class="problem-grid reveal" data-anim="up" data-delay="3">
-    <article class="problem-card">
-      <div class="problem-ico">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M8 14v4" /><path d="M12 14v4" /><path d="M16 14v4" /></svg>
-        <span class="problem-pip" aria-hidden="true"></span>
-      </div>
-      <div class="problem-body">
-        <h3>Availability</h3>
-        <p>Updating dates across multiple platforms leaves room for mistakes and double bookings.</p>
-      </div>
-    </article>
-    <article class="problem-card">
-      <div class="problem-ico">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8" /><path d="M3 10l18 0" /><path d="M7 15l.01 0" /><path d="M11 15l2 0" /></svg>
-        <span class="problem-pip" aria-hidden="true"></span>
-      </div>
-      <div class="problem-body">
-        <h3>Payments</h3>
-        <p>Payment proofs and booking records shouldn't live in separate chat threads.</p>
-      </div>
-    </article>
-    <article class="problem-card">
-      <div class="problem-ico">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" /><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" /><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" /><path d="M4 20h14" /></svg>
-        <span class="problem-pip" aria-hidden="true"></span>
-      </div>
-      <div class="problem-body">
-        <h3>Reporting</h3>
-        <p>See what your properties earned without opening multiple tabs or adding everything up yourself.</p>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FEATURES GRID ══════════════════════════ -->
-<section class="section features" id="features">
-  <p class="eyebrow center reveal" data-anim="fade">Everything in one place</p>
-  <h2 class="reveal" data-anim="up">Everything you need to manage your properties.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Bookings, calendars, guests, payments, operations, and financials in one system.
-  </p>
-
-  <!-- ══ THE FEATURE BENTO, the real feature list ════════════════════════════
-       ROUND 16 (19 Sep 2026). The pane structure is unchanged. What changed is
-       the CONTENT: the panes now carry the product's actual feature list, read
-       from pms-app/PaceLodgix Features.txt, in the product's own words rather
-       than the marketing paraphrases that were here before. Seventeen shipped
-       features across four panes, plus a fifth full-width pane for the two that
-       are still being built.
-
-       SOURCE OF TRUTH is that .txt file. If a feature is added, renamed or
-       shipped there, this grid is the place it has to be mirrored, and the
-       heading count above ("Seventeen jobs") has to move with it.
-
-       THE ICONS are now artwork, not inline SVG: assets/icons/*.webp, one per
-       feature, generated from pms-app/Feature Icons/*.png. The originals are
-       roughly 1MB each, so they are resized to 128px and re-encoded to WebP
-       (about 5KB each, 92KB for all nineteen). Never link the originals from
-       this page. Each icon carries its own soft mint blob, so the old tinted
-       icon TILE was removed in CSS, two containers around one glyph read as
-       muddy. See the ROUND 16 block at the end of redesign.css.
-
-       WHY FOUR PANES, unchanged from Round 15: a flat grid makes every card an
-       equal claim, so the eye has nowhere to land. Named product areas give a
-       reader four ideas first and the detail second.
-
-       THE SHAPE is an editorial bento, not a card grid: four generous panes
-       floating over the same light-to-dark field as before. Each pane carries
-       its area name large, a one-line descriptor under it, then its four jobs
-       as light icon rows, no box drawn around each job, because a box around
-       every one is exactly what made the old grid read as a table. Depth comes
-       from the four panes lifting off the field; hierarchy comes from size
-       (area name > job title > line of copy); the air comes from the padding.
-
-       THE MOTION is deliberately cheap and never touches the scroll. Every pane
-       and every row rides the .reveal IntersectionObserver that scroll.js
-       already runs, one observer, opacity and transform only, fires once and
-       unhooks. There is NO scroll-scrubbed tween here any more; the old column
-       drift is gone, which is the single biggest thing that could have cost a
-       frame while scrolling. The only live pointer response is the soft light
-       in the field behind the panes (redesign.js). Hover on a job warms its
-       icon a touch, a small, honest signal, not a lift that would pretend the
-       card is a link it is not. -->
-  <div class="bento" id="jobsGrid">
-    <div class="jobs-light" aria-hidden="true"></div>
-
-    <!-- ── 01 · Bookings & Calendar ──────────────────────────────────────── -->
-    <article class="job-group reveal" data-anim="up">
-      <header class="jg-head">
-        <span class="jg-num" aria-hidden="true">01</span>
-        <h3 class="jg-name">Bookings &amp; Calendar</h3>
-        <p class="jg-desc">Take reservations, keep every calendar in step, and never sell the same night twice.</p>
-      </header>
-      <div class="jg-items">
-        <div class="jc reveal" data-anim="fade" data-delay="1">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/booking-management.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Booking &amp; Reservation Management</h4>
-            <p>Reservations, guest details, booking status and stay information in one central system.</p>
+      <div class="stage auto" id="stage">
+        <div class="stage-top">
+          <p class="hint"><span class="hint-m">Swipe to explore</span><span class="hint-d">Tap to explore</span></p>
+          <p class="hname" id="hName" aria-live="polite">Dashboard</p>
+          <div class="htabs" role="tablist" aria-label="Explore Pace Lodgix">
+            <button class="htab" role="tab" aria-selected="true" data-i="0">Dashboard</button>
+            <button class="htab" role="tab" aria-selected="false" data-i="1">Calendar</button>
+            <button class="htab" role="tab" aria-selected="false" data-i="2">Bookings</button>
+            <button class="htab" role="tab" aria-selected="false" data-i="3">Booking form</button>
+            <button class="htab" role="tab" aria-selected="false" data-i="4">Payments</button>
           </div>
         </div>
-        <div class="jc reveal" data-anim="fade" data-delay="2">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/real-time-availability.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Real-Time Availability &amp; Pricing</h4>
-            <p>Guests see open dates and current pricing before they book.</p>
-          </div>
+        <div class="screens" role="tabpanel" aria-live="polite">
+          <div class="browser"><div class="bar"><i></i><i></i><i></i></div><img class="swap" id="hDesk" src="assets/shots/app/dashboard.webp" alt="Pace Lodgix dashboard" width="1600" height="787"></div>
+          <div class="phone"><img class="swap" id="hPhone" src="assets/shots/phone/m-dashboard.webp" alt="Pace Lodgix dashboard on a phone" width="680" height="1257"></div>
+          <div class="float f1"><span class="ic" id="hIc">&#9650;</span><b id="hT">This month &#8369;184,250</b><small id="hS">&#9650; 18% vs. last</small></div>
         </div>
-        <div class="jc reveal" data-anim="fade" data-delay="3">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/smart-pricing.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Smart Pricing Rules</h4>
-            <p>Rates calculated automatically from dates, guest count, fees, discounts and promotions.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="4">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/channel-sync.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Channel Calendar Sync</h4>
-            <p>Sync availability across all your connected booking platforms such as Agoda, Airbnb, Booking.com, etc.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="5">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/calendar-blocking.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Centralized Calendar Blocking</h4>
-            <p>Block a date once. It blocks across every connected platform.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ── 02 · Guests & Properties ──────────────────────────────────────── -->
-    <article class="job-group reveal" data-anim="up" data-delay="1">
-      <header class="jg-head">
-        <span class="jg-num" aria-hidden="true">02</span>
-        <h3 class="jg-name">Guests &amp; Properties</h3>
-        <p class="jg-desc">One home for every property, every guest, and every message you send them.</p>
-      </header>
-      <div class="jg-items">
-        <div class="jc reveal" data-anim="fade" data-delay="1">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/multi-property.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Multi-Property Management</h4>
-            <p>Every property managed from one place.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="2">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/guest-management.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Guest Management</h4>
-            <p>Keep guest profiles and booking history in one place.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="3">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/guest-communication.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Automated Guest Communication</h4>
-            <p>Confirmations, payment reminders, check-in instructions, thank-you notes and review requests, sent automatically.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="4">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/housekeeping.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Housekeeping Management</h4>
-            <p>Cleaning and turnover organised, so every property is ready for the next arrival.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="5">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/team-access.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Team Access &amp; Activity Tracking</h4>
-            <p>Give your team access and keep a record of every important change.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ── 03 · Payments & Finance ───────────────────────────────────────── -->
-    <article class="job-group reveal" data-anim="up" data-delay="2">
-      <header class="jg-head">
-        <span class="jg-num" aria-hidden="true">03</span>
-        <h3 class="jg-name">Payments &amp; Finance</h3>
-        <p class="jg-desc">Invoices, payments and property performance, adding themselves up as you go.</p>
-      </header>
-      <div class="jg-items">
-        <div class="jc reveal" data-anim="fade" data-delay="1">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/invoicing.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Invoicing &amp; Payment Tracking</h4>
-            <p>Track deposits, balances, and payments while automatically sending invoices to guests when payments are recorded.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="2">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/payment-proof.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Payment Records &amp; Proof</h4>
-            <p>A full record of every guest payment, with uploaded screenshots and proof of payment attached.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="3">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/financial-reports.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Financial Dashboard &amp; Reports</h4>
-            <p>Income, expenses, revenue and property performance, exportable to CSV.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="4">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/performance-overview.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Dashboard &amp; Performance Overview</h4>
-            <p>Bookings, check-ins, revenue, outstanding payments, occupancy and anything needing attention, live on one screen.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ── 04 · Growth & Reach ───────────────────────────────────────────── -->
-    <article class="job-group reveal" data-anim="up" data-delay="3">
-      <header class="jg-head">
-        <span class="jg-num" aria-hidden="true">04</span>
-        <h3 class="jg-name">Growth &amp; Reach</h3>
-        <p class="jg-desc">Win bookings under your own name, bring past guests back, and run it all from your phone.</p>
-      </header>
-      <div class="jg-items">
-        <div class="jc reveal" data-anim="fade" data-delay="1">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/custom-website.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Custom Booking Website</h4>
-            <p>Your own direct booking site, designed and branded inside PaceLodgix. Zero booking commission.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="2">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/marketing-center.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Built-in Marketing Center</h4>
-            <p>Offers, coupon codes, seasonal rates and promotions for past guests and subscribers.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="3">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/mobile.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Mobile-Friendly</h4>
-            <p>Manage your properties, bookings, calendar, and finances from anywhere.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ── 05 · In development ───────────────────────────────────────────────
-         A FIFTH PANE, full width, and it is deliberately not mixed in with the
-         four above. Both of these are being built and neither ships today.
-         Putting them in a pane of their own, with a status chip on each, is the
-         honest way to show them: a reader can see what is coming without being
-         sold something that is not there yet. If either one ships, move it into
-         its home pane (Payments & Finance, Guests & Properties) and drop the
-         chip. When both have shipped, delete this pane and .jg-wide with it. -->
-    <article class="job-group jg-wide reveal" data-anim="up" data-delay="4">
-      <header class="jg-head">
-        <span class="jg-num" aria-hidden="true">05</span>
-        <h3 class="jg-name">In development</h3>
-        <p class="jg-desc">Being built now. Not available yet.</p>
-      </header>
-      <div class="jg-items">
-        <div class="jc reveal" data-anim="fade" data-delay="1">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/online-payments.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>Online Payments via PayMongo <span class="jc-soon">In development</span></h4>
-            <p>Card and e-wallet payments taken from guests online.</p>
-          </div>
-        </div>
-        <div class="jc reveal" data-anim="fade" data-delay="2">
-          <span class="jc-icon" aria-hidden="true">
-            <img src="assets/icons/ai-receptionist.webp" alt="" width="128" height="128" loading="lazy" decoding="async">
-          </span>
-          <div class="jc-text">
-            <h4>AI Desk Receptionist <span class="jc-soon">Coming soon</span></h4>
-            <p>Guest questions and property information answered around the clock.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- ═══════════ INTERACTIVE SHOWCASE, sticky, dashboard swaps ═══════════ -->
-<section class="section scrolly" id="showcase">
-  <!-- Ambient field: a dot texture plus three slow-drifting colour clouds, so
-       the generous empty space around the sticky mockup reads as depth rather
-       than as a blank cream slab. Purely decorative, aria-hidden, no pointer
-       events, and every layer is a background-image (no blur filter), so the
-       drift is transform-only. -->
-  <div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
-
-  <div class="scrolly-inner">
-    <div class="scrolly-steps">
-      <div class="step" data-shot="dashboard">
-        <span class="step-num">01 · Dashboard</span>
-        <h3>See what's happening across your properties.</h3>
-        <p>See revenue, occupancy, average nightly rate, and other key numbers for the current month.</p>
-      </div>
-      <div class="step" data-shot="bookings">
-        <span class="step-num">02 · Reservations</span>
-        <h3>Pricing that follows your rules.</h3>
-        <p>Set your rates, fees, discounts, guest charges, and commissions. Pace Lodgix calculates
-           the booking total for you.</p>
-      </div>
-      <div class="step" data-shot="calendar">
-        <span class="step-num">03 · Calendar</span>
-        <h3>See every property at a glance.</h3>
-        <p>Block a room for repairs or cleaning in two clicks. It stops taking bookings
-           straight away, on every channel you've connected.</p>
-      </div>
-      <div class="step" data-shot="book">
-        <span class="step-num">04 · Booking form</span>
-        <h3>Your own direct booking form</h3>
-        <p>Give guests a direct way to check availability and submit bookings through your own
-           page, without platform commission.</p>
-      </div>
-      <div class="step" data-shot="ledger">
-        <span class="step-num">05 · Income &amp; expenses</span>
-        <h3>See your financial picture in one place.</h3>
-        <p>Track income, expenses, and booking-related payments in one place. Export to Excel
-           whenever you need a closer look or want to share it with your accountant.</p>
-      </div>
-      <div class="step" data-shot="properties">
-        <span class="step-num">06 · Properties</span>
-        <h3>Set pricing your way.</h3>
-        <p>Set nightly, guest-count, weekday, weekend, holiday, and special pricing for each
-           property.</p>
-      </div>
-      <div class="step" data-shot="activity">
-        <span class="step-num">07 · Activity log</span>
-        <h3>Keep track of team activity.</h3>
-        <p>See who made important changes and when, with activity recorded in the system.</p>
-      </div>
-    </div>
-
-    <div class="scrolly-stage">
-      <div class="frame frame-browser">
-        <div class="frame-bar"><span></span><span></span><span></span></div>
-        <!-- ══ THE SEVEN SHOTS ════════════════════════════════════════════════
-             REPLACED 19 Sep 2026. These were the July captures in
-             assets/shots/*-light-desktop.webp and the app had moved on: the
-             sidebar alone gained Housekeeping, Customers, Campaigns and
-             Website. The current set is assets/shots/app/, built from
-             "Updated Screenshots/" by the build-app-shots.py script sitting
-             next to those raw files.
-
-             THE SHAPE CHANGED WITH THEM. The July shots were 1569x1002, near
-             enough to the frame's old 16:10. These are browser-window captures
-             at about 2.03:1, so the frame is set to match in redesign.css
-             (ROUND 16). Every file in assets/shots/app/ is exactly 1600x787;
-             if a new one is added at a different shape it will letterbox, so
-             put it through the build script rather than copying it in by hand.
-
-             THREE OF THE JULY FILES ARE STILL LOADED and must stay:
-             dashboard-light-desktop.webp (the light-vs-dim comparison further
-             down), dashboard-light-mobile.webp and calendar-light-mobile.webp
-             (the two phone shots). Those three are still the OLD app and want
-             replacing as soon as there are dim-mode and phone captures to
-             replace them with.
-
-             The rest of assets/shots/*-light-desktop.webp are now orphans:
-             bookings, calendar, ledger, properties, activity-log, book and
-             settings. Nothing loads them. Sweep them in their own pass. -->
-
-        <div class="frame-screen" id="scrollyScreen">
-          <img data-shot="dashboard" class="is-active" src="assets/shots/app/dashboard.webp" alt="Dashboard" width="1600" height="787">
-          <img data-shot="bookings" src="assets/shots/app/bookings.webp" alt="Reservations" width="1600" height="787" loading="lazy">
-          <img data-shot="calendar" src="assets/shots/app/calendar.webp" alt="Calendar" width="1600" height="787" loading="lazy">
-          <img data-shot="book" src="assets/shots/app/booking-form.webp" alt="Guest booking form" width="1600" height="787" loading="lazy">
-          <img data-shot="ledger" src="assets/shots/app/ledger.webp" alt="Ledger" width="1600" height="787" loading="lazy">
-          <img data-shot="properties" src="assets/shots/app/properties.webp" alt="Properties" width="1600" height="787" loading="lazy">
-          <img data-shot="activity" src="assets/shots/app/activity-log.webp" alt="Activity log" width="1600" height="787" loading="lazy">
+        <div class="hnav">
+          <button type="button" class="harrow" id="hPrev" aria-label="Previous screen">&#8249;</button>
+          <div class="hdots" id="hDots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <button type="button" class="harrow" id="hNext" aria-label="Next screen">&#8250;</button>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════ CALENDAR SYNC ══════════════════════
-     WHY THIS SECTION EXISTS, AND WHY IT NAMES ITS OWN LIMIT.
-
-     The sync is iCal, so what crosses is whatever the platform chooses to
-     publish in its calendar feed. Checked against pms-app
-     supabase/functions/ical-sync/index.ts, that is more than "the day is
-     blocked": the function writes a real booking row with the dates, the
-     source platform, the feed's summary as guest_name (falling back to
-     "<platform> Reservation" when the summary is generic, which is what
-     Airbnb sends), the description into special_requests, and it handles
-     the event disappearing as a cancellation.
-
-     What no feed carries, on any platform, is the payout. So the owner
-     enters the amount. That boundary belongs to the calendar link, not to
-     this product, and stating it here is deliberate: a prospect who reads
-     a precise limit up front trusts the rest of the page, and one who
-     discovers it in week one churns and tells people. Do not soften these
-     three cards into "full platform integration".
-
-     Card three is not filler. The sync genuinely refuses to move or delete
-     a booking that has amount_paid recorded against it and logs why, which
-     is the strongest trust line available here. -->
-<section class="section dark sync" id="sync">
-  <p class="eyebrow center reveal" data-anim="fade">Calendar sync</p>
-  <h2 class="reveal" data-anim="up">Your calendars stay in step.<br> Your books stay yours.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Connect Airbnb, Booking.com, Agoda, or other platforms that provide a calendar link.
-    Bookings and blocked dates stay in sync across connected calendars.
-  </p>
-
-  <div class="cards">
-    <article class="card glass reveal" data-anim="left" data-delay="1">
-      <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v9.5"/><path d="m8.4 9.6 3.6 3.6 3.6-3.6"/><path d="M3.5 15.5v3a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-3"/></svg></div>
-      <h3>What arrives on its own</h3>
-      <p>Pace Lodgix syncs reservation dates and availability from your connected calendars. Guest details and payment amounts aren't included, and removed reservations update automatically.</p>
-    </article>
-    <article class="card glass reveal" data-anim="up" data-delay="2">
-      <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h17"/><path d="M16.8 3.9a1.9 1.9 0 0 1 2.7 2.7L9.2 16.9l-3.6.9.9-3.6z"/></svg></div>
-      <h3>What you fill in</h3>
-      <p>Calendar feeds do not include payout amounts, so you enter the amount you received and keep the payment record with the booking.</p>
-    </article>
-    <article class="card glass reveal" data-anim="right" data-delay="3">
-      <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.2c4.6-2 7-5.3 7-9.8V6.1l-7-2.9-7 2.9v5.3c0 4.5 2.4 7.8 7 9.8z"/><path d="m9 12 2.2 2.2L15.4 10"/></svg></div>
-      <h3>What it will not touch</h3>
-      <p>If a synced booking already has a payment recorded against it, Pace Lodgix protects that record and tells you why it was not changed.</p>
-    </article>
-  </div>
-
-  <p class="honest-note reveal" data-anim="fade" data-delay="4">
-    Sync availability through calendar feeds, no direct integration or approval
-    required. Full reservation-data integrations are not currently supported.
-  </p>
-</section>
-
-<!-- ══════════════════════ DEPOSITS AND PAYMENTS ══════════════════════
-     HONESTY CONSTRAINT, read before editing.
-
-     Guests paying online by card or e-wallet is NOT BUILT. The plan lives in
-     pms-app/docs/PAYMENT-GATEWAY-ARCHITECTURE.md and is marked "PLAN ONLY,
-     nothing in here is built" (9 Sep 2026). Do not put a card logo, a
-     provider wordmark or the word "checkout" in this section until the
-     connector ships.
-
-     What IS live: the guest picks a payment method, enters an amount and a
-     reference, and attaches a screenshot on the booking form; the owner
-     verifies and confirms; the balance recalculates by trigger. Require
-     Payment to Book (mig 058) is a real Settings toggle, and it defaults
-     OFF for every tenant, so "turn on" is the correct verb here, never
-     "every booking is paid up front".
-
-     TWO DIFFERENT PAYMENT THINGS live on this page and must never blur:
-     the tenant paying Pace Lodgix (PayMongo, live, in #pricing) and a guest
-     paying the tenant (not built, this section). The GCash and Maya
-     wordmarks in #pricing belong to the first one only. -->
-<section class="section payments" id="payments">
-  <p class="eyebrow center reveal" data-anim="fade">Deposits and payments</p>
-  <h2 class="reveal" data-anim="up">Every payment. One clear record.</h2>
-  <!-- CUT BACK TO ONE LINE, 20 Sep 2026, Chad. What used to sit here was a
-       five item tick list walking through the whole payment workflow (which
-       methods, who attaches the screenshot, who confirms it, how the balance
-       is worked out, what the Require Payment to Book toggle does) plus a
-       closing note about card payment being on the way. That is product
-       documentation, not a reason to buy. A visitor at this point on the page
-       is deciding whether Pace Lodgix is worth a closer look, and does not
-       need to understand the mechanism first.
-
-       NOTHING HERE OVERSTATES WHAT SHIPS. The remaining sentence describes
-       what the booking form does today and makes no claim about cards or
-       e-wallets, so the honesty constraint in the header comment above is
-       satisfied by saying less rather than by qualifying more.
-
-       The detail is not lost, the FAQ still carries it. If this section ever
-       needs to sell harder, the right next move is a screenshot of the
-       payment record on a booking, not the list coming back. -->
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Record payment details and proof directly on the booking, so everything stays together.
-  </p>
-</section>
-
-<!-- ══════════════════════ AUTOMATION WORKFLOW ══════════════════════ -->
-<!-- The spec called this "AI Automation". It is not AI, it's a deterministic
-     rules engine (see CLAUDE.md gotcha 13: PaceBot is a keyword matcher, and
-     nothing else in the app calls a model). Named honestly on purpose. -->
-<section class="section dark automation" id="automation">
-  <p class="eyebrow center reveal" data-anim="fade">Automation</p>
-  <h2 class="reveal" data-anim="up">One booking. Seven things <br>you no longer have to do.</h2>
-  <!-- Em dash removed, on request (Chad, 20 Sep 2026) and per this site's own
-       rule against them. A comma does the same job. -->
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    From the moment a booking comes in, Pace Lodgix takes care of the follow-up,
-    from guest emails and invoices to payment reminders and review requests.
-  </p>
-
-  <ol class="flow" id="flow">
-    <!-- Every node here maps to a real template in pms-app
-         src/scripts/email-templates.js (DEFAULT_TEMPLATES / EMAIL_TEMPLATE_KEYS):
-         booking_received, booking_confirmed, payment_reminder, thank_you,
-         booking_rejected, plus the invoice that issues itself when a booking
-         reaches Fully Paid.
-
-         Two of these are REAL BUT NOT SEPARATE EMAILS, which is why a
-         seven-step list reads as wrong if it is only mis-structured:
-
-         · Check-in information rides inside booking_confirmed, whose body
-           carries {{stay_details}}, {{house_rules}}, {{cancellation_policy}}
-           and {{contact}}. There is no arrival-timed check-in email yet, so do
-           not list one until it ships.
-         · The review request rides inside thank_you, which carries the ask and
-           a {{review_button}} token. It is not its own step.
-
-         NODES 5 AND 7 ARE BUTTONS, not automatic sends, checked against
-         pms-app/src/scripts/write-bookings.js and email-sender.js on this
-         pass. sendAndMarkPaymentReminder() and sendBookingRejectedEmail() are
-         both called from a click handler in bookings.html
-         (window.sendSorryEmail for node 7) and each locks after one send.
-         Chad's 20 Sep 2026 draft copy called node 7 "send... automatically",
-         which is not what the code does, so it is corrected here to match
-         node 5's existing "one click" pattern rather than shipped as given.
-         Do not upgrade either to "sent automatically" without moving it to a
-         scheduled job.
-
-         Nodes 1, 2, 3, 4 and 6 ARE automatic, gated by their own Settings
-         toggle (notify_booking_received, notify_booking_confirmed,
-         invoice_auto_gen_on_full_payment / _on_deposit, notify_thank_you),
-         each defaulting to on. -->
-    <li class="flow-node"><span class="fn-dot">1</span><strong>Booking received</strong><span class="fn-sub">A guest books, or you add the reservation yourself</span></li>
-    <li class="flow-node"><span class="fn-dot">2</span><strong>Booking acknowledgement</strong><span class="fn-sub">The guest gets immediate confirmation it was received</span></li>
-    <li class="flow-node"><span class="fn-dot">3</span><strong>Confirmation email</strong><span class="fn-sub">Stay details, house rules, and your contact information</span></li>
-    <li class="flow-node"><span class="fn-dot">4</span><strong>Invoice</strong><span class="fn-sub">Issued automatically once the booking is paid</span></li>
-    <li class="flow-node"><span class="fn-dot">5</span><strong>Payment reminder</strong><span class="fn-sub">One click, already written for you</span></li>
-    <li class="flow-node"><span class="fn-dot">6</span><strong>Thank you and review request</strong><span class="fn-sub">Sent after the stay, review link included</span></li>
-    <li class="flow-node"><span class="fn-dot">7</span><strong>Alternative booking response</strong><span class="fn-sub">One click sends a polite reply if you cannot take it</span></li>
-  </ol>
-</section>
-
-<!-- ══════════════════════ MARKETING CENTER ══════════════════════ -->
-<section class="section marketing" id="marketing-center">
-  <p class="eyebrow center reveal" data-anim="fade">Marketing Center</p>
-  <h2 class="reveal" data-anim="up">Your guests leave.<br>The relationship doesn't.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Keep your guest list organized and use it to send offers, promotions, and updates
-    to past guests.
-  </p>
-
-  <div class="marketing-grid reveal" data-anim="up" data-delay="2">
-    <!-- 01 · Guest List -->
-    <article class="mkt-card">
-      <div class="mkt-card-copy">
-        <span class="mkt-step-num">01</span>
-        <div class="mkt-card-text">
-          <h3>Your Guest List</h3>
-          <p>Completed stays are added to your guest list automatically, so you don't have to enter them again.</p>
-        </div>
-      </div>
-      <div class="frame frame-browser">
-        <div class="frame-bar"><span></span><span></span><span></span></div>
-        <div class="frame-screen">
-          <img src="assets/shots/marketing-guest-list-desktop.webp" alt="Guest list in Pace Lodgix" width="1440" height="900" loading="lazy">
-        </div>
-      </div>
-    </article>
-
-    <!-- 02 · Send an Offer -->
-    <article class="mkt-card">
-      <div class="mkt-card-copy">
-        <span class="mkt-step-num">02</span>
-        <div class="mkt-card-text">
-          <h3>Send an Offer</h3>
-          <p>Create an offer and send it to past guests by property or stay date, with filters to help you choose your audience.</p>
-        </div>
-      </div>
-      <div class="frame frame-browser">
-        <div class="frame-bar"><span></span><span></span><span></span></div>
-        <div class="frame-screen">
-          <img src="assets/shots/marketing-offer-desktop.webp" alt="Sending an offer to past guests" width="1440" height="900" loading="lazy">
-        </div>
-      </div>
-    </article>
-
-    <!-- 03 · Coupon Codes & Seasonal Rates -->
-    <article class="mkt-card">
-      <div class="mkt-card-copy">
-        <span class="mkt-step-num">03</span>
-        <div class="mkt-card-text">
-          <h3>Coupon Codes &amp; Seasonal Rates</h3>
-          <p>Set coupon limits, expiry dates, seasonal rates, and long-stay discounts that are applied to eligible bookings.</p>
-        </div>
-      </div>
-      <div class="frame frame-browser">
-        <div class="frame-bar"><span></span><span></span><span></span></div>
-        <div class="frame-screen">
-          <img src="assets/shots/marketing-discounts-desktop.webp" alt="Coupon codes and seasonal rates setup" width="1440" height="900" loading="lazy">
-        </div>
-      </div>
-    </article>
-
-    <!-- 04 · Your Own Website -->
-    <article class="mkt-card">
-      <div class="mkt-card-copy">
-        <span class="mkt-step-num">04</span>
-        <div class="mkt-card-text">
-          <h3>Your Own Website</h3>
-          <p>Choose a website theme, add your branding and photos, and publish your direct booking website at your own link.</p>
-        </div>
-      </div>
-      <div class="frame frame-browser">
-        <div class="frame-bar"><span></span><span></span><span></span></div>
-        <div class="frame-screen">
-          <img src="assets/shots/marketing-website-desktop.webp" alt="Website Builder and live guest preview" width="1440" height="900" loading="lazy">
-        </div>
-      </div>
-    </article>
-  </div>
-
-  <p class="marketing-honesty reveal" data-anim="fade" data-delay="3">
-    A referral program that tracks and rewards a guest for sending the next one is still on the way.
-  </p>
-</section>
-
-<!-- ══════════════════════ MOBILE EXPERIENCE ══════════════════════ -->
-<section class="section dark mobile" id="mobile">
-  <div class="split">
-    <div class="split-copy">
-      <p class="eyebrow reveal" data-anim="fade">On the go</p>
-      <h2 class="reveal" data-anim="up">Manage your rentals<br> from your phone.</h2>
-      <p class="lede reveal" data-anim="up" data-delay="1">
-        Nothing to install. The whole platform, built to work on the phone in your hand.
-        Same data, same prices, same calendar.
-      </p>
-      <ul class="ticks reveal" data-anim="up" data-delay="2">
-        <li>Owner dashboard and reports</li>
-        <li>Guest booking form</li>
-        <li>Record a payment at the door</li>
-        <li>Light and Night Dim, everywhere</li>
-      </ul>
+  <div class="strip">
+    <div class="wrap">
+      <div class="strip-row"><p>Built for</p><div class="logos"><span>Airbnb hosts</span><span>Vacation rentals</span><span>Short-term rentals</span><span>Apartments &amp; villas</span><span>Staycations</span><span>Beach resorts</span></div></div>
     </div>
+  </div>
 
-    <div class="split-stage phones">
-      <div class="frame frame-phone phone-back float-b" id="phoneBack">
-        <div class="frame-notch"></div>
-        <div class="frame-screen">
-          <img src="assets/shots/calendar-light-mobile.webp" alt="The calendar on a phone" width="680" height="2465" loading="lazy">
-        </div>
+  <section id="problem">
+    <div class="wrap">
+      <div class="problem-head">
+        <p class="eyebrow">The old way</p>
+        <h2>Your bookings are everywhere. Your operation shouldn't be.</h2>
+        <p class="lede">Managing a rental business across booking platforms, spreadsheets, messages, and payment records creates work that should be easier to manage.</p>
       </div>
-      <div class="frame frame-phone phone-front float-a" id="phoneFront">
-        <div class="frame-notch"></div>
-        <div class="frame-screen">
-          <img src="assets/shots/dashboard-light-mobile.webp" alt="The dashboard on a phone" width="680" height="6162" loading="lazy">
+      <div class="quote-card">
+        <p class="quote-big">Before Pace Lodgix, we had to manage our resort calendar separately from Airbnb, Facebook, and our booking website.</p>
+        <p class="quote-by">Yen Escarpe, Owner, JDN Beach Resort</p>
+      </div>
+      <div class="cards3">
+        <div class="pcard"><span class="tag">Availability</span><p>Updating dates across multiple platforms leaves room for mistakes and double bookings.</p></div>
+        <div class="pcard"><span class="tag">Payments</span><p>Payment proofs and booking records shouldn't live in separate chat threads.</p></div>
+        <div class="pcard"><span class="tag">Reporting</span><p>See what your properties earned without opening multiple tabs or adding everything up yourself.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tint" id="features">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Everything in one place</p>
+        <h2>Everything you need to manage your properties.</h2>
+        <p class="lede">Bookings, calendars, guests, payments, operations, and financials in one system.</p>
+      </div>
+      <div class="fgroups">
+        <div class="fgroup">
+          <div class="fg-head"><span class="bi"><svg aria-hidden="true"><use href="#i-calendar-event"/></svg></span><div><span class="fg-num">01</span><h3>Bookings &amp; Calendar</h3></div></div>
+          <p class="fg-intro">Take reservations, keep every calendar in step, and never sell the same night twice.</p>
+          <ul>
+            <li><b>Booking &amp; Reservation Management</b><span>Reservations, guest details, booking status and stay information in one central system.</span></li>
+            <li><b>Real-Time Availability &amp; Pricing</b><span>Guests see open dates and current pricing before they book.</span></li>
+            <li><b>Smart Pricing Rules</b><span>Rates calculated automatically from dates, guest count, fees, discounts and promotions.</span></li>
+            <li><b>Channel Calendar Sync</b><span>Sync availability across all your connected booking platforms such as Agoda, Airbnb, Booking.com, etc.</span></li>
+            <li><b>Centralized Calendar Blocking</b><span>Block a date once. It blocks across every connected platform.</span></li>
+          </ul>
+        </div>
+        <div class="fgroup">
+          <div class="fg-head"><span class="bi"><svg aria-hidden="true"><use href="#i-users"/></svg></span><div><span class="fg-num">02</span><h3>Guests &amp; Properties</h3></div></div>
+          <p class="fg-intro">One home for every property, every guest, and every message you send them.</p>
+          <ul>
+            <li><b>Multi-Property Management</b><span>Every property managed from one place.</span></li>
+            <li><b>Guest Management</b><span>Keep guest profiles and booking history in one place.</span></li>
+            <li><b>Automated Guest Communication</b><span>Confirmations, payment reminders, check-in instructions, thank-you notes and review requests, sent automatically.</span></li>
+            <li><b>Housekeeping Management</b><span>Cleaning and turnover organised, so every property is ready for the next arrival.</span></li>
+            <li><b>Team Access &amp; Activity Tracking</b><span>Give your team access and keep a record of every important change.</span></li>
+          </ul>
+        </div>
+        <div class="fgroup">
+          <div class="fg-head"><span class="bi"><svg aria-hidden="true"><use href="#i-chart-bar"/></svg></span><div><span class="fg-num">03</span><h3>Payments &amp; Finance</h3></div></div>
+          <p class="fg-intro">Invoices, payments and property performance, adding themselves up as you go.</p>
+          <ul>
+            <li><b>Invoicing &amp; Payment Tracking</b><span>Track deposits, balances, and payments while automatically sending invoices to guests when payments are recorded.</span></li>
+            <li><b>Payment Records &amp; Proof</b><span>A full record of every guest payment, with uploaded screenshots and proof of payment attached.</span></li>
+            <li><b>Financial Dashboard &amp; Reports</b><span>Income, expenses, revenue and property performance, exportable to CSV.</span></li>
+            <li><b>Dashboard &amp; Performance Overview</b><span>Bookings, check-ins, revenue, outstanding payments, occupancy and anything needing attention, live on one screen.</span></li>
+          </ul>
+        </div>
+        <div class="fgroup">
+          <div class="fg-head"><span class="bi"><svg aria-hidden="true"><use href="#i-world-www"/></svg></span><div><span class="fg-num">04</span><h3>Growth &amp; Reach</h3></div></div>
+          <p class="fg-intro">Win bookings under your own name, bring past guests back, and run it all from your phone.</p>
+          <ul>
+            <li><b>Custom Booking Website</b><span>Your own direct booking site, designed and branded inside Pace Lodgix. Zero booking commission.</span></li>
+            <li><b>Built-in Marketing Center</b><span>Offers, coupon codes, seasonal rates and promotions for past guests and subscribers.</span></li>
+            <li><b>Mobile-Friendly</b><span>Manage your properties, bookings, calendar, and finances from anywhere.</span></li>
+          </ul>
+        </div>
+        <div class="fgroup dev">
+          <div class="fg-head"><span class="bi"><svg aria-hidden="true"><use href="#i-robot"/></svg></span><div><span class="fg-num">05</span><h3>In development</h3></div></div>
+          <p class="fg-intro">Being built now. Not available yet.</p>
+          <ul>
+            <li><b>Online Payments via PayMongo <span class="chip">In development</span></b><span>Card and e-wallet payments taken from guests online.</span></li>
+            <li><b>AI Desk Receptionist <span class="chip">Coming soon</span></b><span>Guest questions and property information answered around the clock.</span></li>
+          </ul>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════ NIGHT DIM CROSSFADE ══════════════════════ -->
-<section class="section dim-demo">
-  <div class="dim-copy">
-    <!-- Eyebrow added for template consistency: eight of the eleven sections
-         open with eyebrow -> h2 -> lede, and the three that didn't (this one,
-         #tour and #faq) read as a different page furniture. No heading level
-         is added or changed, so the document outline is untouched. -->
-    <p class="eyebrow center reveal" data-anim="fade">Appearance</p>
-    <h2 class="reveal" data-anim="up">Work comfortably, day or night.</h2>
-    <p class="lede center reveal" data-anim="fade" data-delay="1">
-      Choose Light, Night Dim, or match your device. Your pages, charts, and calendars
-      update instantly.
-    </p>
-  </div>
-  <div class="dim-stage" id="dimStage">
-    <div class="frame frame-browser">
-      <div class="frame-bar"><span></span><span></span><span></span></div>
-      <div class="frame-screen">
-        <img class="dim-light" src="assets/shots/dashboard-light-desktop.webp" alt="Dashboard in light mode" width="1569" height="1002" loading="lazy">
-        <img class="dim-dark" src="assets/shots/dashboard-dim-desktop.webp" alt="Dashboard in Night Dim" width="1569" height="1002" loading="lazy">
+  <section id="showcase">
+    <div class="wrap">
+      <div class="show" id="show">
+       <div class="show-sticky">
+        <div class="show-now" aria-hidden="true"><p class="show-name" id="showName">01 · Dashboard</p><div class="show-bar"><i id="showBar"></i></div></div>
+        <div class="show-list" role="tablist" aria-label="Product">
+          <button class="show-btn" role="tab" aria-selected="true" data-p="0"><span class="k">01</span>Dashboard<span class="d">See what's happening across your properties.</span></button>
+          <button class="show-btn" role="tab" aria-selected="false" data-p="1"><span class="k">02</span>Reservations<span class="d">Pricing that follows your rules.</span></button>
+          <button class="show-btn" role="tab" aria-selected="false" data-p="2"><span class="k">03</span>Calendar<span class="d">See every property at a glance.</span></button>
+          <button class="show-btn" role="tab" aria-selected="false" data-p="3"><span class="k">04</span>Booking form<span class="d">Your own direct booking form</span></button>
+          <button class="show-btn" role="tab" aria-selected="false" data-p="4"><span class="k">05</span>Income &amp; expenses<span class="d">See your financial picture in one place.</span></button>
+          <button class="show-btn" role="tab" aria-selected="false" data-p="5"><span class="k">06</span>Properties<span class="d">Set pricing your way.</span></button>
+          <button class="show-btn" role="tab" aria-selected="false" data-p="6"><span class="k">07</span>Activity log<span class="d">Keep track of team activity.</span></button>
+        </div>
+        <div class="show-panels" id="showTrack">
+          <div class="show-panel" data-panel="0"><div><p class="label">01 · Dashboard</p><h3>See what's happening across your properties.</h3><p>See revenue, occupancy, average nightly rate, and other key numbers for the current month.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-dashboard.webp"><img src="assets/shots/app/dashboard.webp" alt="Dashboard" width="1600" height="787"></picture></div></div>
+          <div class="show-panel" data-panel="1" hidden><div><p class="label">02 · Reservations</p><h3>Pricing that follows your rules.</h3><p>Set your rates, fees, discounts, guest charges, and commissions. Pace Lodgix calculates the booking total for you.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-bookings.webp"><img src="assets/shots/app/bookings.webp" alt="Reservations" width="1600" height="787"></picture></div></div>
+          <div class="show-panel" data-panel="2" hidden><div><p class="label">03 · Calendar</p><h3>See every property at a glance.</h3><p>Block a room for repairs or cleaning in two clicks. It stops taking bookings straight away, on every channel you've connected.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-calendar.webp"><img src="assets/shots/app/calendar.webp" alt="Calendar" width="1600" height="787"></picture></div></div>
+          <div class="show-panel" data-panel="3" hidden><div><p class="label">04 · Booking form</p><h3>Your own direct booking form</h3><p>Give guests a direct way to check availability and submit bookings through your own page, without platform commission.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-book.webp"><img src="assets/shots/app/booking-form.webp" alt="Booking form" width="1600" height="787"></picture></div></div>
+          <div class="show-panel" data-panel="4" hidden><div><p class="label">05 · Income &amp; expenses</p><h3>See your financial picture in one place.</h3><p>Track income, expenses, and booking-related payments in one place. Export to Excel whenever you need a closer look or want to share it with your accountant.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-ledger.webp"><img src="assets/shots/app/ledger.webp" alt="Income and expenses" width="1600" height="787"></picture></div></div>
+          <div class="show-panel" data-panel="5" hidden><div><p class="label">06 · Properties</p><h3>Set pricing your way.</h3><p>Set nightly, guest-count, weekday, weekend, holiday, and special pricing for each property.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-properties.webp"><img src="assets/shots/app/properties.webp" alt="Properties" width="1600" height="787"></picture></div></div>
+          <div class="show-panel" data-panel="6" hidden><div><p class="label">07 · Activity log</p><h3>Keep track of team activity.</h3><p>See who made important changes and when, with activity recorded in the system.</p></div><div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-activity-log.webp"><img src="assets/shots/app/activity-log.webp" alt="Activity log" width="1600" height="787"></picture></div></div>
+        </div>
+       </div>
       </div>
     </div>
-    <p class="dim-hint">Scroll to compare</p>
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════════ VIDEO GALLERY ══════════════════════════ -->
-<section class="section tour" id="tour">
-  <p class="eyebrow center reveal" data-anim="fade">Walkthroughs</p>
-  <h2 class="reveal" data-anim="up">See Pace Lodgix in action.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">See the actual product and how it works across everyday property management tasks.</p>
-
-  <!-- Two responsive walkthroughs. Each card serves the full-length desktop
-       "batch" recording on wide screens and its shorter mobile-captured
-       counterpart on phones, the lightbox picks by viewport at click time
-       (data-src vs data-src-mobile in scroll.js). Nothing loads until clicked. -->
-  <div class="video-grid video-grid--duo">
-    <figure class="video-card reveal" data-anim="scale">
-      <button class="video-play"
-              data-src="assets/video/batch-1-the-command-center.mp4"
-              data-src-mobile="assets/video/mobile-booking-ledger-dashboard-walkthrough.mp4"
-              style="background-image:url('assets/video/batch-1-the-command-center-poster.webp')"
-              aria-label="Play: the command center. Dashboard, bookings and ledger">
-        <span class="play-icon"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-      </button>
-      <figcaption>The command center</figcaption>
-    </figure>
-
-    <figure class="video-card reveal" data-anim="scale" data-delay="1">
-      <button class="video-play"
-              data-src="assets/video/batch-2-a-day-of-operations.mp4"
-              data-src-mobile="assets/video/mobile-automation-and-invoicing.mp4"
-              style="background-image:url('assets/video/batch-2-a-day-of-operations-poster.webp')"
-              aria-label="Play: a day of operations. Automation and invoicing">
-        <span class="play-icon"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
-      </button>
-      <figcaption>A day of operations</figcaption>
-    </figure>
-  </div>
-</section>
-
-<!-- ═══════════════════════════ PRICING ═══════════════════════════ -->
-<!-- ══════════════════════════ CUSTOMERS ══════════════════════════
-     Added 19 Sep 2026. First social proof this page has ever carried.
-     BOTH QUOTES ARE VERBATIM, supplied by the customers themselves. Do not
-     reword them, do not shorten them and do not "fix" the style. The only
-     change made is "PaceLodgix" to "Pace Lodgix" in Yen's, to match the
-     product name used everywhere else on the site.
-     Two of the words in these quotes ("easily", "easier") are on the banned
-     filler list in the language guard. That rule exists for OUR copy, not for
-     a customer's own words. If the hook blocks a future write here, add a
-     quote exemption to the hook rather than editing the quote.
-     Placed directly above #pricing on purpose: someone deciding whether to pay
-     should first see that other owners already did.
-     STILL OUTSTANDING: a photo of each owner (or their property) and the town
-     for each business. Add Review structured data once those are in, and keep
-     it identical to the visible text. -->
-<section class="section customers" id="customers">
-  <p class="eyebrow center reveal" data-anim="fade">Customers</p>
-  <h2 class="reveal" data-anim="up">Used by property owners.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    See how property owners are using Pace Lodgix to manage their bookings, operations,
-    and guest communications.
-  </p>
-  <div class="cust-grid reveal" data-anim="up" data-delay="2">
-    <figure class="cust-card">
-      <blockquote>
-        <p class="cust-lead">Before Pace Lodgix, we had to manage our resort calendar
-          separately from Airbnb, Facebook, and our booking website.</p>
-        <p>Now, our calendars are connected in one place, making it easier to block dates
-          and keep our availability organized. Our emails and invoices are also sent
-          automatically, while bookings, guests, payments, finances, and property
-          operations can all be managed in one system. It saves us time and makes our
-          day-to-day operations much easier.</p>
-      </blockquote>
-      <figcaption>
-        <span class="cust-name">Yen Escarpe</span>
-        <span class="cust-role">Owner, JDN Beach Resort</span>
-      </figcaption>
-    </figure>
-    <figure class="cust-card">
-      <blockquote>
-        <p class="cust-lead">We can manage our calendar, bookings, invoices, and guest
-          email communications all in one place.</p>
-        <p>We can also send promotions and email campaigns to reach more customers, while
-          easily updating our built-in website whenever we have new announcements or
-          offers. It gives us one system to manage and promote our business, saving us
-          time and keeping everything organized.</p>
-      </blockquote>
-      <figcaption>
-        <span class="cust-name">Xty Pua</span>
-        <span class="cust-role">Property Owner, Lucky Koi SMDC</span>
-      </figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="section pricing" id="pricing">
-  <p class="eyebrow center reveal" data-anim="fade">Pricing</p>
-  <h2 class="reveal" data-anim="up">Simple pricing that scales with your properties.</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">Every plan includes the full Pace Lodgix platform. You pay based on the number of properties you manage.</p>
-
-  <!-- ── Billing cycle switch ──────────────────────────────────────────────
-       Two buttons, not a checkbox: this is one either/or control and
-       aria-pressed announces the state without a label that has to change.
-       Monthly is pressed in the HTML, so the page renders a complete, correct
-       monthly view with payments.js blocked or still loading. -->
-  <div class="billing-switch reveal" data-anim="fade" data-delay="1"
-       id="billingToggle" role="group" aria-label="Billing cycle">
-    <button type="button" data-cycle="monthly" aria-pressed="true">Monthly</button>
-    <button type="button" data-cycle="yearly"  aria-pressed="false">
-      Yearly <span class="bs-save">2 months free</span>
-    </button>
-  </div>
-
-  <!-- Tiers are property-count only. Every functional feature ships in every
-       plan, so the lede above is literally true: the only things that vary are
-       the three that cost real money to serve (team seats, channel-sync
-       frequency, support level). If you add a plan here, update the Offer
-       JSON-LD in <head> in the same commit, Google reads the prices from
-       there, not from these cards, and stale rich results are worse than none.
-
-       BOTH prices live in the markup as data-monthly / data-yearly. payments.js
-       swaps the text between them; it never computes a price. That is what
-       keeps these cards, the JSON-LD Offers and the FAQ answer from drifting
-       apart, there is exactly one place each figure is written. -->
-  <div class="price-grid">
-    <article class="price-card glass reveal" data-anim="left" data-delay="1">
-      <h3>Starter</h3>
-      <p class="pc-for">For hosts finding their feet</p>
-      <div class="pc-amt" data-monthly="399" data-yearly="3,990">
-        <span class="pc-cur">₱</span><span class="pc-figure">399</span><em class="pc-period">/mo</em>
+  <section class="dark" id="sync">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Calendar sync</p>
+        <h2>Your calendars stay in step. Your books stay yours.</h2>
+        <p class="lede">Connect Airbnb, Booking.com, Agoda, or other platforms that provide a calendar link. Bookings and blocked dates stay in sync across connected calendars.</p>
       </div>
-      <p class="pc-save" hidden>You save ₱798 a year</p>
-      <ul class="ticks">
-        <li><strong>1-5 properties</strong></li>
-        <li>Everything in Pace Lodgix</li>
-        <li>2 team members</li>
-        <li>Hourly channel sync</li>
-        <li>Email support</li>
-      </ul>
-      <div class="pc-actions">
-        <a class="btn btn-ghost btn-block" data-plan="starter" href="#cta">Subscribe</a>
-        <a class="pc-alt" href="https://app.pacelodgix.com/">or start a 14-day free trial</a>
+      <div class="sync-cols">
+        <div class="sync-col"><span class="bi"><svg aria-hidden="true"><use href="#i-refresh"/></svg></span><h3>What arrives on its own</h3><p>Pace Lodgix syncs reservation dates and availability from your connected calendars. Guest details and payment amounts aren't included, and removed reservations update automatically.</p></div>
+        <div class="sync-col"><span class="bi"><svg aria-hidden="true"><use href="#i-cash"/></svg></span><h3>What you fill in</h3><p>Calendar feeds do not include payout amounts, so you enter the amount you received and keep the payment record with the booking.</p></div>
+        <div class="sync-col"><span class="bi"><svg aria-hidden="true"><use href="#i-shield-check"/></svg></span><h3>What it will not touch</h3><p>If a synced booking already has a payment recorded against it, Pace Lodgix protects that record and tells you why it was not changed.</p></div>
       </div>
-    </article>
+      <p class="fine">Sync availability through calendar feeds, no direct integration or approval required. Full reservation-data integrations are not currently supported.</p>
+    </div>
+  </section>
 
-    <article class="price-card glass featured reveal" data-anim="up" data-delay="2">
-      <span class="pc-badge">Most popular</span>
-      <h3>Growth</h3>
-      <p class="pc-for">A growing portfolio</p>
-      <div class="pc-amt" data-monthly="599" data-yearly="5,990">
-        <span class="pc-cur">₱</span><span class="pc-figure">599</span><em class="pc-period">/mo</em>
+  <section id="payments">
+    <div class="wrap">
+      <div class="frow">
+        <div class="frow-copy">
+          <span class="bi"><svg aria-hidden="true"><use href="#i-receipt"/></svg></span>
+          <p class="eyebrow">Deposits and payments</p>
+          <h3>Every payment. One clear record.</h3>
+          <p>Record payment details and proof directly on the booking, so everything stays together.</p>
+        </div>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i></div><picture><source media="(max-width: 639px)" srcset="assets/shots/phone/m-ledger.webp"><img src="assets/shots/app/ledger.webp" alt="Payment record in Pace Lodgix" width="1600" height="787"></picture></div>
       </div>
-      <p class="pc-save" hidden>You save ₱1,198 a year</p>
-      <!-- Introductory price, per Chad, 19 Sep 2026. Was ₱999/mo for 4-15
-           properties; this plan is now ₱599/mo for 6-15, Starter absorbing
-           4-5. If this is time-limited, add an end date here and to the two
-           Growth Offers in the JSON-LD above, and set a reminder to revert
-           both together, the FAQ answer and the pc-save line included. -->
-      <ul class="ticks">
-        <li><strong>6-15 properties</strong></li>
-        <li>Everything in Pace Lodgix</li>
-        <li>8 team members</li>
-        <li>Hourly channel sync</li>
-        <li>Priority support</li>
-      </ul>
-      <div class="pc-actions">
-        <a class="btn btn-accent btn-block" data-plan="growth" href="#cta">Subscribe</a>
-        <a class="pc-alt" href="https://app.pacelodgix.com/">or start a 14-day free trial</a>
+    </div>
+  </section>
+
+  <section class="dark" id="automation">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Automation</p>
+        <h2>One booking. Seven things you no longer have to do.</h2>
+        <p class="lede">From the moment a booking comes in, Pace Lodgix takes care of the follow-up, from guest emails and invoices to payment reminders and review requests.</p>
       </div>
-    </article>
+      <ol class="auto-steps">
+        <li><span class="n">1</span><b>Booking received</b><span>A guest books, or you add the reservation yourself</span></li>
+        <li><span class="n">2</span><b>Booking acknowledgement</b><span>The guest gets immediate confirmation it was received</span></li>
+        <li><span class="n">3</span><b>Confirmation email</b><span>Stay details, house rules, and your contact information</span></li>
+        <li><span class="n">4</span><b>Invoice</b><span>Issued automatically once the booking is paid</span></li>
+        <li class="manual"><span class="n">5</span><b>Payment reminder</b><span>One click, already written for you</span></li>
+        <li><span class="n">6</span><b>Thank you and review request</b><span>Sent after the stay, review link included</span></li>
+        <li class="manual"><span class="n">7</span><b>Alternative booking response</b><span>One click sends a polite reply if you cannot take it</span></li>
+      </ol>
+    </div>
+  </section>
 
-    <article class="price-card glass reveal" data-anim="right" data-delay="3">
-      <h3>Enterprise</h3>
-      <p class="pc-for">Resorts &amp; operators</p>
-      <div class="pc-amt">Custom</div>
-      <ul class="ticks">
-        <li><strong>16+ properties</strong></li>
-        <li>Everything in Pace Lodgix</li>
-        <li>Unlimited team members</li>
-        <li>Multiple businesses</li>
-        <li>Onboarding, migration &amp; dedicated support</li>
-      </ul>
-      <!-- No data-plan, and deliberately so: Enterprise is quoted per operator,
-           so it must stay a conversation rather than a self-serve checkout at a
-           price nobody has agreed to. payments.js only ever touches [data-plan]. -->
-      <div class="pc-actions">
-        <a class="btn btn-ghost btn-block" href="#cta">Talk to us</a>
-        <a class="pc-alt" href="#cta">We'll quote your portfolio</a>
+  <section class="tint" id="marketing-center">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Marketing Center</p>
+        <h2>Your guests leave. The relationship doesn't.</h2>
+        <p class="lede">Keep your guest list organized and use it to send offers, promotions, and updates to past guests.</p>
       </div>
-    </article>
+      <div class="mcards">
+        <div class="mcard"><div class="img"><img src="assets/shots/marketing-guest-list-desktop.webp" alt="Guest list" width="2160" height="1350"></div><div class="txt"><span class="k">01</span><h3>Your Guest List</h3><p>Completed stays are added to your guest list automatically, so you don't have to enter them again.</p></div></div>
+        <div class="mcard"><div class="img"><img src="assets/shots/marketing-offer-desktop.webp" alt="Send an offer" width="2160" height="1350"></div><div class="txt"><span class="k">02</span><h3>Send an Offer</h3><p>Create an offer and send it to past guests by property or stay date, with filters to help you choose your audience.</p></div></div>
+        <div class="mcard"><div class="img"><img src="assets/shots/marketing-discounts-desktop.webp" alt="Coupon codes and seasonal rates" width="2160" height="1350"></div><div class="txt"><span class="k">03</span><h3>Coupon Codes &amp; Seasonal Rates</h3><p>Set coupon limits, expiry dates, seasonal rates, and long-stay discounts that are applied to eligible bookings.</p></div></div>
+        <div class="mcard"><div class="img"><img src="assets/shots/marketing-website-desktop.webp" alt="Your own website" width="2160" height="1350"></div><div class="txt"><span class="k">04</span><h3>Your Own Website</h3><p>Choose a website theme, add your branding and photos, and publish your direct booking website at your own link.</p></div></div>
+      </div>
+      <p class="m-note">A referral program that tracks and rewards a guest for sending the next one is still on the way.</p>
+    </div>
+  </section>
+
+  <section class="dark" id="mobile">
+    <div class="wrap">
+      <div class="gosplit">
+        <div class="gocopy">
+          <p class="eyebrow">On the go</p>
+          <h2>Manage your rentals<br> from your phone.</h2>
+          <p class="lede">Nothing to install. The whole platform, built to work on the phone in your hand. Same data, same prices, same calendar.</p>
+          <ul class="goticks">
+            <li>Owner dashboard and reports</li>
+            <li>Guest booking form</li>
+            <li>Record a payment at the door</li>
+            <li>Light and Night Dim, everywhere</li>
+          </ul>
+        </div>
+        <div class="gophones">
+          <div class="pframe pback bob-b" id="phoneBack">
+            <span class="notch"></span>
+            <div class="pscreen"><img src="assets/shots/calendar-light-mobile.webp" alt="The calendar on a phone" width="680" height="2465"></div>
+          </div>
+          <div class="pframe pfront bob-a" id="phoneFront">
+            <span class="notch"></span>
+            <div class="pscreen"><img src="assets/shots/dashboard-light-mobile.webp" alt="The dashboard on a phone" width="680" height="6162"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="appearance">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Appearance</p>
+        <h2>Work comfortably, day or night.</h2>
+        <p class="lede">Choose Light, Night Dim, or match your device. Your pages, charts, and calendars update instantly.</p>
+      </div>
+      <div class="dimbox">
+        <div class="seg" role="group" aria-label="Appearance"><button type="button" aria-pressed="true" data-src="assets/shots/app/dashboard.webp">Light</button><button type="button" aria-pressed="false" data-src="assets/shots/dashboard-dim-desktop.webp">Night Dim</button></div>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img id="dimImg" src="assets/shots/app/dashboard.webp" alt="Dashboard in Light" width="1600" height="787"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tint" id="tour">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Walkthroughs</p>
+        <h2>See Pace Lodgix in action.</h2>
+        <p class="lede">See the actual product and how it works across everyday property management tasks.</p>
+      </div>
+      <div class="video" role="img" aria-label="Demo video placeholder">
+        <div class="video-inner">
+          <span class="play" aria-hidden="true"></span>
+          <b>Demo video with voice-over</b>
+          <small>Placeholder. Chad's recording goes here.</small>
+        </div>
+      </div>
+      <div class="clips">
+        <a class="clip" href="assets/video/batch-1-the-command-center.mp4" target="_blank" rel="noopener"><img src="assets/video/batch-1-the-command-center-poster.webp" alt=""><span><b>The command center</b></span></a>
+        <a class="clip" href="assets/video/batch-2-a-day-of-operations.mp4" target="_blank" rel="noopener"><img src="assets/video/batch-2-a-day-of-operations-poster.webp" alt=""><span><b>A day of operations</b></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="onboarding">
+    <div class="wrap">
+      <div class="onb">
+        <div class="onb-copy">
+          <span class="chip">Included in every plan</span>
+          <h2>Free guided onboarding. We set you up, you take the bookings.</h2>
+          <p class="lede">Starter, Growth and Enterprise all include 1:1 onboarding with the Pace Lodgix team over WhatsApp or Messenger chat. We connect your listings and build your booking website with you, so you go live with confidence.</p>
+          <ul class="hlist onb-list">
+            <li>All your listings connected in your first session</li>
+            <li>Your direct booking website, built and published</li>
+            <li>From sign-up to first direct booking, faster</li>
+          </ul>
+          <div class="onb-cta"><a class="btn btn-primary" href="https://app.pacelodgix.com/">Start free trial</a></div>
+        </div>
+        <ol class="steps">
+          <li class="step"><span class="n">1</span><div><h3>Sign up and send your listing links</h3><p>Airbnb, Booking.com, Agoda. Send them on WhatsApp or Messenger, that is all we need.</p></div></li>
+          <li class="step"><span class="n">2</span><div><h3>We connect your calendars and rates</h3><p>Properties, weekday and weekend rates, fees and house rules, set up for you.</p></div></li>
+          <li class="step"><span class="n">3</span><div><h3>Your booking website goes live</h3><p>Your name, your photos, your link. Share it and take bookings with zero commission.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="tint" id="customers">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Customers</p>
+        <h2>Used by property owners.</h2>
+        <p class="lede">See how property owners are using Pace Lodgix to manage their bookings, operations, and guest communications.</p>
+      </div>
+      <div class="quotes">
+        <figure class="qcard" style="margin:0"><blockquote>&ldquo;Before Pace Lodgix, we had to manage our resort calendar separately from Airbnb, Facebook, and our booking website.&rdquo;<p class="rest">Now, our calendars are connected in one place, making it easier to block dates and keep our availability organized. Our emails and invoices are also sent automatically, while bookings, guests, payments, finances, and property operations can all be managed in one system. It saves us time and makes our day-to-day operations much easier.</p></blockquote><figcaption class="who"><span class="av">JD</span><span><b>Yen Escarpe</b><small>Owner, JDN Beach Resort</small></span></figcaption></figure>
+        <figure class="qcard" style="margin:0"><blockquote>&ldquo;We can manage our calendar, bookings, invoices, and guest email communications all in one place.&rdquo;<p class="rest">We can also send promotions and email campaigns to reach more customers, while easily updating our built-in website whenever we have new announcements or offers. It gives us one system to manage and promote our business, saving us time and keeping everything organized.</p></blockquote><figcaption class="who"><span class="av">LK</span><span><b>Xty Pua</b><small>Property Owner, Lucky Koi SMDC</small></span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Pricing</p>
+        <h2>Simple pricing that scales with your properties.</h2>
+        <p class="lede">Every plan includes the full Pace Lodgix platform. You pay based on the number of properties you manage.</p>
+      </div>
+      <div class="cycle-wrap"><div class="cycle" id="billingToggle" role="group" aria-label="Billing cycle"><button type="button" data-cycle="monthly" aria-pressed="true">Monthly</button><button type="button" data-cycle="yearly" aria-pressed="false">Yearly <span class="free">2 months free</span></button></div></div>
+      <div class="plans price-grid">
+        <div class="plan"><h3>Starter</h3><p class="for">For hosts finding their feet</p><div class="pc-amt" data-monthly="399" data-yearly="3,990"><span class="pc-cur">&#8369;</span><span class="pc-figure">399</span><em class="pc-period">/mo</em></div><p class="pc-save" hidden>You save &#8369;798 a year</p><ul><li>1-5 properties</li><li>Everything in Pace Lodgix</li><li>2 team members</li><li>Hourly channel sync</li><li>Email support</li></ul><a class="btn btn-ghost" data-plan="starter" href="#cta">Subscribe</a><p class="alt">or <a href="https://app.pacelodgix.com/">start a 14-day free trial</a></p></div>
+        <div class="plan pop"><span class="badge">Most popular</span><h3>Growth</h3><p class="for">A growing portfolio</p><div class="pc-amt" data-monthly="599" data-yearly="5,990"><span class="pc-cur">&#8369;</span><span class="pc-figure">599</span><em class="pc-period">/mo</em></div><p class="pc-save" hidden>You save &#8369;1,198 a year</p><ul><li>6-15 properties</li><li>Everything in Pace Lodgix</li><li>8 team members</li><li>Hourly channel sync</li><li>Priority support</li></ul><a class="btn btn-primary" data-plan="growth" href="#cta">Subscribe</a><p class="alt">or <a href="https://app.pacelodgix.com/">start a 14-day free trial</a></p></div>
+        <div class="plan"><h3>Enterprise</h3><p class="for">Resorts &amp; operators</p><div class="pc-amt pc-custom">Custom</div><ul><li>16+ properties</li><li>Everything in Pace Lodgix</li><li>Unlimited team members</li><li>Multiple businesses</li><li>Onboarding, migration &amp; dedicated support</li></ul><a class="btn btn-ghost" href="#cta">Talk to us</a><p class="alt">We'll quote your portfolio</p></div>
+      </div>
+      <div class="paystrip" id="payMethods" hidden>
+        <p><b>Pay securely with</b></p>
+        <div class="logos"><span>GCash</span><span>Maya</span><span>GrabPay</span><span>Visa</span><span>Mastercard</span><span>Online bank transfer</span></div>
+        <p>Payment is handled on our provider's secure checkout page. Card details are never entered on this website and never reach our servers.</p>
+      </div>
+      <p class="plan-note">Prefer to try first? Every plan starts with a <a href="https://app.pacelodgix.com/">14-day free trial</a>, no card required. A yearly payment covers 12 months and the first payment is refundable within 14 days. For monthly billing, <a href="#cta">contact us</a>. See <a href="terms.html#plans">Terms</a>.</p>
+    </div>
+  </section>
+
+  <section class="tint" id="faq">
+    <div class="wrap">
+      <div class="sec-head center"><p class="eyebrow">FAQ</p><h2>Questions? We've got answers.</h2></div>
+      <div class="faq">
+        <details open><summary>What is a property management system (PMS)?</summary><p>A property management system is software that runs the day-to-day operations of a rental business from one place: reservations, the booking calendar, guest records, invoices, payments and financial reports. For vacation rentals and short-term rentals, a PMS like Pace Lodgix replaces the spreadsheets and message threads most hosts start out with, so availability and pricing stay correct across every booking platform.</p></details>
+        <details><summary>Is Pace Lodgix good for Airbnb hosts and short-term rentals?</summary><p>Yes. Pace Lodgix is vacation rental software built for Airbnb hosts, short-term rental operators, staycations, villas, apartments and beach resorts. It works alongside the platforms you already list on, syncing your calendar both ways so the same dates are never sold twice, and gives you a commission-free direct booking page of your own.</p></details>
+        <details><summary>How much does Pace Lodgix vacation rental software cost?</summary><p>Plans start at &#8369;399 a month for 1-5 properties and &#8369;599 a month for 6-15, with custom pricing for 16 or more. Every plan includes the full platform, with no feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free trial and no card is required.</p></details>
+        <details><summary>How do I pay for Pace Lodgix, and can I use GCash?</summary><p>Yes. GCash, Maya, GrabPay, Visa, Mastercard and online bank transfer are all accepted. Choose a yearly plan and you finish on our payment provider's secure checkout page; card details are entered there, never on this website, so they never reach our servers. A yearly payment covers 12 months and the first payment is refundable within 14 days. For monthly billing, contact us and we'll set it up.</p></details>
+        <details><summary>Do I have to stop using Airbnb or Booking.com?</summary><p>No. Pace Lodgix syncs your calendar with them. Connect each platform's calendar link and availability stays in step both ways. A booking on Airbnb blocks the dates here, and a direct booking here blocks them there.</p></details>
+        <details><summary>Does a booking from Airbnb arrive with the guest name and the amount?</summary><p>Partly, and it depends on the platform. Connecting a calendar link brings the reservation and its dates across on its own and blocks the night here, tagged with the platform it came from. Some sites publish the guest name in that feed and it arrives with it; Airbnb usually does not. No platform publishes the payout in a calendar link, so you enter what you were paid. That takes a moment per booking and keeps your records under your control.</p></details>
+        <details><summary>Can guests book directly, without a platform commission?</summary><p>Yes. That is the point of your booking page. Every business gets its own link. A guest picks dates, sees the live price, and submits. It arrives as <b>Pending</b> and nothing is confirmed until you approve it.</p></details>
+        <details><summary>Can my guests pay by card on my booking page?</summary><p>Not yet. Today a guest pays by GCash, bank transfer or cash and attaches the proof on the booking form, and you confirm it in one tap. Online card and e-wallet payment is in build. When it arrives you will connect your own payment account, so the money goes straight to you and Pace Lodgix never holds it or takes a share of a booking.</p></details>
+        <details><summary>Does it handle weekend, holiday and long-stay pricing?</summary><p>All of it, plus per-guest-count brackets, cleaning fees, extra-head charges, automatic length-of-stay discounts and platform commission. You set the rules once and the price computes itself on every booking.</p></details>
+        <details><summary>Can my staff use it without seeing everything?</summary><p>Yes. Invite your team as owner, manager or staff. Deletion is owner-gated and every change lands in the activity log with a name and a timestamp.</p></details>
+        <details><summary>Is my data separated from other businesses?</summary><p>Yes, enforced in the database itself, not only in the app. Every row is scoped to your business and the security policy is checked on every single query.</p></details>
+        <details><summary>What does onboarding look like?</summary><p>Hands-on. We set your properties, rates and channels up with you, so the first thing you see is your own business, not an empty screen.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" id="cta">
+    <div class="final">
+      <h2>Ready to run your rentals from one place?</h2>
+      <p>Bring your bookings, calendars, guests, payments, and daily operations into one system. Start with a 14-day free trial or talk to us about your setup.</p>
+      <form class="request-form" action="https://formspree.io/f/mnjedwqk" method="POST">
+        <input type="hidden" name="_subject" value="New Pace Lodgix demo request">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
+        <input type="text" name="name" placeholder="Your name" aria-label="Your name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email address" aria-label="Email address" required autocomplete="email">
+        <input type="text" name="business" placeholder="Business name" aria-label="Business name" required autocomplete="organization">
+        <input type="number" name="units" placeholder="How many units?" aria-label="How many units do you manage?" min="1" required>
+        <button class="btn btn-gold" type="submit">Request a demo</button>
+      </form>
+      <div class="btns">
+        <a class="btn btn-ghost chatbtn" href="https://wa.me/639563800054" target="_blank" rel="noopener"><img src="assets/brand/whatsapp-3d.png" alt="" width="26" height="26">Chat on WhatsApp</a>
+        <a class="btn btn-ghost chatbtn" href="https://m.me/pacedigitalworks" target="_blank" rel="noopener"><img src="assets/brand/messenger-3d.png" alt="" width="26" height="26">Chat on Messenger</a>
+      </div>
+      <p class="small">We'll reply within a day. No card, no obligation.</p>
+    </div>
   </div>
-
-  <!-- ── Payment methods ───────────────────────────────────────────────────
-       Hidden until at least one checkout link is configured in payments.js,
-       promising GCash at checkout while every button still routes to the demo
-       form would be a promise the page cannot keep.
-
-       Wordmarks are set as text, not as the providers' logo files. Using the
-       real GCash/Maya/Visa artwork needs each brand's permission and their
-       clear-space rules, and a stale or stretched payment logo reads as a
-       phishing page rather than a trust signal. -->
-  <div class="pay-methods reveal" data-anim="fade" data-delay="3" id="payMethods" hidden>
-    <p class="pm-label">Pay securely with</p>
-    <ul class="pm-list">
-      <li>GCash</li>
-      <li>Maya</li>
-      <li>GrabPay</li>
-      <li>Visa</li>
-      <li>Mastercard</li>
-      <li>Online bank transfer</li>
-    </ul>
-    <p class="pm-note">
-      <svg class="pm-lock" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25V9.75H6A2.25 2.25 0 0 0 3.75 12v8.25A2.25 2.25 0 0 0 6 22.5h12a2.25 2.25 0 0 0 2.25-2.25V12A2.25 2.25 0 0 0 18 9.75h-.75V6.75A5.25 5.25 0 0 0 12 1.5Zm3 8.25H9V6.75a3 3 0 1 1 6 0v3Z"/>
-      </svg>
-      Payment is handled on our provider's secure checkout page. Card details are
-      never entered on this website and never reach our servers.
-    </p>
-  </div>
-
-  <p class="price-note reveal" data-anim="fade" data-delay="3">
-    Prefer to try first? Every plan starts with a <strong>14-day free trial</strong>,
-    no card required. A yearly payment covers 12 months and the first payment is
-    refundable within 14 days. For monthly billing, <a href="#cta">contact us</a>.
-    See <a href="terms.html#plans">Terms</a>.
-  </p>
-</section>
-
-<!-- ═══════════════════════════════ FAQ ═══════════════════════════════ -->
-<section class="section faq" id="faq">
-  <p class="eyebrow center reveal" data-anim="fade">FAQ</p>
-  <h2 class="reveal" data-anim="up">Questions? We've got answers.</h2>
-
-  <!-- Answer-first on purpose: each answer opens with the direct response, then
-       explains. That is what AI search engines lift as a citation, and it is
-       what the FAQPage JSON-LD in <head> mirrors. Keep the two in sync, if you
-       add, remove or reword a question here, do the same up there in the same
-       commit. -->
-  <div class="faq-list reveal" data-anim="up" data-delay="1">
-    <details>
-      <summary>What is a property management system (PMS)?</summary>
-      <div class="faq-body"><p>A property management system is software that runs the day-to-day operations
-        of a rental business from one place: reservations, the booking calendar, guest records, invoices,
-        payments and financial reports. For vacation rentals and short-term rentals, a PMS like Pace Lodgix
-        replaces the spreadsheets and message threads most hosts start out with, so availability and pricing
-        stay correct across every booking platform.</p></div>
-    </details>
-    <details>
-      <summary>Is Pace Lodgix good for Airbnb hosts and short-term rentals?</summary>
-      <div class="faq-body"><p>Yes. Pace Lodgix is vacation rental software built for Airbnb hosts,
-        short-term rental operators, staycations, villas, apartments and beach resorts. It works alongside
-        the platforms you already list on, syncing your calendar both ways so the same dates are never sold
-        twice, and gives you a commission-free direct booking page of your own.</p></div>
-    </details>
-    <details>
-      <summary>How much does Pace Lodgix vacation rental software cost?</summary>
-      <div class="faq-body"><p>Plans start at ₱399 a month for 1-5 properties and ₱599 a month for
-        6-15, with custom pricing for 16 or more. Every plan includes the full platform, with no
-        feature paywalls, you pay for the number of properties you run. Each plan starts with a 14-day free
-        trial and no card is required.</p></div>
-    </details>
-    <details>
-      <!-- Names Pace Lodgix on purpose, and now matches its JSON-LD twin. This
-           question is the TENANT paying for the product; "Can my guests pay by
-           card on my booking page?" below is a guest paying the tenant. Left
-           unqualified, the two read as the same question. -->
-      <summary>How do I pay for Pace Lodgix, and can I use GCash?</summary>
-      <div class="faq-body"><p>Yes. GCash, Maya, GrabPay, Visa, Mastercard and online bank transfer are
-        all accepted. Choose a yearly plan and you finish on our payment provider's secure checkout
-        page; card details are entered there, never on this website, so they never reach our
-        servers. A yearly payment covers 12 months and the first payment is refundable within 14 days.
-        For monthly billing, contact us and we'll set it up.</p></div>
-    </details>
-    <details>
-      <summary>Do I have to stop using Airbnb or Booking.com?</summary>
-      <!-- "Channel manager" was the wording here until Sep 2026 and it oversold:
-           the phrase makes a reader expect full reservation and payout sync,
-           which an iCal link cannot carry. Say calendar sync. -->
-      <div class="faq-body"><p>No. Pace Lodgix syncs your calendar with them. Connect each
-        platform's calendar link and availability stays in step both ways. A booking on Airbnb blocks the
-        dates here, and a direct booking here blocks them there.</p></div>
-    </details>
-    <details>
-      <summary>Does a booking from Airbnb arrive with the guest name and the amount?</summary>
-      <div class="faq-body"><p>Partly, and it depends on the platform. Connecting a calendar link brings the
-        reservation and its dates across on its own and blocks the night here, tagged with the platform it
-        came from. Some sites publish the guest name in that feed and it arrives with it; Airbnb usually
-        does not. No platform publishes the payout in a calendar link, so you enter what you were paid. That
-        takes a moment per booking and keeps your records under your control.</p></div>
-    </details>
-    <details>
-      <summary>Can guests book directly, without a platform commission?</summary>
-      <div class="faq-body"><p>Yes. That is the point of your booking page. Every business gets its own link.
-        A guest picks dates, sees the live price, and submits. It arrives as <em>Pending</em> and nothing is
-        confirmed until you approve it.</p></div>
-    </details>
-    <details>
-      <!-- Distinct from "How do I pay, and can I use GCash?" above, which is about
-           the TENANT paying for Pace Lodgix. This one is a GUEST paying the
-           tenant, which is not built. Keep both, and keep them worded so the two
-           can never be read as the same answer. -->
-      <summary>Can my guests pay by card on my booking page?</summary>
-      <div class="faq-body"><p>Not yet. Today a guest pays by GCash, bank transfer or cash and attaches the
-        proof on the booking form, and you confirm it in one tap. Online card and e-wallet payment is in
-        build. When it arrives you will connect your own payment account, so the money goes straight to you
-        and Pace Lodgix never holds it or takes a share of a booking.</p></div>
-    </details>
-    <details>
-      <summary>Does it handle weekend, holiday and long-stay pricing?</summary>
-      <div class="faq-body"><p>All of it, plus per-guest-count brackets, cleaning fees, extra-head charges,
-        automatic length-of-stay discounts and platform commission. You set the rules once and the price
-        computes itself on every booking.</p></div>
-    </details>
-    <details>
-      <summary>Can my staff use it without seeing everything?</summary>
-      <div class="faq-body"><p>Yes. Invite your team as owner, manager or staff. Deletion is owner-gated and
-        every change lands in the activity log with a name and a timestamp.</p></div>
-    </details>
-    <details>
-      <summary>Is my data separated from other businesses?</summary>
-      <div class="faq-body"><p>Yes, enforced in the database itself, not only in the app. Every row is scoped to
-        your business and the security policy is checked on every single query.</p></div>
-    </details>
-    <details>
-      <summary>What does onboarding look like?</summary>
-      <div class="faq-body"><p>Hands-on. We set your properties, rates and channels up with you, so the first
-        thing you see is your own business, not an empty screen.</p></div>
-    </details>
-  </div>
-</section>
-
-<!-- ═══════════════════════════ FINAL CTA ═══════════════════════════ -->
-<section class="section dark cta" id="cta">
-  <div class="blobs" aria-hidden="true">
-    <span class="blob blob-1"></span>
-    <span class="blob blob-3"></span>
-  </div>
-  <h2 class="reveal" data-anim="scale">Ready to run your rentals<br> from one place?</h2>
-  <p class="lede center reveal" data-anim="fade" data-delay="1">
-    Bring your bookings, calendars, guests, payments, and daily operations into one system.
-    Start with a 14-day free trial or talk to us about your setup.
-  </p>
-
-  <form class="request-form reveal" data-anim="up" data-delay="2"
-        action="https://formspree.io/f/mnjedwqk" method="POST">
-    <input type="hidden" name="_subject" value="New Pace Lodgix demo request">
-    <!-- Honeypot: real users leave this empty; bots fill it and Formspree drops them. -->
-    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
-    <!-- aria-label, not a visible <label>, and deliberately so: the placeholder
-         is currently these fields' only name, and a placeholder is not an
-         accessible name you can rely on, it is dropped by some AT, and it
-         disappears the moment the field has a value, so anyone reviewing what
-         they typed has nothing left to tell them which box is which.
-         These give each input a stable name with zero visual change and zero
-         effect on submission (name/type/required are untouched).
-         Standing recommendation, unchanged from the CSS note: real visible
-         labels, or a floating-label treatment, are still the better answer,
-         that is a layout decision for you rather than a polish pass. -->
-    <input type="text" name="name" placeholder="Your name" aria-label="Your name" required autocomplete="name">
-    <input type="email" name="email" placeholder="Email address" aria-label="Email address" required autocomplete="email">
-    <input type="text" name="business" placeholder="Business name" aria-label="Business name" required autocomplete="organization">
-    <input type="number" name="units" placeholder="How many units?" aria-label="How many units do you manage?" min="1" required>
-    <button class="btn btn-accent btn-lg" type="submit">Request a demo</button>
-    <a class="btn btn-glass btn-lg" href="https://wa.me/639563800054" target="_blank" rel="noopener">Chat on WhatsApp</a>
-  </form>
-  <p class="cta-note">We'll reply within a day. No card, no obligation.</p>
-</section>
-
 </main>
 
-<footer class="footer">
-  <div class="footer-top">
-    <div class="footer-brand">
-      <!-- Always on --primary-dark, so the white artwork alone, no swap pair. -->
-      <img class="brand-mark" src="assets/logo-mark.png" alt="" width="37" height="32" loading="lazy" decoding="async">
-      <img class="brand-word" src="assets/wordmark-white.png" alt="Pace Lodgix" width="97" height="19" loading="lazy" decoding="async">
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr-brand">
+      <div class="row"><img class="mark" src="assets/logo-mark.png" alt="" width="37" height="32"><img class="word" src="assets/wordmark-white.png" alt="Pace Lodgix" width="87" height="17"></div>
       <p class="tagline">Refined Stays. Premium Management.</p>
-
-      <!-- Verified SaaS Browser listing. Hotlinked from their CDN on purpose:
-           if they reissue the artwork the badge stays current, and a stale
-           self-hosted copy of someone else's verification mark is worse than a
-           third-party request. width/height are the SVG's own 456x160 scaled
-           to 200, so the box is reserved and this costs no layout shift. -->
-      <a class="footer-badge" href="https://saasbrowser.com/en/saas/1598880/pace-lodgix"
-         target="_blank" rel="noopener">
-        <img src="assets/saas-browser-badge-14.svg"
-             alt="Pace Lodgix on SaaS Browser - verified listing"
-             width="200" height="70" loading="lazy" decoding="async">
-      </a>
     </div>
-
-    <nav class="footer-col">
-      <h4>Product</h4>
-      <a href="#features">Features</a>
-      <a href="#showcase">Product</a>
-      <a href="#automation">Automation</a>
-      <a href="#pricing">Pricing</a>
-    </nav>
-
-    <nav class="footer-col">
-      <h4>Company</h4>
-      <a href="#cta">Book a demo</a>
-      <a href="#faq">FAQ</a>
-      <a href="https://app.pacelodgix.com/">Sign in</a>
-    </nav>
-
-    <!-- Contact, as icons rather than words.
-         ACCESSIBILITY: there is no visible text in these links, so the
-         aria-label IS the link's entire accessible name, a screen reader
-         announces nothing else. Never remove one, and never let it drift from
-         where the link actually goes. Each icon is aria-hidden so the label is
-         not read twice. `title` gives sighted mouse users the same information
-         on hover, which a bare icon otherwise hides.
-
-         The marks are the official WhatsApp and Facebook glyphs but drawn in
-         the footer's own light ink, not in #25D366 and #1877F2. Two saturated
-         brand colours in a quiet dark footer pull harder than the CTA above
-         them, and the blue in particular fights the emerald. They pick up the
-         brand emerald on hover instead. -->
-    <nav class="footer-col" aria-label="Contact">
-      <h4>Contact</h4>
-      <ul class="footer-social">
-        <li>
-          <a href="https://wa.me/639563800054" target="_blank" rel="noopener"
-             aria-label="Message us on WhatsApp" title="WhatsApp">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.174.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 0 1 6.988 2.896 9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="https://www.facebook.com/pacedigitalworks" target="_blank" rel="noopener"
-             aria-label="Pace Lodgix on Facebook" title="Facebook">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
-          </a>
-        </li>
-        <li>
-          <a href="mailto:hello@pacelodgix.com"
-             aria-label="Email hello@pacelodgix.com" title="hello@pacelodgix.com">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z"/><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z"/></svg>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-
-  <div class="footer-bottom">
-    <!-- The address is written out here because the contact column above is
-         icons only, and an envelope glyph is the one contact detail a visitor
-         cannot read without clicking it. Plain-text contact details are also a
-         small trust signal for real people and for search engines, and this is
-         now the only place on the homepage the address appears in words.
-         privacy.html and terms.html already carry it in their body copy. -->
-    <p>© 2026 Pace Lodgix. All Rights Reserved.
-      <span class="footer-dot" aria-hidden="true">·</span>
-      <a class="footer-email" href="mailto:hello@pacelodgix.com">hello@pacelodgix.com</a>
-    </p>
-    <nav>
-      <a href="privacy.html">Privacy policy</a>
-      <a href="terms.html">Terms</a>
-    </nav>
+    <div class="ftr-cols">
+      <div><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#showcase">Product</a></li><li><a href="#automation">Automation</a></li><li><a href="#pricing">Pricing</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#cta">Book a demo</a></li><li><a href="#faq">FAQ</a></li><li><a href="https://app.pacelodgix.com/">Sign in</a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:hello@pacelodgix.com">hello@pacelodgix.com</a></li></ul></div>
+    </div>
+    <div class="ftr-base"><span>&copy; 2026 Pace Lodgix. All Rights Reserved.</span><span class="ftr-legal"><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms</a></span></div>
   </div>
 </footer>
 
-<div class="lightbox" id="lightbox" hidden>
-  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
-  <video id="lightboxVideo" controls playsinline></video>
-</div>
-
-<!-- ═══════════════════════ MESSENGER BUTTON ═══════════════════════
-     Opens a Messenger conversation with the Page in a new tab. Not Meta's
-     embedded chat plugin, see the note above .chat-fab in styles.css for
-     why (it would put Facebook's tracking SDK on every page and contradict
-     privacy.html).
-
-     One path with fill-rule="evenodd": the bolt is a hole punched through
-     the bubble, so it shows the button's green rather than needing a second
-     fill that would have to be kept in sync with the background. -->
-<a class="chat-fab" href="https://m.me/pacedigitalworks" target="_blank" rel="noopener"
-   aria-label="Chat with us on Messenger">
-  <svg viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false">
-    <path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.15.26.35.27.57l.05 1.78c.02.57.6.94 1.12.71l1.99-.88c.17-.07.36-.09.53-.04 1.03.28 2.12.44 3.24.44 5.64 0 10-4.13 10-9.7S17.64 2 12 2Zm-6.01 12.54 2.94-4.66c.47-.74 1.47-.93 2.18-.4l2.34 1.75c.21.16.51.16.72 0l3.16-2.4c.42-.32.97.18.69.63l-2.94 4.66c-.47.74-1.47.93-2.18.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63Z"/>
-  </svg>
-  <span class="chat-fab-label">Chat with us</span>
-</a>
-
-<script src="nav.js"></script>
-<script src="scroll.js"></script>
-
-<!-- Pricing toggle + checkout links. Plain and early on purpose: it touches
-     text and hrefs only, needs no GSAP, and must not sit behind the CDN below.
-     A visitor ready to pay should not wait on an animation library. The yearly
-     checkout URLs are configured at the top of this file. -->
+<a class="chatfab" href="https://m.me/pacedigitalworks" target="_blank" rel="noopener">Chat with us</a>
+<div class="sticky"><a class="btn btn-ghost" href="https://app.pacelodgix.com/">Sign in</a><a class="btn btn-primary" href="https://app.pacelodgix.com/">Start free trial</a></div>
+<script src="site.js"></script>
 <script src="payments.js"></script>
-
-<!-- GSAP enhancement layer. Loaded last and progressively: if either CDN file
-     fails to load, parallax.js sees no window.gsap, bails, and scroll.js has
-     already animated everything the original way. No build step, same
-     constraint the rest of the site runs under. crossorigin so a CDN error is
-     legible in the console rather than an opaque "Script error". -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" crossorigin="anonymous"></script>
-<script src="parallax.js"></script>
-
-<!-- LAST ON PURPOSE: it needs GSAP + ScrollTrigger already parsed, and it must
-     not run before parallax.js has registered the plugin. Drives the feature
-     grid's column drift and the light behind it. Both are enhancements, with
-     this file removed, or with the GSAP CDN unreachable, the grid renders
-     complete and still. -->
-<script src="redesign.js"></script>
 </body>
 </html>

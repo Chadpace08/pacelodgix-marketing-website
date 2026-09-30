@@ -18,7 +18,20 @@ Public marketing site for PaceLodgix PMS (`pacelodgix.com`). Separate codebase f
 - Colors: Deep Forest Green `#1F3A2A` · Warm Cream `#FDFAF0` · Gold `#D9B25F`
 - Logo: **white-only master artwork**, invisible on light surfaces. Always check what's behind a logo placement before using the white variant; forest-on-light and white-on-dark cuts already exist in `assets/`. Never stretch to a square box, both mark and wordmark are non-square (1.46:1 and 5.09:1); size by height, `width: auto`.
 
-## Stylesheet Order (read before editing any CSS)
+## Redesign branch `redesign-2026-10` (Oct 2026): READ FIRST on this branch
+Lodgify-style, mobile-first rebuild of `index.html`. **Not deployed.** Chad's rule: nothing goes live until every asset is ready (his voice-over demo video, re-captured screenshots, customer photos and permissions) AND he says go. Never run `npx wrangler deploy` from this branch without that.
+
+- **Wording is locked.** Every line of copy is the live site's wording, word for word. Add new text if asked; never reword existing lines. Approved changes so far: hero subline shortened to "built for Philippine short-term rentals."; "PaceLodgix" to "Pace Lodgix".
+- `index.html` loads **one** stylesheet, `site.css`, and two scripts: `site.js` (menus, hero, product section, phones, appearance switch) and `payments.js` (unchanged, see below). `styles.css`, `redesign.css`, `nav.js`, `scroll.js`, `parallax.js`, `redesign.js` are no longer used by `index.html`; `privacy.html` and `terms.html` still use `styles.css` until they are moved over.
+- `site.css` is mobile first: base rules are the phone, `@media (min-width: 640px)` tablet, `(min-width: 900px)` desktop. Colours are tokens on `:root` (forest, cream, gold). Later rules in the file override earlier ones.
+- Icons: an inline SVG sprite at the top of `<body>` (Tabler outline, MIT), shown as `<span class="bi"><svg><use href="#i-NAME"/></svg></span>`, gold on a forest tile. To add one, copy the paths of `D:\CLAUDE CODE\Saas Icons\tabler icons\tabler\outline\NAME.svg` into a new `<symbol id="i-NAME">`.
+- Hero (`#stage`): phone shows the page name and swipes (arrows and dots too); desktop shows clickable tabs. Screens and floating-card text live in the `data` array in `site.js`.
+- Product (`#showcase`): below 900px it pins and slides sideways as you scroll (`slide()` in `site.js`, section height `560svh` in `site.css`); desktop is a clickable list.
+- On the go (`#mobile`): the tall dashboard screenshot scrolls inside the front phone (`panPhone()` in `site.js`).
+- Pricing keeps the exact markup `payments.js` needs: `#billingToggle`, `.price-grid`, `.pc-amt[data-monthly][data-yearly]` with `.pc-figure` and `.pc-period`, `.pc-save`, `[data-plan]` buttons, `#payMethods`. Do not rename any of them.
+- New assets: `assets/shots/phone/` (phone crops), `assets/brand/` (3D WhatsApp and Messenger icons), `assets/hero-villa.webp` (hero backdrop, from `og-image.jpg`).
+
+## Stylesheet Order (read before editing any CSS; describes `main`, the live site)
 `index.html` loads **two** stylesheets, in this order:
 
 1. `styles.css`, the original design, still complete and untouched.
