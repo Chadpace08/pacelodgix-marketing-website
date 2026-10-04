@@ -18,8 +18,13 @@ Public marketing site for PaceLodgix PMS (`pacelodgix.com`). Separate codebase f
 - Colors: Deep Forest Green `#1F3A2A` · Warm Cream `#FDFAF0` · Gold `#D9B25F`
 - Logo: **white-only master artwork**, invisible on light surfaces. Always check what's behind a logo placement before using the white variant; forest-on-light and white-on-dark cuts already exist in `assets/`. Never stretch to a square box, both mark and wordmark are non-square (1.46:1 and 5.09:1); size by height, `width: auto`.
 
-## Redesign branch `redesign-2026-10` (Oct 2026): READ FIRST on this branch
-Lodgify-style, mobile-first rebuild of `index.html`. **Not deployed.** Chad's rule: nothing goes live until every asset is ready (his voice-over demo video, re-captured screenshots, customer photos and permissions) AND he says go. Never run `npx wrangler deploy` from this branch without that.
+## The 2026 redesign is LIVE (since 4 Oct 2026): READ FIRST
+Lodgify-style, mobile-first rebuild of `index.html`. **Deployed to pacelodgix.com on 4 Oct 2026**, on Chad's instruction (version `033c17aa`). That instruction replaced his earlier rule of holding the redesign until every asset was ready.
+
+- **Two folders, one repo, same commit.** `marketing-website/` is branch `main`, `marketing-website-redesign/` is a worktree on `redesign-2026-10`. How a change goes live: edit and commit in the redesign folder (the `backups/` copies and the source pictures live there, on this computer only), then in `marketing-website/` run `git merge --ff-only redesign-2026-10`, then `npx wrangler deploy` **from `marketing-website/`**, then push both branches. Keep the two branches on the same commit.
+- **The GitHub repo is public.** Never commit full-size source pictures, customer photos or backups: `.gitignore` keeps `backups/`, `carolen.png`, `Host Christy.jpg` and `PaceLodgix Dashboard Hero.png` out.
+- **Going back:** the last version of the old design is the git tag `live-before-redesign-2026-10`. `npx wrangler rollback` also returns the site to the previous upload.
+- **Still open after going live:** the hero's two pictures are different captures (see Known gap below); screenshots still show the old logo in places; whether Yen and Xty gave written OK for their photos is not recorded here (Chad supplied the photos and chose to go live).
 
 - **Wording is locked.** Every line of copy is the live site's wording, word for word. Add new text if asked; never reword existing lines. Approved changes so far: hero subline shortened to "built for Philippine short-term rentals."; "PaceLodgix" to "Pace Lodgix"; onboarding section (30 Sep 2026) reworded with no "we"/"team" and "All plans" instead of plan names (Chad works solo).
 - `index.html` loads **one** stylesheet, `site.css`, and two scripts: `site.js` (menus, hero picture drift, product list on desktop, phones, appearance fade on scroll) and `payments.js` (unchanged, see below). `styles.css`, `redesign.css`, `nav.js`, `scroll.js`, `parallax.js`, `redesign.js` are no longer used by `index.html`; `privacy.html` and `terms.html` still use `styles.css` until they are moved over.
@@ -45,7 +50,7 @@ Lodgify-style, mobile-first rebuild of `index.html`. **Not deployed.** Chad's ru
 - Pricing keeps the exact markup `payments.js` needs: `#billingToggle`, `.price-grid`, `.pc-amt[data-monthly][data-yearly]` with `.pc-figure` and `.pc-period`, `.pc-save`, `[data-plan]` buttons, `#payMethods`. Do not rename any of them.
 - New assets: `assets/shots/phone/` (phone crops), `assets/brand/` (3D WhatsApp and Messenger icons), `assets/hero-villa.webp` (the old hero backdrop, from `og-image.jpg`; no longer used by `index.html` since 4 Oct 2026).
 
-## Stylesheet Order (read before editing any CSS; describes `main`, the live site)
+## Stylesheet Order of the OLD design (no longer what `index.html` loads; kept because `privacy.html` and `terms.html` still use `styles.css`)
 `index.html` loads **two** stylesheets, in this order:
 
 1. `styles.css`, the original design, still complete and untouched.
