@@ -13,54 +13,40 @@
   wrap.addEventListener('mouseleave', function () { setMega(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMega(false); });
 
-  /* Interactive hero: tap a screen, or let it rotate every 5 seconds */
-  var data = [
-    { d: 'assets/shots/app/dashboard.webp', m: 'assets/shots/phone/m-dashboard.webp', ic: '▲', t: 'This month ₱184,250', s: '▲ 18% vs. last' },
-    { d: 'assets/shots/app/calendar.webp', m: 'assets/shots/phone/m-calendar.webp', ic: '✓', t: 'March', s: '4 units · 82% booked' },
-    { d: 'assets/shots/app/bookings.webp', m: 'assets/shots/phone/m-bookings.webp', ic: 'MR', t: 'Maria Reyes · ₱12,400', s: 'Villa Anilao · 3 nights · Confirmed' },
-    { d: 'assets/shots/app/booking-form.webp', m: 'assets/shots/phone/m-book.webp', ic: '★', t: 'Booked direct', s: 'No platform commission' },
-    { d: 'assets/shots/app/ledger.webp', m: 'assets/shots/phone/m-ledger.webp', ic: '₱', t: 'Payment recorded', s: 'GCash · proof attached' }
-  ];
-  data.forEach(function (x) { new Image().src = x.d; new Image().src = x.m; });
-  var stage = $('stage'), tabs = stage.querySelectorAll('.htab');
-  var desk = $('hDesk'), phone = $('hPhone');
-  var cur = 0, timer = null;
+  /* Hero picture: the phone drifts a little as the page scrolls and, with a
+     mouse, as the pointer moves, and the browser frame tilts slightly. This
+     only writes three numbers onto .hv (--mx, --my, --sy); site.css turns them
+     into movement. The scrolling phone screen and the gentle floating are
+     plain CSS and need none of this. */
+  var hv = $('heroVisual');
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var dots = $('hDots').children;
-  function show(i) {
-    cur = i;
-    tabs.forEach(function (x, k) { x.setAttribute('aria-selected', String(k === i)); });
-    for (var k = 0; k < dots.length; k++) dots[k].className = k === i ? 'on' : '';
-    $('hName').textContent = tabs[i].textContent;
-    var d = data[i];
-    [desk, phone].forEach(function (img) { img.classList.add('out'); });
-    setTimeout(function () {
-      desk.src = d.d; phone.src = d.m;
-      $('hIc').textContent = d.ic; $('hT').textContent = d.t; $('hS').textContent = d.s;
-      [desk, phone].forEach(function (img) { img.classList.remove('out'); });
-    }, 180);
-  }
-  function stop() { clearInterval(timer); timer = null; stage.classList.remove('auto'); }
-  tabs.forEach(function (b) { b.addEventListener('click', function () { stop(); show(+b.dataset.i); }); });
-  function step(d) { stop(); show((cur + d + data.length) % data.length); }
-  $('hPrev').addEventListener('click', function () { step(-1); });
-  $('hNext').addEventListener('click', function () { step(1); });
-  /* Swipe left or right on the screens to move between them */
-  var sx = null, sy = null, screens = stage.querySelector('.screens');
-  screens.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-  screens.addEventListener('touchend', function (e) {
-    if (sx === null) return;
-    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
-    sx = null;
-  }, { passive: true });
-  dots[0].className = 'on';
-  if (still) { stage.classList.remove('auto'); }
-  else {
-    timer = setInterval(function () {
-      show((cur + 1) % data.length);
-      stage.classList.remove('auto'); void stage.offsetWidth; stage.classList.add('auto');
-    }, 5000);
+  if (hv && !still) {
+    var tx = 0, ty = 0, mx = 0, my = 0, hvRaf = 0;
+    var drift = function () {
+      hvRaf = 0;
+      var r = hv.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.bottom < -80) return;
+      mx += (tx - mx) * 0.08; my += (ty - my) * 0.08;
+      var p = Math.max(-1, Math.min(1, (vh / 2 - (r.top + r.height / 2)) / vh));
+      hv.style.setProperty('--mx', mx.toFixed(3));
+      hv.style.setProperty('--my', my.toFixed(3));
+      hv.style.setProperty('--sy', p.toFixed(3));
+      if (Math.abs(tx - mx) > 0.002 || Math.abs(ty - my) > 0.002) hvRaf = requestAnimationFrame(drift);
+    };
+    var queueDrift = function () { if (!hvRaf) hvRaf = requestAnimationFrame(drift); };
+    window.addEventListener('scroll', queueDrift, { passive: true });
+    window.addEventListener('resize', queueDrift);
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      var heroBox = hv.closest('.hero');
+      heroBox.addEventListener('mousemove', function (e) {
+        var r = hv.getBoundingClientRect();
+        tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / r.width));
+        ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / r.height));
+        queueDrift();
+      });
+      heroBox.addEventListener('mouseleave', function () { tx = 0; ty = 0; queueDrift(); });
+    }
+    drift();
   }
 
   /* On the go: the tall dashboard scrolls inside the front phone as the page
@@ -143,55 +129,89 @@
 
   /* Product showcase.
      Desktop: click a step in the list to show its panel.
-     Phones and tablets: the section pins, and scrolling down slides the pages
-     sideways, pausing on each one so it can be read. */
+     Phones and tablets: all seven cards show, stacked down the page. */
   var sbtns = document.querySelectorAll('.show-btn'), panels = document.querySelectorAll('.show-panel');
-  var show = $('show'), track = $('showTrack'), sticky = show.querySelector('.show-sticky');
   var narrow = window.matchMedia('(max-width: 899px)');
-  var labels = Array.prototype.map.call(panels, function (p) { return p.querySelector('.label').textContent; });
-  var sel = 0, sTick = false;
+  var sel = 0;
   function pick(i) {
     sel = i;
     sbtns.forEach(function (x, k) { x.setAttribute('aria-selected', String(k === i)); });
     if (!narrow.matches) panels.forEach(function (p, k) { p.hidden = k !== i; });
   }
   sbtns.forEach(function (b) { b.addEventListener('click', function () { pick(+b.dataset.p); }); });
-  function slide() {
-    sTick = false;
-    if (!narrow.matches) return;
-    var n = panels.length;
-    var start = show.getBoundingClientRect().top - parseFloat(getComputedStyle(sticky).top);
-    var range = show.offsetHeight - sticky.offsetHeight;
-    var p = Math.min(1, Math.max(0, -start / range));
-    var f = p * (n - 1), i = Math.floor(f), frac = f - i;
-    /* hold on each page for the first and last quarter of its stretch */
-    var ease = Math.min(1, Math.max(0, (frac - 0.25) / 0.5));
-    ease = ease * ease * (3 - 2 * ease);
-    var pos = Math.min(n - 1, i + ease);
-    var w = track.clientWidth + 16;
-    track.style.transform = 'translate3d(' + (-pos * w).toFixed(1) + 'px,0,0)';
-    var now = Math.round(pos);
-    $('showName').textContent = labels[now];
-    $('showBar').style.width = (p * 100).toFixed(1) + '%';
-    if (now !== sel) pick(now);
-  }
-  function onShowScroll() { if (!sTick) { sTick = true; requestAnimationFrame(slide); } }
   function mode() {
-    if (narrow.matches) { panels.forEach(function (p) { p.hidden = false; }); slide(); }
-    else { track.style.transform = ''; pick(sel); }
+    if (narrow.matches) panels.forEach(function (p) { p.hidden = false; });
+    else pick(sel);
   }
-  window.addEventListener('scroll', onShowScroll, { passive: true });
-  window.addEventListener('resize', onShowScroll);
   if (narrow.addEventListener) narrow.addEventListener('change', mode); else narrow.addListener(mode);
   mode();
 
-  /* Appearance: Light / Night Dim */
-  var seg = document.querySelectorAll('.seg button'), dimImg = $('dimImg');
-  seg.forEach(function (b) {
-    b.addEventListener('click', function () {
-      seg.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-      dimImg.src = b.dataset.src; dimImg.alt = 'Dashboard in ' + b.textContent;
+  /* The old way: the three pain cards rise into place as they scroll into
+     view. Each card gets --p, 0 when its top edge is near the bottom of the
+     screen and 1 once it has travelled about a third of the screen. Scrolling
+     back up plays it in reverse. Side by side (640px and wider) each card
+     starts a little after the one before it, so they arrive as a staircase.
+     The position is read from the layout, not from the moving card, so the
+     animation cannot feed back into its own measurement. */
+  var painBox = $('pains');
+  if (painBox && !still) {
+    var pains = painBox.querySelectorAll('.pcard'), pTick = false;
+    var liftPains = function () {
+      pTick = false;
+      var vh = window.innerHeight, boxTop = painBox.getBoundingClientRect().top;
+      if (boxTop > vh * 1.2 || boxTop + painBox.offsetHeight < -vh) return;
+      var lag = window.innerWidth >= 640 ? 0.08 : 0;
+      pains.forEach(function (card, i) {
+        var top = boxTop + card.offsetTop;
+        var t = Math.min(1, Math.max(0, (vh * (0.97 - i * lag) - top) / (vh * 0.34)));
+        card.style.setProperty('--p', (1 - (1 - t) * (1 - t)).toFixed(3));
+      });
+    };
+    var onPains = function () { if (!pTick) { pTick = true; requestAnimationFrame(liftPains); } };
+    window.addEventListener('scroll', onPains, { passive: true });
+    window.addEventListener('resize', onPains);
+    pains.forEach(function (card) { card.style.setProperty('--p', '0'); });
+    liftPains();
+  }
+
+  /* Walkthrough videos: the page shows only a cover picture and a play button.
+     YouTube is loaded when the visitor taps play, so nobody spends mobile data
+     on a video they did not ask for. Without this script the same element is
+     a normal link that opens the video on YouTube. */
+  document.querySelectorAll('.video.yt[data-yt]').forEach(function (v) {
+    v.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (v.querySelector('iframe')) return;
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + v.dataset.yt + '?autoplay=1&rel=0&playsinline=1';
+      f.title = v.dataset.title || 'Video';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      v.appendChild(f);
+      v.removeAttribute('href');
     });
   });
+
+  /* Appearance: the dashboard fades from Light to Night Dim as the section is
+     scrolled, the same effect as the live site. It stays Light while the
+     picture comes into view, changes as the middle of the picture travels
+     from three quarters of the way down the screen to a little above the
+     centre, and is fully Night Dim while the whole picture is still on screen. */
+  var dimStage = $('dimStage');
+  if (dimStage && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var dTick = false;
+    var mixDim = function () {
+      dTick = false;
+      var r = dimStage.getBoundingClientRect(), vh = window.innerHeight;
+      var mid = r.top + r.height / 2;
+      var mix = Math.min(1, Math.max(0, (vh * 0.75 - mid) / (vh * 0.33)));
+      dimStage.style.setProperty('--dim-mix', mix.toFixed(3));
+    };
+    var onDim = function () { if (!dTick) { dTick = true; requestAnimationFrame(mixDim); } };
+    window.addEventListener('scroll', onDim, { passive: true });
+    window.addEventListener('resize', onDim);
+    mixDim();
+  }
 
 })();

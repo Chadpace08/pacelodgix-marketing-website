@@ -3,3 +3,11 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.tmp
+
+# This repository is public on GitHub. Keep the full-size source pictures and
+# the local review backups on this computer only. The site uses the small
+# copies in assets/.
+backups/
+carolen.png
+Host Christy.jpg
+PaceLodgix Dashboard Hero.png

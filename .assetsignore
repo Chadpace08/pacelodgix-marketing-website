@@ -60,3 +60,20 @@ Pace Lodgix Mark 2026.png
 # noindex, and it now renders the same design as index.html — publishing it
 # would put a duplicate of the homepage on a second URL.
 preview.html
+
+# Source picture for the hero (4 Oct 2026), 1.5MB. The served copies are
+# assets/shots/hero-dashboard-light.webp and hero-dashboard-light-960.webp.
+# Keep it here as the master to re-export from. Never ship it.
+PaceLodgix Dashboard Hero.png
+
+# Source photos of the two hosts (4 Oct 2026). The served copies are the
+# small crops in assets/people/. Never ship the full-size originals.
+carolen.png
+Host Christy.jpg
+
+# Local backup copies of pages Chad has reviewed. Never serve them.
+backups/
+
+# Internal writing prompt sitting loose in the live folder. It was unlisted, so
+# the site was serving it to anyone who knew the name (found 4 Oct 2026).
+COPYWRTING PROMPT.txt
